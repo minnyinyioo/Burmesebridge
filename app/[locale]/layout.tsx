@@ -18,6 +18,7 @@ export default async function LocaleLayout({
       news: "သတင်း",
       checkin: "Check In",
       me: "ကျွန်ုပ်",
+      login: "ဝင်ရန်"
     },
     zh: {
       home: "首页",
@@ -27,6 +28,7 @@ export default async function LocaleLayout({
       news: "新闻",
       checkin: "签到",
       me: "我的",
+      login: "登录"
     },
     en: {
       home: "Home",
@@ -36,6 +38,7 @@ export default async function LocaleLayout({
       news: "News",
       checkin: "Check In",
       me: "Me",
+      login: "Login"
     },
   };
 
@@ -56,6 +59,7 @@ export default async function LocaleLayout({
           <Link href={`/${locale}/news`}>{t.news}</Link>
           <Link href={`/${locale}/checkin`}>{t.checkin}</Link>
           <Link href={`/${locale}/me`}>{t.me}</Link>
+          <Link href={`/${locale}/login`}>{t.login}</Link>
         </div>
 
         <div className="language-switch">
