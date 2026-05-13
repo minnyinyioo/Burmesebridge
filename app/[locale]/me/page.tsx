@@ -20,8 +20,8 @@ export default function MePage() {
       checkin: "နေ့စဉ်ချက်အင်",
       forum: "Community",
       jobs: "အလုပ်အကိုင်",
-      logout: "Logout",
-      notlogin: "Login မဝင်ရသေးပါ",
+      logout: "အကောင့်ထွက်ရန်",
+      notlogin: " အကောင့်မဝင်ရသေးပါ",
       day: "ရက်",
     },
 
