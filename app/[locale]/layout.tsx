@@ -1,3 +1,4 @@
+import AuthMenu from "@/components/AuthMenu";
 import Link from "next/link";
 
 export default async function LocaleLayout({
@@ -16,7 +17,7 @@ export default async function LocaleLayout({
       forum: "အသိုင်းအဝိုင်း",
       jobs: "အလုပ်",
       news: "သတင်း",
-      checkin: "Check In",
+      checkin: "ချက်အင်လုပ်ရန်",
       me: "ကျွန်ုပ်",
       login: "ဝင်ရန်"
     },
@@ -58,8 +59,7 @@ export default async function LocaleLayout({
           <Link href={`/${locale}/jobs`}>{t.jobs}</Link>
           <Link href={`/${locale}/news`}>{t.news}</Link>
           <Link href={`/${locale}/checkin`}>{t.checkin}</Link>
-          <Link href={`/${locale}/me`}>{t.me}</Link>
-          <Link href={`/${locale}/login`}>{t.login}</Link>
+          <AuthMenu locale={locale} />
         </div>
 
         <div className="language-switch">
