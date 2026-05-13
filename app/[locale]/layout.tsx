@@ -48,7 +48,7 @@ export default async function LocaleLayout({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "24px 40px",
+          padding: "20px",
           borderBottom: "1px solid #e5e7eb",
           background: "white",
         }}
@@ -56,7 +56,7 @@ export default async function LocaleLayout({
         <Link
           href={`/${locale}`}
           style={{
-            fontSize: "32px",
+            fontSize: "28px",
             fontWeight: "bold",
             color: "#2563eb",
             textDecoration: "none",
@@ -68,7 +68,7 @@ export default async function LocaleLayout({
         <div
           style={{
             display: "flex",
-            gap: "22px",
+            gap: "14px",
             alignItems: "center",
             flexWrap: "wrap",
           }}
@@ -96,7 +96,71 @@ export default async function LocaleLayout({
         </div>
       </nav>
 
-      {children}
+      <main>{children}</main>
+
+<footer
+  style={{
+    marginTop: "80px",
+    padding: "40px 24px",
+    background: "#0f172a",
+    color: "white",
+  }}
+>
+  <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      display: "flex",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: "20px",
+    }}
+  >
+    <div>
+      <h2
+        style={{
+          marginBottom: "12px",
+          color: "#60a5fa",
+        }}
+      >
+        BurmeseBridge
+      </h2>
+
+      <p
+        style={{
+          opacity: 0.8,
+          lineHeight: 1.8,
+        }}
+      >
+        Myanmar Chinese Learning Platform
+      </p>
+    </div>
+
+    <div
+      style={{
+        display: "flex",
+        gap: "16px",
+        flexWrap: "wrap",
+      }}
+    >
+      <Link href={`/${locale}/learn`}>
+        {t.learn}
+      </Link>
+
+      <Link href={`/${locale}/forum`}>
+        {t.forum}
+      </Link>
+
+      <Link href={`/${locale}/jobs`}>
+        {t.jobs}
+      </Link>
+
+      <Link href={`/${locale}/news`}>
+        {t.news}
+      </Link>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }
