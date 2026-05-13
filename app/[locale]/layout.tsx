@@ -46,9 +46,10 @@ export default async function LocaleLayout({
       <nav
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "20px",
+flexDirection: "column",
+alignItems: "stretch",
+gap: "18px",
+padding: "20px",
           borderBottom: "1px solid #e5e7eb",
           background: "white",
         }}
@@ -68,9 +69,11 @@ export default async function LocaleLayout({
         <div
           style={{
             display: "flex",
-            gap: "14px",
-            alignItems: "center",
-            flexWrap: "wrap",
+gap: "14px",
+alignItems: "center",
+flexWrap: "wrap",
+fontSize: "15px",
+lineHeight: 1.8,
           }}
         >
           <Link href={`/${locale}`}>{t.home}</Link>
@@ -85,11 +88,11 @@ export default async function LocaleLayout({
             style={{
               display: "flex",
               gap: "10px",
-              marginLeft: "16px",
               fontWeight: 700,
+              paddingTop: "6px",
             }}
           >
-            <Link href="/my">MY</Link>
+            <Link href="/my">MM</Link>
             <Link href="/zh">中文</Link>
             <Link href="/en">EN</Link>
           </div>
