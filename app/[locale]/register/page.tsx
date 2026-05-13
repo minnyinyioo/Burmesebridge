@@ -1,9 +1,45 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function RegisterPage() {
+  const params = useParams();
+  const locale = String(params.locale || "en");
+
+  const text = {
+    my: {
+      title: "အကောင့်ဖွင့်ရန်",
+      email: "အီးမေးလ်",
+      password: "စကားဝှက်",
+      button: "အကောင့်ဖွင့်မည်",
+      loading: "ခေတ္တစောင့်ပါ...",
+      login: "အကောင့်ရှိပြီးသားလား? ဝင်ရန်",
+      success: "အကောင့်ဖွင့်မှု အောင်မြင်ပါသည်",
+    },
+    zh: {
+      title: "注册",
+      email: "邮箱",
+      password: "密码",
+      button: "创建账号",
+      loading: "加载中...",
+      login: "已有账号？去登录",
+      success: "注册成功",
+    },
+    en: {
+      title: "Register",
+      email: "Email",
+      password: "Password",
+      button: "Create Account",
+      loading: "Loading...",
+      login: "Already have an account? Login",
+      success: "Register success",
+    },
+  };
+
+  const t = text[locale as keyof typeof text] || text.en;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +55,8 @@ export default function RegisterPage() {
     if (error) {
       alert(error.message);
     } else {
-      alert("Register success. Please check your email.");
+      alert(t.success);
+      window.location.href = `/${locale}/login`;
     }
 
     setLoading(false);
@@ -47,18 +84,13 @@ export default function RegisterPage() {
           boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "36px",
-            marginBottom: "24px",
-          }}
-        >
-          Register
+        <h1 style={{ fontSize: "36px", marginBottom: "24px" }}>
+          {t.title}
         </h1>
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t.email}
           style={input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -66,21 +98,18 @@ export default function RegisterPage() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t.password}
           style={input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button
-          style={button}
-          onClick={handleRegister}
-        >
-          {loading ? "Loading..." : "Create Account"}
+        <button style={button} onClick={handleRegister}>
+          {loading ? t.loading : t.button}
         </button>
 
         <a
-          href="/my/login"
+          href={`/${locale}/login`}
           style={{
             display: "block",
             marginTop: "18px",
@@ -89,7 +118,7 @@ export default function RegisterPage() {
             fontWeight: 700,
           }}
         >
-          Already have an account? Login
+          {t.login}
         </a>
       </div>
     </main>
