@@ -66,7 +66,13 @@ export default async function LocaleLayout({
       </nav>
 
       {children}
-
+      <div className="mobile-tabbar">
+        <Link href={`/${locale}`}>{t.home}</Link>
+        <Link href={`/${locale}/learn`}>{t.learn}</Link>
+        <Link href={`/${locale}/forum`}>{t.forum}</Link>
+        <Link href={`/${locale}/checkin`}>{t.checkin}</Link>
+        <Link href={`/${locale}/me`}>{t.me}</Link>
+      </div>
       <footer className="site-footer">
         <div className="site-footer-inner">
           <div>
