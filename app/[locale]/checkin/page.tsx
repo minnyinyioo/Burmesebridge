@@ -1,145 +1,142 @@
-export default async function CheckinPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+"use client";
 
-  const content = {
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+
+export default function CheckinPage() {
+  const params = useParams();
+  const locale = String(params.locale || "en");
+
+  const text = {
     my: {
-      title: "Check In",
-      subtitle: "နေ့စဉ် Check In လုပ်ပြီး အမှတ်များ စုဆောင်းနိုင်သည်။",
-      today: "ယနေ့ Check In",
-      desc: "နောက်ပိုင်း Supabase Login နှင့် Database ချိတ်ပြီး အမှတ်များကို သိမ်းဆည်းမည်။",
-      button: "Check In +1 Point",
-      streak: "ဆက်တိုက် Check In",
-      points: "လက်ရှိအမှတ်",
-      level: "အဆင့်",
+      title: "နေ့စဉ်ချက်အင်",
+      checked: "✅ ဒီနေ့ချက်အင်လုပ်ပြီးပါပြီ",
+      button: "ချက်အင် လုပ်မည်",
+      login: "ကျေးဇူးပြု၍ Login ဝင်ပါ",
+      loading: "Loading...",
     },
     zh: {
-      title: "签到",
-      subtitle: "每天签到获得积分，用于等级、认证和学习成长系统。",
-      today: "今日签到",
-      desc: "后面会接 Supabase 登录和数据库，真实记录签到和积分。",
-      button: "签到 +1 积分",
-      streak: "连续签到",
-      points: "当前积分",
-      level: "等级",
+      title: "每日签到",
+      checked: "✅ 今天已经签到",
+      button: "立即签到",
+      login: "请先登录",
+      loading: "加载中...",
     },
     en: {
-      title: "Check In",
-      subtitle: "Check in every day to earn points and grow your level.",
-      today: "Today’s Check In",
-      desc: "Later this will connect to Supabase login and database records.",
-      button: "Check In +1 Point",
-      streak: "Check-in Streak",
-      points: "Current Points",
-      level: "Level",
+      title: "Daily Check In",
+      checked: "✅ Already checked in today",
+      button: "Check In Now",
+      login: "Please login first",
+      loading: "Loading...",
     },
   };
 
-  const t = content[locale as keyof typeof content] || content.en;
+  const t = text[locale as keyof typeof text] || text.en;
+
+  const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    checkToday();
+  }, []);
+
+  async function checkToday() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const { data } = await supabase
+      .from("checkins")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("checkin_date", today);
+
+    setChecked(!!data && data.length > 0);
+    setLoading(false);
+  }
+
+  async function handleCheckin() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert(t.login);
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const { error } = await supabase.from("checkins").insert({
+      user_id: user.id,
+      checkin_date: today,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setChecked(true);
+  }
+
+  if (loading) {
+    return <main style={{ padding: 40 }}>{t.loading}</main>;
+  }
 
   return (
     <main
       style={{
-        padding: "48px 24px",
-        background: "#f8fafc",
         minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#f8fafc",
+        padding: "24px",
       }}
     >
-      <section
+      <div
         style={{
-          maxWidth: "1000px",
-          margin: "0 auto",
+          background: "white",
+          padding: "40px",
+          borderRadius: "24px",
+          border: "1px solid #e2e8f0",
+          width: "100%",
+          maxWidth: "500px",
+          textAlign: "center",
         }}
       >
-        <h1 style={{ fontSize: "48px", marginBottom: "14px" }}>
-          {t.title}
-        </h1>
+        <h1 style={{ fontSize: "42px", marginBottom: "20px" }}>{t.title}</h1>
 
-        <p
-          style={{
-            color: "#64748b",
-            fontSize: "20px",
-            lineHeight: 1.8,
-            marginBottom: "36px",
-          }}
-        >
-          {t.subtitle}
-        </p>
-
-        <div
-          style={{
-            background: "white",
-            padding: "36px",
-            borderRadius: "24px",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 8px 24px rgba(15,23,42,0.06)",
-          }}
-        >
-          <h2 style={{ fontSize: "32px", marginBottom: "16px" }}>
-            {t.today}
-          </h2>
-
-          <p
-            style={{
-              color: "#475569",
-              lineHeight: 1.9,
-              fontSize: "18px",
-            }}
-          >
-            {t.desc}
+        {checked ? (
+          <p style={{ color: "#10b981", fontSize: "20px", fontWeight: 700 }}>
+            {t.checked}
           </p>
-
-          <button
-            style={{
-              marginTop: "24px",
-              padding: "14px 24px",
-              borderRadius: "14px",
-              border: "none",
-              background: "#2563eb",
-              color: "white",
-              fontSize: "16px",
-              fontWeight: 700,
-            }}
-          >
+        ) : (
+          <button onClick={handleCheckin} style={button}>
             {t.button}
           </button>
-        </div>
-
-        <div
-          style={{
-            marginTop: "24px",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
-            gap: "18px",
-          }}
-        >
-          <div style={smallCard}>
-            <h3>{t.streak}</h3>
-            <p>0</p>
-          </div>
-
-          <div style={smallCard}>
-            <h3>{t.points}</h3>
-            <p>0</p>
-          </div>
-
-          <div style={smallCard}>
-            <h3>{t.level}</h3>
-            <p>Newbie</p>
-          </div>
-        </div>
-      </section>
+        )}
+      </div>
     </main>
   );
 }
 
-const smallCard = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "20px",
-  border: "1px solid #e2e8f0",
-  boxShadow: "0 8px 24px rgba(15,23,42,0.04)",
+const button = {
+  padding: "16px 28px",
+  borderRadius: "14px",
+  border: "none",
+  background: "#2563eb",
+  color: "white",
+  fontSize: "18px",
+  fontWeight: 700,
+  cursor: "pointer",
 };

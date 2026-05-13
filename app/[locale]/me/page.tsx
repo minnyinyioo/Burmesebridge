@@ -1,15 +1,82 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function MePage() {
+  const params = useParams();
+  const locale = String(params.locale || "en");
+
+  const text = {
+    my: {
+      user: "BurmeseBridge အသုံးပြုသူ",
+      verified: "အတည်ပြုပြီးသော အဖွဲ့ဝင်",
+      points: "အမှတ်",
+      streak: "ဆက်တိုက် ချက်အင်",
+      progress: "သင်ယူမှု",
+      posts: "ကျွန်ုပ်၏ Post များ",
+      learn: "သင်ယူရန်",
+      checkin: "နေ့စဉ်ချက်အင်",
+      forum: "Community",
+      jobs: "အလုပ်အကိုင်",
+      logout: "Logout",
+      notlogin: "Login မဝင်ရသေးပါ",
+      day: "ရက်",
+    },
+
+    zh: {
+      user: "BurmeseBridge 用户",
+      verified: "已认证会员",
+      points: "积分",
+      streak: "连续签到",
+      progress: "学习进度",
+      posts: "我的帖子",
+      learn: "学习中心",
+      checkin: "每日签到",
+      forum: "社区论坛",
+      jobs: "工作信息",
+      logout: "退出登录",
+      notlogin: "未登录",
+      day: "天",
+    },
+
+    en: {
+      user: "BurmeseBridge User",
+      verified: "Verified Member",
+      points: "Points",
+      streak: "Check In Streak",
+      progress: "Learning Progress",
+      posts: "My Posts",
+      learn: "Learning Center",
+      checkin: "Daily Check In",
+      forum: "Community Forum",
+      jobs: "Jobs",
+      logout: "Logout",
+      notlogin: "Not logged in",
+      day: "days",
+    },
+  };
+
+  const t = text[locale as keyof typeof text] || text.en;
+
   const [email, setEmail] = useState<string | null>(null);
+  const [checkinCount, setCheckinCount] = useState(0);
 
   useEffect(() => {
     async function getUser() {
       const { data } = await supabase.auth.getUser();
+
       setEmail(data.user?.email ?? null);
+
+      if (data.user) {
+        const { count } = await supabase
+          .from("checkins")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", data.user.id);
+
+        setCheckinCount(count || 0);
+      }
     }
 
     getUser();
@@ -17,7 +84,7 @@ export default function MePage() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    window.location.href = "/my/login";
+    window.location.href = `/${locale}/login`;
   }
 
   return (
@@ -70,15 +137,15 @@ export default function MePage() {
 
             <div>
               <h1 style={{ fontSize: "38px", marginBottom: "8px" }}>
-                BurmeseBridge User
+                {t.user}
               </h1>
 
               <p style={{ color: "#64748b" }}>
-                {email ? email : "Not logged in"}
+                {email ? email : t.notlogin}
               </p>
 
               <p style={{ color: "#10b981", fontWeight: 700 }}>
-                Verified Member
+                {t.verified}
               </p>
             </div>
           </div>
@@ -92,28 +159,30 @@ export default function MePage() {
             }}
           >
             <div style={card}>
-              <h3>积分</h3>
-              <p>0</p>
+              <h3>{t.points}</h3>
+              <p>{checkinCount}</p>
             </div>
 
             <div style={card}>
-              <h3>连续签到</h3>
-              <p>0 天</p>
+              <h3>{t.streak}</h3>
+              <p>
+                {checkinCount} {t.day}
+              </p>
             </div>
 
             <div style={card}>
-              <h3>学习进度</h3>
+              <h3>{t.progress}</h3>
               <p>0%</p>
             </div>
 
             <div style={card}>
-              <h3>我的帖子</h3>
+              <h3>{t.posts}</h3>
               <p>0</p>
             </div>
           </div>
 
           <div style={{ marginTop: "36px" }}>
-            <h2>快捷入口</h2>
+            <h2>Quick Access</h2>
 
             <div
               style={{
@@ -123,10 +192,21 @@ export default function MePage() {
                 marginTop: "16px",
               }}
             >
-              <a href="/my/learn" style={button}>学习中心</a>
-              <a href="/my/checkin" style={button}>每日 Check In</a>
-              <a href="/my/forum" style={button}>社区论坛</a>
-              <a href="/my/jobs" style={button}>工作信息</a>
+              <a href={`/${locale}/learn`} style={button}>
+                {t.learn}
+              </a>
+
+              <a href={`/${locale}/checkin`} style={button}>
+                {t.checkin}
+              </a>
+
+              <a href={`/${locale}/forum`} style={button}>
+                {t.forum}
+              </a>
+
+              <a href={`/${locale}/jobs`} style={button}>
+                {t.jobs}
+              </a>
             </div>
           </div>
 
@@ -143,7 +223,7 @@ export default function MePage() {
               cursor: "pointer",
             }}
           >
-            Logout
+            {t.logout}
           </button>
         </div>
       </section>
