@@ -97,9 +97,8 @@ export default async function HomePage({
   return (
     <main
       style={{
-        padding: "48px 24px",
+        padding: "32px 24px 72px",
         background: "#f8fafc",
-        minHeight: "100vh",
       }}
     >
       <section
@@ -112,7 +111,7 @@ export default async function HomePage({
           style={{
             background: "linear-gradient(135deg,#2563eb,#10b981)",
             borderRadius: "28px",
-            padding: "56px",
+            padding: "48px",
             color: "white",
           }}
         >
@@ -145,14 +144,7 @@ export default async function HomePage({
           </p>
         </div>
 
-        <div
-          style={{
-            marginTop: "36px",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-            gap: "24px",
-          }}
-        >
+        <div className="home-card-grid">
           {t.cards.map((card, index) => (
             <div
               key={index}

@@ -43,39 +43,12 @@ export default async function LocaleLayout({
 
   return (
     <div>
-      <nav
-        style={{
-          display: "flex",
-flexDirection: "column",
-alignItems: "stretch",
-gap: "18px",
-padding: "20px",
-          borderBottom: "1px solid #e5e7eb",
-          background: "white",
-        }}
-      >
-        <Link
-          href={`/${locale}`}
-          style={{
-            fontSize: "28px",
-            fontWeight: "bold",
-            color: "#2563eb",
-            textDecoration: "none",
-          }}
-        >
+      <nav className="site-nav">
+        <Link href={`/${locale}`} className="site-logo">
           BurmeseBridge
         </Link>
 
-        <div
-          style={{
-            display: "flex",
-gap: "14px",
-alignItems: "center",
-flexWrap: "wrap",
-fontSize: "15px",
-lineHeight: 1.8,
-          }}
-        >
+        <div className="site-menu">
           <Link href={`/${locale}`}>{t.home}</Link>
           <Link href={`/${locale}/learn`}>{t.learn}</Link>
           <Link href={`/${locale}/forum`}>{t.forum}</Link>
@@ -83,87 +56,27 @@ lineHeight: 1.8,
           <Link href={`/${locale}/news`}>{t.news}</Link>
           <Link href={`/${locale}/checkin`}>{t.checkin}</Link>
           <Link href={`/${locale}/me`}>{t.me}</Link>
+        </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              fontWeight: 700,
-              paddingTop: "6px",
-            }}
-          >
-            <Link href="/my">MM</Link>
-            <Link href="/zh">中文</Link>
-            <Link href="/en">EN</Link>
-          </div>
+        <div className="language-switch">
+          <Link href="/my">MM</Link>
+          <Link href="/zh">中文</Link>
+          <Link href="/en">EN</Link>
         </div>
       </nav>
 
-      <main>{children}</main>
+      {children}
 
-<footer
-  style={{
-    marginTop: "80px",
-    padding: "40px 24px",
-    background: "#0f172a",
-    color: "white",
-  }}
->
-  <div
-    style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      display: "flex",
-      justifyContent: "space-between",
-      flexWrap: "wrap",
-      gap: "20px",
-    }}
-  >
-    <div>
-      <h2
-        style={{
-          marginBottom: "12px",
-          color: "#60a5fa",
-        }}
-      >
-        BurmeseBridge
-      </h2>
+      <footer className="site-footer">
+        <div className="site-footer-inner">
+          <div>
+            <h3>BurmeseBridge</h3>
+            <p>Burmese Chinese Learning Platform</p>
+          </div>
 
-      <p
-        style={{
-          opacity: 0.8,
-          lineHeight: 1.8,
-        }}
-      >
-        Myanmar Chinese Learning Platform
-      </p>
-    </div>
-
-    <div
-      style={{
-        display: "flex",
-        gap: "16px",
-        flexWrap: "wrap",
-      }}
-    >
-      <Link href={`/${locale}/learn`}>
-        {t.learn}
-      </Link>
-
-      <Link href={`/${locale}/forum`}>
-        {t.forum}
-      </Link>
-
-      <Link href={`/${locale}/jobs`}>
-        {t.jobs}
-      </Link>
-
-      <Link href={`/${locale}/news`}>
-        {t.news}
-      </Link>
-    </div>
-  </div>
-</footer>
+          <div>© 2026 BurmeseBridge</div>
+        </div>
+      </footer>
     </div>
   );
 }
