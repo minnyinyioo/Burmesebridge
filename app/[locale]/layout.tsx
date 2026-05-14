@@ -1,3 +1,4 @@
+import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import Link from "next/link";
 
@@ -62,11 +63,7 @@ export default async function LocaleLayout({
           <AuthMenu locale={locale} />
         </div>
 
-        <div className="language-switch">
-          <Link href="/my">MM</Link>
-          <Link href="/zh">中文</Link>
-          <Link href="/en">EN</Link>
-        </div>
+        <LanguageMenu locale={locale} />
       </nav>
 
       {children}
@@ -75,7 +72,6 @@ export default async function LocaleLayout({
         <Link href={`/${locale}/learn`}>{t.learn}</Link>
         <Link href={`/${locale}/forum`}>{t.forum}</Link>
         <Link href={`/${locale}/checkin`}>{t.checkin}</Link>
-        <Link href={`/${locale}/me`}>{t.me}</Link>
       </div>
       <footer className="site-footer">
         <div className="site-footer-inner">
