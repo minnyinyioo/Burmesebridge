@@ -12,7 +12,7 @@ export default function LanguageMenu({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const label = {
-    my: "MM",
+    my: "မြန်မာ",
     zh: "中文",
     en: "EN",
   };
@@ -71,7 +71,7 @@ export default function LanguageMenu({
             zIndex: 999,
           }}
         >
-          <LangLink href="/my" label="မြန်မာ / MM" />
+          <LangLink href="/my" label="မြန်မာ" />
           <LangLink href="/zh" label="中文" />
           <LangLink href="/en" label="English" />
         </div>
