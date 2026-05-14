@@ -13,7 +13,7 @@ export default async function LocaleLayout({
 
   const nav = {
     my: {
-      home: "ပင်မ",
+      home: "ပင်မစာမျက်နှာ",
       learn: "သင်ယူရန်",
       forum: "အသိုင်းအဝိုင်း",
       jobs: "အလုပ်",
