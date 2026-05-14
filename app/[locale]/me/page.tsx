@@ -21,10 +21,10 @@ export default function MePage() {
       forum: "Community",
       jobs: "အလုပ်အကိုင်",
       logout: "အကောင့်ထွက်ရန်",
-      notlogin: " အကောင့်မဝင်ရသေးပါ",
+      notlogin: "အကောင့်မဝင်ရသေးပါ",
       day: "ရက်",
+      quick: "အမြန်ဝင်ရန်",
     },
-
     zh: {
       user: "BurmeseBridge 用户",
       verified: "已认证会员",
@@ -39,8 +39,8 @@ export default function MePage() {
       logout: "退出登录",
       notlogin: "未登录",
       day: "天",
+      quick: "快捷入口",
     },
-
     en: {
       user: "BurmeseBridge User",
       verified: "Verified Member",
@@ -55,6 +55,7 @@ export default function MePage() {
       logout: "Logout",
       notlogin: "Not logged in",
       day: "days",
+      quick: "Quick Access",
     },
   };
 
@@ -62,21 +63,33 @@ export default function MePage() {
 
   const [email, setEmail] = useState<string | null>(null);
   const [checkinCount, setCheckinCount] = useState(0);
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     async function getUser() {
       const { data } = await supabase.auth.getUser();
 
-      setEmail(data.user?.email ?? null);
-
-      if (data.user) {
-        const { count } = await supabase
-          .from("checkins")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", data.user.id);
-
-        setCheckinCount(count || 0);
+      if (!data.user) {
+        setEmail(null);
+        return;
       }
+
+      setEmail(data.user.email ?? null);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+      setDisplayName(profile?.display_name || "");
+
+      const { count } = await supabase
+        .from("checkins")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", data.user.id);
+
+      setCheckinCount(count || 0);
     }
 
     getUser();
@@ -95,12 +108,7 @@ export default function MePage() {
         minHeight: "100vh",
       }}
     >
-      <section
-        style={{
-          maxWidth: "1000px",
-          margin: "0 auto",
-        }}
-      >
+      <section style={{ maxWidth: "1000px", margin: "0 auto" }}>
         <div
           style={{
             background: "white",
@@ -137,7 +145,7 @@ export default function MePage() {
 
             <div>
               <h1 style={{ fontSize: "38px", marginBottom: "8px" }}>
-                {t.user}
+                {displayName || t.user}
               </h1>
 
               <p style={{ color: "#64748b" }}>
@@ -182,7 +190,7 @@ export default function MePage() {
           </div>
 
           <div style={{ marginTop: "36px" }}>
-            <h2>Quick Access</h2>
+            <h2>{t.quick}</h2>
 
             <div
               style={{
@@ -210,21 +218,23 @@ export default function MePage() {
             </div>
           </div>
 
-          <button
-            onClick={handleLogout}
-            style={{
-              marginTop: "36px",
-              padding: "14px 20px",
-              borderRadius: "12px",
-              border: "none",
-              background: "#ef4444",
-              color: "white",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {t.logout}
-          </button>
+          {email && (
+            <button
+              onClick={handleLogout}
+              style={{
+                marginTop: "36px",
+                padding: "14px 20px",
+                borderRadius: "12px",
+                border: "none",
+                background: "#ef4444",
+                color: "white",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              {t.logout}
+            </button>
+          )}
         </div>
       </section>
     </main>
