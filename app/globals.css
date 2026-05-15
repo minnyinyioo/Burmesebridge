@@ -265,3 +265,87 @@ box-shadow:
 0 4px 12px rgba(0,0,0,.04);
 
 }
+/* ===== BurmeseBridge Feed UI v1 ===== */
+
+.feedShell {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 20px 96px;
+}
+
+.feedTitle {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+.feedComposer {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  margin-bottom: 24px;
+}
+
+.feedComposer textarea {
+  width: 100%;
+  min-height: 130px;
+  border: 1px solid #cbd5e1;
+  border-radius: 18px;
+  padding: 16px;
+  font-size: 16px;
+  outline: none;
+  resize: none;
+  background: #f8fafc;
+}
+
+.feedComposer button {
+  margin-top: 14px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.feed {
+  display: grid;
+  gap: 18px;
+}
+
+.feedCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.feedActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.feedActions button {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+
+.feedActions button:hover {
+  background: #f1f5f9;
+  color: #2563eb;
+}

@@ -317,8 +317,8 @@ export default function ForumPage() {
   }
 
   return (
-    <main style={page}>
-      <h1 style={title}>{t.title}</h1>
+    <main className="feedShell">
+  <h1 className="feedTitle">{t.title}</h1>
 
       <PostComposer
         content={content}
