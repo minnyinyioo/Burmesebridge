@@ -1,5 +1,5 @@
 "use client";
-
+import Badge from "@/components/Badges";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -12,6 +12,8 @@ type Post = {
   profiles?: {
     display_name: string | null;
     email: string | null;
+    verified: boolean | null;
+    badge: string | null;
   } | null;
 };
 
@@ -62,7 +64,9 @@ export default function ForumPage() {
         user_id,
         profiles (
           display_name,
-          email
+          email,
+          verified,
+          badge
         )
       `)
       .order("created_at", { ascending: false });
@@ -115,25 +119,72 @@ export default function ForumPage() {
 
       <div style={{ marginTop: "24px", display: "grid", gap: "18px" }}>
         {posts.map((post) => {
-          const author =
-            post.profiles?.display_name ||
-            post.profiles?.email ||
-            t.anonymous;
+  const author =
+    post.profiles?.display_name ||
+    post.profiles?.email ||
+    t.anonymous;
 
-          return (
-            <div key={post.id} style={card}>
-              <div style={{ marginBottom: "12px", fontWeight: 700 }}>
-                {author}
-              </div>
+  const badge = post.profiles?.badge || "member";
 
-              <p>{post.content}</p>
+  return (
+    <div key={post.id} style={card}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          marginBottom: "14px",
+        }}
+      >
+        <div
+          style={{
+            width: "42px",
+            height: "42px",
+            borderRadius: "999px",
+            background: "#2563eb",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 700,
+          }}
+        >
+          {author.slice(0, 1).toUpperCase()}
+        </div>
 
-              <p style={{ marginTop: "12px", color: "#64748b", fontSize: "14px" }}>
-                {new Date(post.created_at).toLocaleString()}
-              </p>
-            </div>
-          );
-        })}
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              flexWrap: "wrap",
+              fontWeight: 700,
+            }}
+          >
+            {author}
+
+            {post.profiles?.verified && <Badge type="verified" />}
+
+            <Badge type={badge as any} />
+          </div>
+
+          <div
+            style={{
+              color: "#64748b",
+              fontSize: "13px",
+              marginTop: "4px",
+            }}
+          >
+            {new Date(post.created_at).toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      <p>{post.content}</p>
+    </div>
+  );
+})}
       </div>
     </main>
   );
