@@ -1,0 +1,69 @@
+[33m0278d57[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m keep current path when switching language
+[33m13543e3[m fix admin dashboard client auth guard
+[33mee17b71[m normalize profile roles
+[33mf4b9594[m build admin dashboard v1
+[33m27102c2[m add admin roles and access guard
+[33mcb25639[m redesign site shell and unify typography
+[33me77f65c[m redesign site shell and unify typography
+[33m56717fd[m stabilize forum feed ui
+[33mb423c07[m refactor forum into components
+[33mdd6eae9[m improve comments ui
+[33m8eff418[m upgrade forum feed layout
+[33m4f96ae6[m add reusable social action components
+[33m5e17b4f[m add real likes comments and share
+[33m6101da8[m improve forum social feed ui
+[33m6daaf46[m upgrade forum UI add delete and profile sync
+[33m238bf06[m sync post count and enable post delete
+[33m1f4ef29[m add badge component
+[33m6cc1dfc[m add badge component system
+[33m29a452c[m add forum posts table and multilingual forum
+[33m455895a[m add multilingual forum system
+[33me165f50[m add supabase migrations
+[33m494e1d6[m sync dashboard points with checkins
+[33m2914107[m sync profile name to me page
+[33mb85079f[m make dashboard and profile multilingual
+[33me583719[m add language dropdown menu
+[33m25bc979[m add language dropdown menu
+[33m96dfb76[m add user dashboard
+[33m20b0524[m stable checkpoint
+[33m6306387[m fix dependencies
+[33m137bd54[m production security update
+[33m145468c[m security hardening
+[33m0a08c42[m make register page multilingual
+[33mf667a80[m make login page multilingual
+[33m7633371[m add multilingual me page
+[33m27c4d7d[m localize auth menu
+[33m85d1b37[m build user center with auth state
+[33m43b86dc[m connect supabase register
+[33m8acfbad[m add register page
+[33mefecd2e[m add multilingual register page
+[33m1089b68[m add multilingual login page
+[33m1eeaa5c[m add mobile bottom tabbar
+[33m556fccb[m improve responsive card grid
+[33m4d8b289[m fix complete globals css
+[33ma3cc0a3[m improve responsive navigation
+[33m1c3b148[m make homepage hero responsive
+[33ma832fcd[m make homepage hero responsive
+[33m68f49c5[m responsive homepage grid layout
+[33mf16f095[m optimize mobile navigation layout
+[33m806807f[m add basic seo metadata
+[33me32c2a0[m add multilingual user center page
+[33ma7b9a9a[m add multilingual checkin page
+[33m5c30803[m add multilingual news page
+[33m65f0389[m add multilingual jobs page
+[33m532546b[m add multilingual forum page
+[33m8851b62[m add multilingual learn page
+[33m193e4f2[m add responsive footer layout
+[33mce3e18c[m complete multilingual homepage and navigation
+[33m480cf0b[m add multilingual homepage
+[33m451f825[m build me page
+[33ma65ca21[m improve checkin page
+[33m4a611cf[m add checkin and me links to navigation
+[33m58b8f8d[m improve news page
+[33m75d454a[m improve jobs page
+[33mf0baa09[m improve forum page
+[33m881f9c3[m improve learn page
+[33m814996d[m improve homepage
+[33m7c27269[m add main navigation
+[33m4bb6bcd[m first working burmesebridge version
+[33m37cad17[m Initial commit
