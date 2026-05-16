@@ -1,124 +1,82 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-
-import {
-canAccessAdmin
-} from "@/lib/permissions";
-
-import AdminSidebar
-from "@/components/admin/AdminSidebar";
-
-import AdminStatCard
-from "@/components/admin/AdminStatCard";
+import { canAccessAdmin } from "@/lib/permissions";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminStatCard from "@/components/admin/AdminStatCard";
 
 /**
-后台首页
+ * Admin Dashboard
+ * 只允许 role 为 admin / moderator 的用户访问。
  */
+export default function AdminPage() {
+  const params = useParams();
+  const locale = String(params.locale || "my");
 
-export default async function AdminPage(){
+  const [loading, setLoading] = useState(true);
+  const [allowed, setAllowed] = useState(false);
+  const [usersCount, setUsersCount] = useState(0);
+  const [postsCount, setPostsCount] = useState(0);
 
-const {
+  useEffect(() => {
+    checkAdminAccess();
+  }, []);
 
-data:{user}
+  async function checkAdminAccess() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-}=await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = `/${locale}/login`;
+      return;
+    }
 
-if(!user){
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
 
-redirect("/")
+    if (!canAccessAdmin(profile?.role)) {
+      window.location.href = `/${locale}`;
+      return;
+    }
 
-}
+    setAllowed(true);
 
-const {data:profile}=await supabase
+    const [users, posts] = await Promise.all([
+      supabase.from("profiles").select("*", { count: "exact", head: true }),
+      supabase.from("posts").select("*", { count: "exact", head: true }),
+    ]);
 
-.from("profiles")
+    setUsersCount(users.count || 0);
+    setPostsCount(posts.count || 0);
+    setLoading(false);
+  }
 
-.select("role")
+  if (loading) {
+    return <main style={{ padding: 40 }}>Loading...</main>;
+  }
 
-.eq(
-"id",
-user.id
-)
+  if (!allowed) {
+    return null;
+  }
 
-.single()
+  return (
+    <div className="adminShell">
+      <AdminSidebar />
 
-if(
+      <div className="adminContent">
+        <h1>Admin Dashboard</h1>
 
-!canAccessAdmin(
-profile?.role
-)
-
-){
-
-redirect("/")
-
-}
-
-/**
-真实统计
-*/
-
-const [
-
-users,
-posts
-
-]=await Promise.all([
-
-supabase
-.from("profiles")
-.select("*",{count:"exact",head:true}),
-
-supabase
-.from("posts")
-.select("*",{count:"exact",head:true})
-
-])
-
-return(
-
-<div className="adminShell">
-
-<AdminSidebar/>
-
-<div className="adminContent">
-
-<h1>
-
-Admin Dashboard
-
-</h1>
-
-<div
-className="adminGrid"
->
-
-<AdminStatCard
-
-title="Users"
-
-value={
-users.count||0
-}
-
-/>
-
-<AdminStatCard
-
-title="Posts"
-
-value={
-posts.count||0
-}
-
-/>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
+        <div className="adminGrid">
+          <AdminStatCard title="Users" value={usersCount} />
+          <AdminStatCard title="Posts" value={postsCount} />
+        </div>
+      </div>
+    </div>
+  );
 }
