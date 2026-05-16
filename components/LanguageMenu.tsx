@@ -1,13 +1,15 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 
-export default function LanguageMenu({ locale }: { locale: string }) {
+export default function LanguageMenu({
+  locale,
+}: {
+  locale: string;
+}) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-  const router = useRouter();
 
   const label = {
     my: "မြန်မာ",
@@ -15,23 +17,12 @@ export default function LanguageMenu({ locale }: { locale: string }) {
     en: "EN",
   };
 
-  /**
-   * 切换语言时保留当前页面路径。
-   * 例如：
-   * /my/admin/users → /zh/admin/users
-   */
-  function switchLocale(nextLocale: "my" | "zh" | "en") {
-    const parts = pathname.split("/");
-
-    parts[1] = nextLocale;
-
-    router.push(parts.join("/") || `/${nextLocale}`);
-    setOpen(false);
-  }
-
   useEffect(() => {
     function close(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -44,7 +35,12 @@ export default function LanguageMenu({ locale }: { locale: string }) {
   }, []);
 
   return (
-    <div ref={menuRef} style={{ position: "relative" }}>
+    <div
+      ref={menuRef}
+      style={{
+        position: "relative",
+      }}
+    >
       <button
         onClick={() => setOpen(!open)}
         style={{
@@ -75,39 +71,35 @@ export default function LanguageMenu({ locale }: { locale: string }) {
             zIndex: 999,
           }}
         >
-          <LangButton label="မြန်မာ" onClick={() => switchLocale("my")} />
-          <LangButton label="中文" onClick={() => switchLocale("zh")} />
-          <LangButton label="English" onClick={() => switchLocale("en")} />
+          <LangLink href="/my" label="မြန်မာ" />
+          <LangLink href="/zh" label="中文" />
+          <LangLink href="/en" label="English" />
         </div>
       )}
     </div>
   );
 }
 
-function LangButton({
+function LangLink({
+  href,
   label,
-  onClick,
 }: {
+  href: string;
   label: string;
-  onClick: () => void;
 }) {
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
       style={{
         display: "block",
-        width: "100%",
-        textAlign: "left",
         padding: "12px 14px",
         color: "#0f172a",
-        background: "white",
-        border: "none",
+        textDecoration: "none",
         borderBottom: "1px solid #f1f5f9",
         fontWeight: 700,
-        cursor: "pointer",
       }}
     >
       {label}
-    </button>
+    </Link>
   );
 }
