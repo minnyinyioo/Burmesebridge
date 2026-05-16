@@ -10,19 +10,8 @@ type Profile = {
   display_name?: string | null;
   email?: string | null;
   verified?: boolean | null;
-
-  /**
-   * 用户身份
-   * member
-   * moderator
-   * admin
-   */
-  role?: string | null;
-
-  /**
-   * UI徽章
-   */
   badge?: string | null;
+  role?: string | null;
 };
 
 type Post = {
@@ -104,8 +93,7 @@ export default function ForumPage() {
 
   /**
    * 页面初始化：
-   * 1. 获取当前登录用户
-   * 2. 加载帖子、点赞、评论数据
+   * 获取当前登录用户，然后加载论坛数据。
    */
   async function loadUserAndPosts() {
     const {
@@ -119,10 +107,10 @@ export default function ForumPage() {
   }
 
   /**
-   * 加载论坛数据：
-   * - posts：帖子
-   * - post_likes：点赞数量 + 当前用户是否点赞
-   * - post_comments：评论列表
+   * 加载帖子、点赞、评论。
+   * 关键点：
+   * profiles:profiles!posts_user_id_fkey
+   * 必须依赖 posts.user_id → profiles.id 外键。
    */
   async function loadPosts(userId: string) {
     const { data, error } = await supabase
@@ -132,7 +120,7 @@ export default function ForumPage() {
         content,
         created_at,
         user_id,
-        profiles (
+        profiles:profiles!posts_user_id_fkey (
           display_name,
           email,
           verified,
@@ -159,7 +147,6 @@ export default function ForumPage() {
       return;
     }
 
-    // 读取所有帖子的点赞数据
     const { data: likeRows } = await supabase
       .from("post_likes")
       .select("post_id, user_id")
@@ -179,7 +166,6 @@ export default function ForumPage() {
     setLikes(likeCount);
     setMyLikes(likedByMe);
 
-    // 读取所有帖子的评论数据
     const { data: commentRows } = await supabase
       .from("post_comments")
       .select(`
@@ -188,9 +174,12 @@ export default function ForumPage() {
         content,
         created_at,
         user_id,
-        profiles (
+        profiles:profiles!post_comments_user_id_fkey (
           display_name,
-          email
+          email,
+          verified,
+          badge,
+          role
         )
       `)
       .in("post_id", ids)
@@ -210,7 +199,7 @@ export default function ForumPage() {
   }
 
   /**
-   * 创建新帖子
+   * 创建新帖子。
    */
   async function createPost() {
     const {
@@ -239,7 +228,7 @@ export default function ForumPage() {
   }
 
   /**
-   * 点赞 / 取消点赞
+   * 点赞 / 取消点赞。
    */
   async function toggleLike(postId: number) {
     if (!currentUserId) {
@@ -264,7 +253,7 @@ export default function ForumPage() {
   }
 
   /**
-   * 新增评论
+   * 新增评论。
    */
   async function createComment(postId: number) {
     if (!currentUserId) {
@@ -296,8 +285,8 @@ export default function ForumPage() {
   }
 
   /**
-   * 删除帖子
-   * RLS 已限制：作者本人 / 管理员 / 版主才能删除
+   * 删除帖子。
+   * RLS 应限制：作者本人 / admin / moderator。
    */
   async function deletePost(postId: number) {
     const ok = confirm(t.confirmDelete);
@@ -318,8 +307,7 @@ export default function ForumPage() {
   }
 
   /**
-   * 分享帖子：
-   * 复制帖子链接到剪贴板
+   * 分享帖子链接。
    */
   async function sharePost(postId: number) {
     const url = `${window.location.origin}/${locale}/forum#post-${postId}`;
@@ -331,7 +319,7 @@ export default function ForumPage() {
 
   return (
     <main className="feedShell">
-  <h1 className="feedTitle">{t.title}</h1>
+      <h1 className="feedTitle">{t.title}</h1>
 
       <PostComposer
         content={content}
@@ -378,17 +366,3 @@ export default function ForumPage() {
     </main>
   );
 }
-
-const page = {
-  padding: "48px 24px",
-  maxWidth: "920px",
-  margin: "0 auto",
-  background: "#f8fafc",
-  minHeight: "100vh",
-};
-
-const title = {
-  fontSize: "42px",
-  marginBottom: "24px",
-  color: "#0f172a",
-};
