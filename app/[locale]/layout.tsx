@@ -2,7 +2,7 @@ import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
-import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper, Waypoints } from "lucide-react";
+import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper, PlaySquare, Waypoints } from "lucide-react";
 
 export default async function LocaleLayout({
   children,
@@ -56,6 +56,7 @@ export default async function LocaleLayout({
           <Link href={`/${locale}/jobs`}><BriefcaseBusiness size={16} />{t.jobs}</Link>
           <Link href={`/${locale}/news`}><Newspaper size={16} />{t.news}</Link>
           <Link href={`/${locale}/forum`}><MessageCircle size={16} />{t.forum}</Link>
+          <Link href={`/${locale}/videos`}><PlaySquare size={16} />{locale === "zh" ? "视频" : locale === "my" ? "ဗီဒီယို" : "Videos"}</Link>
         </div>
 
         <div className="site-actions">
