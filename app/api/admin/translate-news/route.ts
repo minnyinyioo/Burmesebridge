@@ -1,4 +1,32 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+export const runtime = "nodejs";
+
+async function authorize(request: Request) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !anonKey || !serviceRoleKey) return { error: "Translation service is not configured.", status: 503 };
+
+  const authorization = request.headers.get("authorization");
+  const accessToken = authorization?.startsWith("Bearer ") ? authorization.slice(7) : "";
+  if (!accessToken) return { error: "Authentication required.", status: 401 };
+
+  const publicClient = createClient(url, anonKey, { auth: { persistSession: false } });
+  const { data, error } = await publicClient.auth.getUser(accessToken);
+  if (error || !data.user) return { error: "Invalid or expired session.", status: 401 };
+
+  const adminClient = createClient(url, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data: profile } = await adminClient.from("profiles").select("role").eq("id", data.user.id).single();
+  if (!profile || !["admin", "moderator"].includes(profile.role)) {
+    return { error: "Administrator or moderator access required.", status: 403 };
+  }
+
+  return { error: null, status: 200 };
+}
 
 /**
  * Admin News Translation API
@@ -14,6 +42,11 @@ import { NextResponse } from "next/server";
  */
 export async function POST(request: Request) {
   try {
+    const authorization = await authorize(request);
+    if (authorization.error) {
+      return NextResponse.json({ success: false, message: authorization.error }, { status: authorization.status });
+    }
+
     const body = await request.json();
 
     const title = String(body.title || "").trim();

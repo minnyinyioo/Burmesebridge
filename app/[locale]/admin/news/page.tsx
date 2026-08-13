@@ -168,10 +168,18 @@ function NewsContent() {
       return;
     }
 
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) {
+      alert(t.draftFailed);
+      return;
+    }
+
     const response = await fetch("/api/admin/translate-news", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         title: sourceTitle,
