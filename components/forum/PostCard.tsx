@@ -179,4 +179,3 @@ const avatar = {
   fontWeight: 800,
   fontSize: "18px",
 };
-

@@ -97,4 +97,3 @@ const sendButton = {
   cursor: "pointer",
   fontWeight: 700,
 };
-
