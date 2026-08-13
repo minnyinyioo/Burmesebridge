@@ -14,6 +14,7 @@ import LessonManager from "@/components/admin/LessonManager";
 type RequestItem = {
   id: number;
   payment_reference: string;
+  proof_path: string | null;
   created_at: string;
   product_id: number;
   user_id: string;
@@ -134,6 +135,7 @@ function KnowledgeAdmin() {
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [msg, setMsg] = useState("");
+  const [reviewNotes, setReviewNotes] = useState<Record<number, string>>({});
   const load = useCallback(async () => {
     const [
       { data: requestData, error: requestError },
@@ -142,7 +144,7 @@ function KnowledgeAdmin() {
       supabase
         .from("knowledge_purchase_requests")
         .select(
-          "id,payment_reference,created_at,product_id,user_id,knowledge_products(title_zh,title_my,title_en)",
+          "id,payment_reference,proof_path,created_at,product_id,user_id,knowledge_products(title_zh,title_my,title_en)",
         )
         .eq("status", "pending")
         .order("created_at", { ascending: true }),
@@ -226,10 +228,17 @@ function KnowledgeAdmin() {
   async function review(id: number, status: "approved" | "rejected") {
     const { error } = await supabase
       .from("knowledge_purchase_requests")
-      .update({ status })
+      .update({ status, review_note: reviewNotes[id]?.trim() || null })
       .eq("id", id);
     if (error) setMsg(error.message);
     else await load();
+  }
+  async function openProof(path: string) {
+    const { data, error } = await supabase.storage
+      .from("payment-proofs")
+      .createSignedUrl(path, 300);
+    if (error) setMsg(error.message);
+    else window.open(data.signedUrl, "_blank", "noopener,noreferrer");
   }
   return (
     <div className="adminShell">
@@ -359,11 +368,41 @@ function KnowledgeAdmin() {
                     r.knowledge_products?.title_en}
                 </strong>
                 <p>{r.payment_reference}</p>
+                {r.proof_path && (
+                  <button
+                    type="button"
+                    className="proof-view"
+                    onClick={() => openProof(r.proof_path!)}
+                  >
+                    {locale === "zh"
+                      ? "查看付款凭证"
+                      : locale === "my"
+                        ? "ငွေပေးချေမှု ကြည့်ရန်"
+                        : "View payment proof"}
+                  </button>
+                )}
                 <small>
                   {r.user_id} · {new Date(r.created_at).toLocaleString()}
                 </small>
               </div>
               <div>
+                <textarea
+                  className="review-note-input"
+                  value={reviewNotes[r.id] || ""}
+                  onChange={(event) =>
+                    setReviewNotes((current) => ({
+                      ...current,
+                      [r.id]: event.target.value,
+                    }))
+                  }
+                  placeholder={
+                    locale === "zh"
+                      ? "审核备注（可选）"
+                      : locale === "my"
+                        ? "စစ်ဆေးမှတ်ချက်"
+                        : "Review note (optional)"
+                  }
+                />
                 <button type="button" onClick={() => review(r.id, "approved")}>
                   <Check size={16} />
                   {c.approve}

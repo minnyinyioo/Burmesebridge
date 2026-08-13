@@ -6,6 +6,7 @@ import {
   BookOpen,
   BriefcaseBusiness,
   CalendarCheck,
+  ClipboardList,
   FileText,
   LogOut,
   MessageSquareText,
@@ -152,6 +153,16 @@ export default function MePage() {
             ? "ကျွန်ုပ်၏ သင်တန်းများ"
             : "My courses",
       icon: BookOpen,
+    },
+    {
+      href: `/${locale}/orders`,
+      label:
+        locale === "zh"
+          ? "购买记录"
+          : locale === "my"
+            ? "ဝယ်ယူမှု မှတ်တမ်း"
+            : "Purchase history",
+      icon: ClipboardList,
     },
     { href: `/${locale}/learn`, label: copy.learn, icon: BookOpen },
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },

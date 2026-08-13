@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { BookOpen, CheckCircle2, LockKeyhole, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PaymentMethodsLoader from "@/components/knowledge/PaymentMethodsLoader";
+import PaymentProofInput from "@/components/knowledge/PaymentProofInput";
 
 type Product = {
   id: number;
@@ -85,6 +86,7 @@ export default function KnowledgePage() {
   const [access, setAccess] = useState<number[]>([]);
   const [requests, setRequests] = useState<RequestState[]>([]);
   const [refs, setRefs] = useState<Record<number, string>>({});
+  const [proofs, setProofs] = useState<Record<number, File | null>>({});
   const [userId, setUserId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const load = useCallback(async () => {
@@ -162,6 +164,19 @@ export default function KnowledgePage() {
     }
     const payment_reference = refs[productId]?.trim();
     if (!payment_reference) return;
+    let proof_path: string | null = null;
+    const proof = proofs[productId];
+    if (proof) {
+      const extension = proof.name.split(".").pop()?.toLowerCase() || "jpg";
+      proof_path = `${userId}/${productId}-${crypto.randomUUID()}.${extension}`;
+      const { error: uploadError } = await supabase.storage
+        .from("payment-proofs")
+        .upload(proof_path, proof, { contentType: proof.type });
+      if (uploadError) {
+        setMessage(uploadError.message);
+        return;
+      }
+    }
     const existing = requests.find((item) => item.product_id === productId);
     const query =
       existing?.status === "rejected"
@@ -169,6 +184,7 @@ export default function KnowledgePage() {
             .from("knowledge_purchase_requests")
             .update({
               payment_reference,
+              proof_path,
               status: "pending",
               reviewer_id: null,
               reviewed_at: null,
@@ -179,6 +195,7 @@ export default function KnowledgePage() {
             product_id: productId,
             user_id: userId,
             payment_reference,
+            proof_path,
             status: "pending",
           });
     const { error } = await query;
@@ -267,6 +284,16 @@ export default function KnowledgePage() {
                             }))
                           }
                           placeholder={copy.ref}
+                        />
+                        <PaymentProofInput
+                          locale={locale}
+                          file={proofs[product.id] || null}
+                          onChange={(file) =>
+                            setProofs((current) => ({
+                              ...current,
+                              [product.id]: file,
+                            }))
+                          }
                         />
                         <button>
                           <PlayCircle size={16} />
