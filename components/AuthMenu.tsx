@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut, UserRound } from "lucide-react";
+import { CalendarCheck, ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut, UserRound } from "lucide-react";
 
 export default function AuthMenu({
   locale,
@@ -138,7 +138,7 @@ export default function AuthMenu({
           <MenuLink
             href={`/${locale}/checkin`}
             label={t.checkin}
-            icon={<span>✓</span>}
+            icon={<CalendarCheck size={17} />}
           />
 
           <button

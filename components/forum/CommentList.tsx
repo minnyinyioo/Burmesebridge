@@ -1,3 +1,5 @@
+import { Send } from "lucide-react";
+
 type CommentProfile = {
   display_name?: string | null;
   email?: string | null;
@@ -68,7 +70,7 @@ export default function CommentList({
         />
 
         <button onClick={() => onSubmitComment(postId)} style={sendButton}>
-          {sendText}
+          <Send size={16} />{sendText}
         </button>
       </div>
 
@@ -121,6 +123,9 @@ const commentInput = {
 };
 
 const sendButton = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "6px",
   border: "none",
   background: "#2563eb",
   color: "white",

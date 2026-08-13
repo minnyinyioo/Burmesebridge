@@ -1,7 +1,7 @@
 import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import Link from "next/link";
-import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper } from "lucide-react";
+import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper, Waypoints } from "lucide-react";
 
 export default async function LocaleLayout({
   children,
@@ -45,7 +45,7 @@ export default async function LocaleLayout({
     <div className="site-shell" lang={locale}>
       <nav className="site-nav">
         <Link href={`/${locale}`} className="site-logo">
-          <span className="site-logo-mark">B</span>
+          <span className="site-logo-mark" aria-hidden="true"><Waypoints size={20} /></span>
           <span>Burmese<span>Bridge</span></span>
         </Link>
 

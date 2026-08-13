@@ -1,5 +1,7 @@
 "use client";
 
+import { Send } from "lucide-react";
+
 type PostComposerProps = {
   content: string;
   placeholder: string;
@@ -41,7 +43,7 @@ export default function PostComposer({
         }}
       >
         <button onClick={onSubmit} style={primaryButton}>
-          {buttonText}
+          <Send size={17} />{buttonText}
         </button>
       </div>
     </div>
@@ -60,6 +62,9 @@ const textarea = {
 };
 
 const primaryButton = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "7px",
   padding: "12px 22px",
   borderRadius: "999px",
   border: "none",
