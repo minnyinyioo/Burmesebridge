@@ -2,7 +2,7 @@ import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
-import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper, PlaySquare, Waypoints } from "lucide-react";
+import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, LibraryBig, MessageCircle, Newspaper, PlaySquare, Waypoints } from "lucide-react";
 
 export default async function LocaleLayout({
   children,
@@ -21,6 +21,7 @@ export default async function LocaleLayout({
       jobs: "အလုပ်",
       news: "သတင်း",
       checkin: "ချက်အင်",
+      knowledge: "သင်တန်း",
     },
     zh: {
       home: "首页",
@@ -29,6 +30,7 @@ export default async function LocaleLayout({
       jobs: "工作",
       news: "新闻",
       checkin: "签到",
+      knowledge: "知识付费",
     },
     en: {
       home: "Home",
@@ -37,6 +39,7 @@ export default async function LocaleLayout({
       jobs: "Jobs",
       news: "News",
       checkin: "Check In",
+      knowledge: "Knowledge",
     },
   };
 
@@ -57,6 +60,7 @@ export default async function LocaleLayout({
           <Link href={`/${locale}/news`}><Newspaper size={16} />{t.news}</Link>
           <Link href={`/${locale}/forum`}><MessageCircle size={16} />{t.forum}</Link>
           <Link href={`/${locale}/videos`}><PlaySquare size={16} />{locale === "zh" ? "视频" : locale === "my" ? "ဗီဒီယို" : "Videos"}</Link>
+          <Link href={`/${locale}/knowledge`}><LibraryBig size={16} />{t.knowledge}</Link>
         </div>
 
         <div className="site-actions">

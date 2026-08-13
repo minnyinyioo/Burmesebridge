@@ -10,6 +10,7 @@ import {
   Shield,
   BadgeCheck,
   Video,
+  LibraryBig,
 } from "lucide-react";
 
 /**
@@ -32,6 +33,7 @@ export default function AdminSidebar() {
       ban: "ပိတ်ပင်မှု စင်တာ",
       verification: "အတည်ပြုလျှောက်ထားမှု",
       videos: "ဗီဒီယို",
+      knowledge: "အခပေးသင်တန်း",
     },
     zh: {
       dashboard: "总览",
@@ -41,6 +43,7 @@ export default function AdminSidebar() {
       ban: "封禁中心",
       verification: "身份审核",
       videos: "视频管理",
+      knowledge: "知识付费",
     },
     en: {
       dashboard: "Dashboard",
@@ -50,6 +53,7 @@ export default function AdminSidebar() {
       ban: "Ban Center",
       verification: "Verification",
       videos: "Videos",
+      knowledge: "Knowledge",
     },
   };
 
@@ -82,6 +86,7 @@ export default function AdminSidebar() {
       icon: BadgeCheck,
     },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
+    { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },
     {
       label: t.ban,
       href: `/${locale}/admin/ban`,

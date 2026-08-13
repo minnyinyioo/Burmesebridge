@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
+import RichMediaBlocks, { type MediaBlock } from "@/components/RichMediaBlocks";
 
 type Category = "news" | "jobs" | "learn";
 
@@ -20,6 +21,7 @@ type NewsItem = {
   content_zh: string | null;
   content_en: string | null;
   created_at: string;
+  media_blocks: MediaBlock[] | null;
 };
 
 export default function NewsPage() {
@@ -63,6 +65,7 @@ export default function NewsPage() {
   async function init() {
     if (!mounted) return;
 
+    // eslint-disable-next-line react-hooks/immutability
     await loadItems();
   }
 
@@ -96,7 +99,7 @@ export default function NewsPage() {
     const { data, error } = await supabase
       .from("news")
       .select(
-        "id, category,pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, created_at"
+        "id, category,pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, created_at"
       )
       .eq("status", "published")
       .order("pinned", { ascending: false })
@@ -238,6 +241,8 @@ export default function NewsPage() {
             >
               {getContent(item)}
             </p>
+
+            <RichMediaBlocks blocks={item.media_blocks} />
 
             <div
               style={{

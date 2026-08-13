@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import type { MediaBlock } from "@/components/RichMediaBlocks";
+import { getYouTubeId } from "@/lib/youtube";
 
 type Category = "news" | "jobs" | "learn";
 
@@ -21,6 +23,7 @@ type NewsItem = {
   content_zh: string | null;
   content_en: string | null;
   created_at: string;
+  media_blocks: MediaBlock[] | null;
 };
 
 export default function AdminNewsPage() {
@@ -59,6 +62,8 @@ function NewsContent() {
       pinned: "ထိပ်ဆုံးပို့စ်",
       featured: "အကြံပြု",
       hot: "လူကြိုက်များ",
+      media: "ပုံနှင့် ဗီဒီယို",
+      image: "ပုံတင်ရန် (5MB အောက်)", video: "YouTube လင့်ခ်", caption: "စာတန်း", addVideo: "ဗီဒီယိုထည့်ရန်", removeMedia: "ဖယ်ရှားရန်", uploadFailed: "ပုံတင်၍ မရပါ",
     },
     zh: {
       pageTitle: "发布信息",
@@ -82,6 +87,7 @@ function NewsContent() {
       pinned: "置顶",
       featured: "推荐",
       hot: "热门",
+      media: "图片与视频", image: "上传图片（不超过 5MB）", video: "YouTube 链接", caption: "图片/视频字幕", addVideo: "添加视频", removeMedia: "移除", uploadFailed: "图片上传失败",
     },
     en: {
       pageTitle: "Publish",
@@ -105,6 +111,7 @@ function NewsContent() {
       pinned: "Pinned",
       featured: "Featured",
       hot: "Hot",
+      media: "Images and video", image: "Upload image (max 5MB)", video: "YouTube link", caption: "Image/video caption", addVideo: "Add video", removeMedia: "Remove", uploadFailed: "Image upload failed",
     },
   };
 
@@ -124,6 +131,10 @@ function NewsContent() {
   const [contentMy, setContentMy] = useState("");
   const [contentZh, setContentZh] = useState("");
   const [contentEn, setContentEn] = useState("");
+  const [mediaBlocks, setMediaBlocks] = useState<MediaBlock[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [mediaCaption, setMediaCaption] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadItems();
@@ -133,7 +144,7 @@ function NewsContent() {
     const { data, error } = await supabase
       .from("news")
       .select(
-        "id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, created_at"
+        "id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, created_at"
       )
       .order("pinned", { ascending: false })
       .order("hot", { ascending: false })
@@ -216,6 +227,7 @@ function NewsContent() {
       content_my: contentMy || fallbackContent,
       content_zh: contentZh || fallbackContent,
       content_en: contentEn || fallbackContent,
+      media_blocks: mediaBlocks,
     });
 
     if (error) {
@@ -234,8 +246,29 @@ function NewsContent() {
     setContentMy("");
     setContentZh("");
     setContentEn("");
+    setMediaBlocks([]);
 
     await loadItems();
+  }
+
+  async function uploadImage(file?: File) {
+    if (!file || file.size > 5 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
+      alert(t.uploadFailed); return;
+    }
+    setUploading(true);
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `news/${crypto.randomUUID()}.${extension}`;
+    const { error } = await supabase.storage.from("content-media").upload(path, file, { contentType: file.type, upsert: false });
+    if (error) { setUploading(false); alert(error.message); return; }
+    const { data } = supabase.storage.from("content-media").getPublicUrl(path);
+    setMediaBlocks((current) => [...current, { type: "image", url: data.publicUrl, caption: mediaCaption.trim() }]);
+    setMediaCaption(""); setUploading(false);
+  }
+
+  function addVideo() {
+    if (!getYouTubeId(videoUrl)) return alert(t.video);
+    setMediaBlocks((current) => [...current, { type: "video", url: videoUrl.trim(), caption: mediaCaption.trim() }]);
+    setVideoUrl(""); setMediaCaption("");
   }
 
   async function deleteNews(newsId: number) {
@@ -327,6 +360,17 @@ function NewsContent() {
             placeholder={t.contentMy}
             style={textarea}
           />
+
+          <div className="rich-editor">
+            <strong>{t.media}</strong>
+            <input value={mediaCaption} onChange={(event) => setMediaCaption(event.target.value)} placeholder={t.caption} style={input} />
+            <div className="rich-editor-actions">
+              <label className="rich-upload-button">{uploading ? "…" : t.image}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={uploading} onChange={(event) => uploadImage(event.target.files?.[0])} /></label>
+              <input value={videoUrl} onChange={(event) => setVideoUrl(event.target.value)} placeholder={t.video} style={{...input, margin: 0}} />
+              <button type="button" onClick={addVideo} style={button}>{t.addVideo}</button>
+            </div>
+            {mediaBlocks.map((block, index) => <div className="rich-editor-item" key={`${block.url}-${index}`}><span>{block.type === "image" ? "🖼" : "▶"} {block.caption || block.url}</span><button type="button" onClick={() => setMediaBlocks((current) => current.filter((_, itemIndex) => itemIndex !== index))}>{t.removeMedia}</button></div>)}
+          </div>
 
           <input
             value={titleZh}
