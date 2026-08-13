@@ -121,20 +121,27 @@ export default async function LocaleLayout({
               <h3>BurmeseBridge</h3>
               <p>{locale === "zh" ? "连接缅甸与中文世界的学习、资讯和社区平台。" : locale === "my" ? "မြန်မာနှင့် တရုတ်ဘာသာကမ္ဘာကို ချိတ်ဆက်ပေးသည့် သင်ယူမှု၊ သတင်းနှင့် community platform။" : "A learning, information, and community platform connecting Myanmar and the Chinese-speaking world."}</p>
             </div>
-            <nav className="site-footer-links" aria-label="Support and information">
-              <strong>{locale === "zh" ? "支持与信息" : locale === "my" ? "အကူအညီနှင့် အချက်အလက်" : "Support & information"}</strong>
-              <Link href={`/${locale}/feedback`}>{locale === "zh" ? "反馈与报告 BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback & bug report"}</Link>
+            <nav className="site-footer-column" aria-label="Platform">
+              <strong>{locale === "zh" ? "平台" : locale === "my" ? "Platform" : "Platform"}</strong>
+              <Link href={`/${locale}/learn`}>{locale === "zh" ? "学习" : locale === "my" ? "လေ့လာရန်" : "Learn"}</Link>
+              <Link href={`/${locale}/news`}>{locale === "zh" ? "新闻" : locale === "my" ? "သတင်း" : "News"}</Link>
+              <Link href={`/${locale}/forum`}>{locale === "zh" ? "社区" : locale === "my" ? "Community" : "Community"}</Link>
+              <Link href={`/${locale}/knowledge`}>{locale === "zh" ? "知识内容" : locale === "my" ? "သင်တန်း" : "Knowledge"}</Link>
+            </nav>
+            <nav className="site-footer-column" aria-label="Support and legal">
+              <strong>{locale === "zh" ? "支持" : locale === "my" ? "အကူအညီ" : "Support"}</strong>
+              <Link href={`/${locale}/feedback`}>{locale === "zh" ? "反馈与报告 BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback & bugs"}</Link>
               <Link href={`/${locale}/privacy`}>{locale === "zh" ? "隐私政策" : locale === "my" ? "ကိုယ်ရေးအချက်အလက် မူဝါဒ" : "Privacy policy"}</Link>
               <Link href={`/${locale}/terms`}>{locale === "zh" ? "服务条款" : locale === "my" ? "ဝန်ဆောင်မှု စည်းမျဉ်းများ" : "Terms of service"}</Link>
               <Link href={`/${locale}/data-deletion`}>{locale === "zh" ? "用户数据删除" : locale === "my" ? "အသုံးပြုသူဒေတာ ဖျက်ရန်" : "User data deletion"}</Link>
             </nav>
-          </div>
-          <div className="site-footer-social">
-            <span>{locale === "zh" ? "关注我们" : locale === "my" ? "ကျွန်ုပ်တို့ကို Follow လုပ်ရန်" : "Follow BurmeseBridge"}</span>
-            <SocialFooter />
+            <div className="site-footer-connect">
+              <strong>{locale === "zh" ? "关注我们" : locale === "my" ? "Follow လုပ်ရန်" : "Connect"}</strong>
+              <SocialFooter />
+            </div>
           </div>
           <div className="site-footer-bottom">
-            <div>© 2026 BurmeseBridge</div>
+            <div>© 2026 BurmeseBridge · {locale === "zh" ? "保留所有权利" : locale === "my" ? "မူပိုင်ခွင့်အားလုံး ရယူထားသည်" : "All rights reserved"}</div>
             <nav className="footer-legal" aria-label="Legal">
               <Link href={`/${locale}/privacy`}>{locale === "zh" ? "隐私政策" : locale === "my" ? "ကိုယ်ရေးမူဝါဒ" : "Privacy"}</Link>
               <Link href={`/${locale}/terms`}>{locale === "zh" ? "服务条款" : locale === "my" ? "ဝန်ဆောင်မှုစည်းမျဉ်း" : "Terms"}</Link>
