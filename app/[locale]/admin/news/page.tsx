@@ -363,7 +363,7 @@ function NewsContent() {
               style={{
                 ...button,
                 background: "var(--brand-accent)",
-                color: "#30240e",
+                color: "#082e31",
               }}
             >
               {t.generateDraft}

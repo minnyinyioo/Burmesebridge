@@ -292,7 +292,7 @@ export default function HomePage() {
       <section className="home-support-grid">
         <div className="feedCard">
           <div className="small-head">
-            <CalendarCheck size={22} color="#c8a65b" />
+            <CalendarCheck size={22} color="var(--brand-accent)" />
             <strong>{t.checkinTitle}</strong>
           </div>
           <p className="muted-copy">{t.checkinText}</p>
@@ -304,7 +304,7 @@ export default function HomePage() {
 
         <div className="feedCard">
           <div className="small-head">
-            <Crown size={22} color="#c8a65b" />
+            <Crown size={22} color="var(--brand-accent)" />
             <strong>{t.memberTitle}</strong>
           </div>
           <p className="muted-copy">{t.memberText}</p>
