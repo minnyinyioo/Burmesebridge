@@ -4,20 +4,284 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { BookOpen, CheckCircle2, LockKeyhole, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import PaymentMethodsLoader from "@/components/knowledge/PaymentMethodsLoader";
 
-type Product = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; description_my:string|null; description_zh:string|null; description_en:string|null; cover_url:string|null; preview_youtube_id:string|null; price:number; currency:string };
-type ProductContent = { product_id:number; content_my:string|null; content_zh:string|null; content_en:string|null };
-type RequestState = { product_id:number; status:string };
+type Product = {
+  id: number;
+  title_my: string | null;
+  title_zh: string | null;
+  title_en: string | null;
+  description_my: string | null;
+  description_zh: string | null;
+  description_en: string | null;
+  cover_url: string | null;
+  preview_youtube_id: string | null;
+  price: number;
+  currency: string;
+};
+type ProductContent = {
+  product_id: number;
+  content_my: string | null;
+  content_zh: string | null;
+  content_en: string | null;
+};
+type RequestState = { product_id: number; status: string };
 
 export default function KnowledgePage() {
   const locale = String(useParams().locale || "my");
-  const copy = locale === "zh" ? { title:"知识课堂", intro:"免费课程直接学习；付费内容先试看，付款后由管理员确认开通。", free:"免费", paid:"付费内容", learn:"开始学习", unlocked:"已解锁", ref:"付款方式或交易参考号", request:"提交开通申请", login:"请先登录后申请", pending:"审核中", approved:"已开通", rejected:"申请未通过，请联系管理员", empty:"课程正在准备中" } : locale === "my" ? { title:"အသိပညာ သင်တန်းများ", intro:"အခမဲ့သင်ခန်းစာများကို တိုက်ရိုက်လေ့လာပြီး အခပေးအကြောင်းအရာကို အစမ်းကြည့်ပြီးမှ ဖွင့်နိုင်ပါသည်။", free:"အခမဲ့", paid:"အခပေး", learn:"လေ့လာရန်", unlocked:"ဖွင့်ပြီး", ref:"ငွေပေးချေမှု အချက်အလက်", request:"ဖွင့်ရန် တောင်းဆိုမည်", login:"အရင် အကောင့်ဝင်ပါ", pending:"စစ်ဆေးနေသည်", approved:"ဖွင့်ပြီး", rejected:"တောင်းဆိုမှု မအောင်မြင်ပါ", empty:"သင်တန်းများ ပြင်ဆင်နေပါသည်" } : { title:"Knowledge courses", intro:"Learn free courses immediately. Preview paid content and request access after payment.", free:"Free", paid:"Paid", learn:"Start learning", unlocked:"Unlocked", ref:"Payment method or transaction reference", request:"Request access", login:"Sign in to request access", pending:"Under review", approved:"Unlocked", rejected:"Request rejected; contact an administrator", empty:"Courses are being prepared" };
-  const [products,setProducts]=useState<Product[]>([]); const [contents,setContents]=useState<ProductContent[]>([]); const [access,setAccess]=useState<number[]>([]); const [requests,setRequests]=useState<RequestState[]>([]); const [refs,setRefs]=useState<Record<number,string>>({}); const [userId,setUserId]=useState<string|null>(null); const [message,setMessage]=useState("");
-  const load=useCallback(async()=>{ const [{data:productData},{data:{user}}]=await Promise.all([supabase.from("knowledge_products").select("id,title_my,title_zh,title_en,description_my,description_zh,description_en,cover_url,preview_youtube_id,price,currency").eq("status","published").order("created_at",{ascending:false}),supabase.auth.getUser()]); setProducts((productData||[]) as Product[]); setUserId(user?.id||null); const contentPromise=supabase.from("knowledge_product_content").select("product_id,content_my,content_zh,content_en"); if(user){ const [{data:a},{data:r},{data:body}]=await Promise.all([supabase.from("knowledge_access").select("product_id").eq("user_id",user.id),supabase.from("knowledge_purchase_requests").select("product_id,status").eq("user_id",user.id),contentPromise]); setAccess((a||[]).map(item=>item.product_id)); setRequests((r||[]) as RequestState[]); setContents((body||[]) as ProductContent[]); } else { const {data:body}=await contentPromise; setContents((body||[]) as ProductContent[]); } },[]);
+  const copy =
+    locale === "zh"
+      ? {
+          title: "知识课堂",
+          intro: "免费课程直接学习；付费内容先试看，付款后由管理员确认开通。",
+          free: "免费",
+          paid: "付费内容",
+          learn: "开始学习",
+          unlocked: "已解锁",
+          ref: "付款方式或交易参考号",
+          request: "提交开通申请",
+          login: "请先登录后申请",
+          pending: "审核中",
+          approved: "已开通",
+          rejected: "申请未通过，请联系管理员",
+          empty: "课程正在准备中",
+        }
+      : locale === "my"
+        ? {
+            title: "အသိပညာ သင်တန်းများ",
+            intro:
+              "အခမဲ့သင်ခန်းစာများကို တိုက်ရိုက်လေ့လာပြီး အခပေးအကြောင်းအရာကို အစမ်းကြည့်ပြီးမှ ဖွင့်နိုင်ပါသည်။",
+            free: "အခမဲ့",
+            paid: "အခပေး",
+            learn: "လေ့လာရန်",
+            unlocked: "ဖွင့်ပြီး",
+            ref: "ငွေပေးချေမှု အချက်အလက်",
+            request: "ဖွင့်ရန် တောင်းဆိုမည်",
+            login: "အရင် အကောင့်ဝင်ပါ",
+            pending: "စစ်ဆေးနေသည်",
+            approved: "ဖွင့်ပြီး",
+            rejected: "တောင်းဆိုမှု မအောင်မြင်ပါ",
+            empty: "သင်တန်းများ ပြင်ဆင်နေပါသည်",
+          }
+        : {
+            title: "Knowledge courses",
+            intro:
+              "Learn free courses immediately. Preview paid content and request access after payment.",
+            free: "Free",
+            paid: "Paid",
+            learn: "Start learning",
+            unlocked: "Unlocked",
+            ref: "Payment method or transaction reference",
+            request: "Request access",
+            login: "Sign in to request access",
+            pending: "Under review",
+            approved: "Unlocked",
+            rejected: "Request rejected; contact an administrator",
+            empty: "Courses are being prepared",
+          };
+  const [products, setProducts] = useState<Product[]>([]);
+  const [contents, setContents] = useState<ProductContent[]>([]);
+  const [access, setAccess] = useState<number[]>([]);
+  const [requests, setRequests] = useState<RequestState[]>([]);
+  const [refs, setRefs] = useState<Record<number, string>>({});
+  const [userId, setUserId] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
+  const load = useCallback(async () => {
+    const [
+      { data: productData },
+      {
+        data: { user },
+      },
+    ] = await Promise.all([
+      supabase
+        .from("knowledge_products")
+        .select(
+          "id,title_my,title_zh,title_en,description_my,description_zh,description_en,cover_url,preview_youtube_id,price,currency",
+        )
+        .eq("status", "published")
+        .order("created_at", { ascending: false }),
+      supabase.auth.getUser(),
+    ]);
+    setProducts((productData || []) as Product[]);
+    setUserId(user?.id || null);
+    const contentPromise = supabase
+      .from("knowledge_product_content")
+      .select("product_id,content_my,content_zh,content_en");
+    if (user) {
+      const [{ data: a }, { data: r }, { data: body }] = await Promise.all([
+        supabase
+          .from("knowledge_access")
+          .select("product_id")
+          .eq("user_id", user.id),
+        supabase
+          .from("knowledge_purchase_requests")
+          .select("product_id,status")
+          .eq("user_id", user.id),
+        contentPromise,
+      ]);
+      setAccess((a || []).map((item) => item.product_id));
+      setRequests((r || []) as RequestState[]);
+      setContents((body || []) as ProductContent[]);
+    } else {
+      const { data: body } = await contentPromise;
+      setContents((body || []) as ProductContent[]);
+    }
+  }, []);
   // Initial remote fetch; state updates happen after Supabase resolves.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(()=>{ void load(); },[load]);
-  const localized=(item:Product|ProductContent, field:"title"|"description"|"content")=>{ const record=item as unknown as Record<string,string|null>; const values=locale==="zh"?[record[`${field}_zh`],record[`${field}_my`],record[`${field}_en`]]:locale==="en"?[record[`${field}_en`],record[`${field}_my`],record[`${field}_zh`]]:[record[`${field}_my`],record[`${field}_zh`],record[`${field}_en`]]; return values.find(Boolean)||""; };
-  async function requestAccess(event:FormEvent,productId:number){ event.preventDefault(); if(!userId){setMessage(copy.login);return;} const payment_reference=refs[productId]?.trim(); if(!payment_reference)return; const existing=requests.find(item=>item.product_id===productId); const query=existing?.status==="rejected"?supabase.from("knowledge_purchase_requests").update({payment_reference,status:"pending",reviewer_id:null,reviewed_at:null}).eq("product_id",productId).eq("user_id",userId):supabase.from("knowledge_purchase_requests").insert({product_id:productId,user_id:userId,payment_reference,status:"pending"}); const {error}=await query; if(error)setMessage(error.message); else await load(); }
-  return <main className="knowledge-shell"><header className="knowledge-hero"><span><BookOpen size={18}/>{copy.paid}</span><h1>{copy.title}</h1><p>{copy.intro}</p></header>{message&&<p className="knowledge-message">{message}</p>}<div className="knowledge-grid">{products.length===0&&<div className="feedCard">{copy.empty}</div>}{products.map(product=>{const unlocked=Number(product.price)===0||access.includes(product.id);const request=requests.find(item=>item.product_id===product.id);const body=contents.find(item=>item.product_id===product.id);const canRequest=!request||request.status==="rejected";return <article className="knowledge-card" key={product.id}>{product.cover_url&&<div className="knowledge-cover" style={{backgroundImage:`url(${product.cover_url})`}}/>}<div className="knowledge-card-body"><div className="knowledge-price">{Number(product.price)===0?copy.free:`${Number(product.price).toLocaleString()} ${product.currency}`}</div><h2>{localized(product,"title")}</h2><p>{localized(product,"description")}</p>{product.preview_youtube_id&&<div className="rich-video-frame knowledge-preview"><iframe src={`https://www.youtube-nocookie.com/embed/${product.preview_youtube_id}?rel=0`} title={localized(product,"title")} loading="lazy" allowFullScreen/></div>}{unlocked&&body?<div className="knowledge-content"><strong><CheckCircle2 size={17}/>{Number(product.price)===0?copy.learn:copy.unlocked}</strong><p>{localized(body,"content")}</p></div>:<div className="knowledge-locked"><LockKeyhole size={20}/><strong>{copy.paid}</strong>{request&&<p className={`request-${request.status}`}>{request.status==="pending"?copy.pending:request.status==="approved"?copy.approved:copy.rejected}</p>}{canRequest&&<form onSubmit={event=>requestAccess(event,product.id)}><input value={refs[product.id]||""} onChange={event=>setRefs(current=>({...current,[product.id]:event.target.value}))} placeholder={copy.ref}/><button><PlayCircle size={16}/>{copy.request}</button></form>}</div>}</div></article>})}</div></main>;
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load();
+  }, [load]);
+  const localized = (
+    item: Product | ProductContent,
+    field: "title" | "description" | "content",
+  ) => {
+    const record = item as unknown as Record<string, string | null>;
+    const values =
+      locale === "zh"
+        ? [record[`${field}_zh`], record[`${field}_my`], record[`${field}_en`]]
+        : locale === "en"
+          ? [
+              record[`${field}_en`],
+              record[`${field}_my`],
+              record[`${field}_zh`],
+            ]
+          : [
+              record[`${field}_my`],
+              record[`${field}_zh`],
+              record[`${field}_en`],
+            ];
+    return values.find(Boolean) || "";
+  };
+  async function requestAccess(event: FormEvent, productId: number) {
+    event.preventDefault();
+    if (!userId) {
+      setMessage(copy.login);
+      return;
+    }
+    const payment_reference = refs[productId]?.trim();
+    if (!payment_reference) return;
+    const existing = requests.find((item) => item.product_id === productId);
+    const query =
+      existing?.status === "rejected"
+        ? supabase
+            .from("knowledge_purchase_requests")
+            .update({
+              payment_reference,
+              status: "pending",
+              reviewer_id: null,
+              reviewed_at: null,
+            })
+            .eq("product_id", productId)
+            .eq("user_id", userId)
+        : supabase
+            .from("knowledge_purchase_requests")
+            .insert({
+              product_id: productId,
+              user_id: userId,
+              payment_reference,
+              status: "pending",
+            });
+    const { error } = await query;
+    if (error) setMessage(error.message);
+    else await load();
+  }
+  return (
+    <main className="knowledge-shell">
+      <header className="knowledge-hero">
+        <span>
+          <BookOpen size={18} />
+          {copy.paid}
+        </span>
+        <h1>{copy.title}</h1>
+        <p>{copy.intro}</p>
+      </header>
+      <PaymentMethodsLoader locale={locale} />
+      {message && <p className="knowledge-message">{message}</p>}
+      <div className="knowledge-grid">
+        {products.length === 0 && <div className="feedCard">{copy.empty}</div>}
+        {products.map((product) => {
+          const unlocked =
+            Number(product.price) === 0 || access.includes(product.id);
+          const request = requests.find(
+            (item) => item.product_id === product.id,
+          );
+          const body = contents.find((item) => item.product_id === product.id);
+          const canRequest = !request || request.status === "rejected";
+          return (
+            <article className="knowledge-card" key={product.id}>
+              {product.cover_url && (
+                <div
+                  className="knowledge-cover"
+                  style={{ backgroundImage: `url(${product.cover_url})` }}
+                />
+              )}
+              <div className="knowledge-card-body">
+                <div className="knowledge-price">
+                  {Number(product.price) === 0
+                    ? copy.free
+                    : `${Number(product.price).toLocaleString()} ${product.currency}`}
+                </div>
+                <h2>{localized(product, "title")}</h2>
+                <p>{localized(product, "description")}</p>
+                {product.preview_youtube_id && (
+                  <div className="rich-video-frame knowledge-preview">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${product.preview_youtube_id}?rel=0`}
+                      title={localized(product, "title")}
+                      loading="lazy"
+                      allowFullScreen
+                    />
+                  </div>
+                )}
+                {unlocked && body ? (
+                  <div className="knowledge-content">
+                    <strong>
+                      <CheckCircle2 size={17} />
+                      {Number(product.price) === 0 ? copy.learn : copy.unlocked}
+                    </strong>
+                    <p>{localized(body, "content")}</p>
+                  </div>
+                ) : (
+                  <div className="knowledge-locked">
+                    <LockKeyhole size={20} />
+                    <strong>{copy.paid}</strong>
+                    {request && (
+                      <p className={`request-${request.status}`}>
+                        {request.status === "pending"
+                          ? copy.pending
+                          : request.status === "approved"
+                            ? copy.approved
+                            : copy.rejected}
+                      </p>
+                    )}
+                    {canRequest && (
+                      <form
+                        onSubmit={(event) => requestAccess(event, product.id)}
+                      >
+                        <input
+                          value={refs[product.id] || ""}
+                          onChange={(event) =>
+                            setRefs((current) => ({
+                              ...current,
+                              [product.id]: event.target.value,
+                            }))
+                          }
+                          placeholder={copy.ref}
+                        />
+                        <button>
+                          <PlayCircle size={16} />
+                          {copy.request}
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </main>
+  );
 }
