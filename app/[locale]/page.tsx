@@ -4,13 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
-  Briefcase,
-  CalendarCheck,
   ChevronRight,
   Crown,
-  GraduationCap,
   Globe,
-  MessageSquare,
   Newspaper,
   ShieldCheck,
   Sparkles,
@@ -212,15 +208,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-quick-grid" aria-label="Quick links">
-        <HomeLink href={`/${locale}/learn`} icon={<GraduationCap />} label={t.learn} />
-        <HomeLink href={`/${locale}/jobs`} icon={<Briefcase />} label={t.jobs} />
-        <HomeLink href={`/${locale}/news`} icon={<Newspaper />} label={t.news} />
-        <HomeLink href={`/${locale}/forum`} icon={<MessageSquare />} label={t.forum} />
-        <HomeLink href={`/${locale}/checkin`} icon={<CalendarCheck />} label={t.checkin} />
-        <HomeLink href={`/${locale}/forum`} icon={<Users />} label={t.community} />
-      </section>
-
       <ContentSection title={t.pinned} icon={<ShieldCheck size={20} />}>
         {pinnedItems.length === 0 ? (
           <Empty text={t.empty} />
@@ -289,44 +276,9 @@ export default function HomePage() {
         )}
       </ContentSection>
 
-      <section className="home-support-grid">
-        <div className="feedCard">
-          <div className="small-head">
-            <CalendarCheck size={22} color="var(--brand-accent)" />
-            <strong>{t.checkinTitle}</strong>
-          </div>
-          <p className="muted-copy">{t.checkinText}</p>
-          <Link href={`/${locale}/checkin`} className="text-link">
-            {t.go}
-            <ChevronRight size={15} />
-          </Link>
-        </div>
-
-        <div className="feedCard">
-          <div className="small-head">
-            <Crown size={22} color="var(--brand-accent)" />
-            <strong>{t.memberTitle}</strong>
-          </div>
-          <p className="muted-copy">{t.memberText}</p>
-          <Link href={`/${locale}/learn`} className="text-link">
-            {t.go}
-            <ChevronRight size={15} />
-          </Link>
-        </div>
-      </section>
     </main>
   );
 }
-function HomeLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-  return (
-    <Link href={href} className="home-quick-link">
-      <span>{icon}</span>
-      <strong>{label}</strong>
-      <ChevronRight size={16} />
-    </Link>
-  );
-}
-
 function ContentSection({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <section>
