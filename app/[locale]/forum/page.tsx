@@ -395,6 +395,7 @@ export default function ForumPage() {
           liked={!!myLikes[post.id]}
           comments={comments[post.id] || []}
           commentText={commentText[post.id] || ""}
+          locale={locale}
           labels={{
             anonymous: t.anonymous,
             like: t.like,

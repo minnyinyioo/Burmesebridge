@@ -4,6 +4,7 @@ import { Heart, MessageCircle } from "lucide-react";
 import Badge, { type BadgeType } from "@/components/Badges";
 import PostActions from "@/components/ui/PostActions";
 import CommentList, { type CommentItem } from "./CommentList";
+import ReportButton from "./ReportButton";
 
 type Profile = {
   display_name?: string | null;
@@ -29,6 +30,7 @@ type PostCardProps = {
   liked: boolean;
   comments: CommentItem[];
   commentText: string;
+  locale: string;
   labels: {
     anonymous: string;
     like: string;
@@ -69,6 +71,7 @@ export default function PostCard({
   liked,
   comments,
   commentText,
+  locale,
   labels,
   onLike,
   onShare,
@@ -131,6 +134,7 @@ export default function PostCard({
             onShare={() => onShare(post.id)}
             onDelete={() => onDelete(post.id)}
           />
+          {currentUserId !== post.user_id && <ReportButton postId={post.id} locale={locale} />}
 
           <CommentList
             postId={post.id}

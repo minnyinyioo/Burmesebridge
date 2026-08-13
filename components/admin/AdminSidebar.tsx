@@ -11,6 +11,7 @@ import {
   BadgeCheck,
   Video,
   LibraryBig,
+  Flag,
 } from "lucide-react";
 
 /**
@@ -34,6 +35,7 @@ export default function AdminSidebar() {
       verification: "အတည်ပြုလျှောက်ထားမှု",
       videos: "ဗီဒီယို",
       knowledge: "အခပေးသင်တန်း",
+      reports: "တိုင်ကြားချက်များ",
     },
     zh: {
       dashboard: "总览",
@@ -44,6 +46,7 @@ export default function AdminSidebar() {
       verification: "身份审核",
       videos: "视频管理",
       knowledge: "知识付费",
+      reports: "举报审核",
     },
     en: {
       dashboard: "Dashboard",
@@ -54,6 +57,7 @@ export default function AdminSidebar() {
       verification: "Verification",
       videos: "Videos",
       knowledge: "Knowledge",
+      reports: "Reports",
     },
   };
 
@@ -87,6 +91,7 @@ export default function AdminSidebar() {
     },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
     { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },
+    { label: t.reports, href: `/${locale}/admin/reports`, icon: Flag },
     {
       label: t.ban,
       href: `/${locale}/admin/ban`,
