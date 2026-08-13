@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Check, Clock3, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -14,6 +14,8 @@ type RequestRow = {
   evidence: string;
   status: "pending" | "approved" | "rejected";
   created_at: string;
+  reviewed_at: string | null;
+  review_note: string | null;
   profiles?: { display_name: string | null; email: string | null } | null;
 };
 
@@ -28,32 +30,32 @@ function VerificationContent() {
   const [filter, setFilter] = useState("pending");
   const [busy, setBusy] = useState<number | null>(null);
   const [message, setMessage] = useState("");
+  const [notes, setNotes] = useState<Record<number, string>>({});
 
   const copy = locale === "zh" ? {
-    title: "身份审核", subtitle: "审核教师、企业和作者的专业身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", teacher: "教师", company: "企业", author: "作者",
+    title: "身份审核", subtitle: "审核教师、企业和作者的专业身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", teacher: "教师", company: "企业", author: "作者", note: "审核备注；拒绝时必须填写原因", reasonRequired: "请填写拒绝原因", reviewed: "审核时间",
   } : locale === "en" ? {
-    title: "Identity verification", subtitle: "Review teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", teacher: "Teacher", company: "Company", author: "Author",
+    title: "Identity verification", subtitle: "Review teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", teacher: "Teacher", company: "Company", author: "Author", note: "Review note; a reason is required when rejecting", reasonRequired: "Enter a rejection reason", reviewed: "Reviewed",
   } : {
-    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ",
+    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", note: "စစ်ဆေးမှတ်ချက်၊ ပယ်ချလျှင် အကြောင်းပြချက် လိုအပ်သည်", reasonRequired: "ပယ်ချရသည့် အကြောင်းပြချက် ရေးပါ", reviewed: "စစ်ဆေးချိန်",
   };
 
-  async function loadRequests(nextFilter = filter) {
+  const loadRequests = useCallback(async (nextFilter = filter) => {
     const { data, error } = await supabase.from("verification_requests")
-      .select("id, user_id, requested_badge, evidence, status, created_at, profiles(display_name, email)")
+      .select("id, user_id, requested_badge, evidence, status, created_at, reviewed_at, review_note, profiles(display_name, email)")
       .eq("status", nextFilter).order("created_at", { ascending: true });
     if (error) { setMessage(error.message); return; }
     setRequests((data || []) as unknown as RequestRow[]);
-  }
+  }, [filter]);
 
   useEffect(() => {
-    // Remote synchronization after the component mounts.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadRequests();
-  }, []);
+  }, [loadRequests]);
 
   async function review(id: number, decision: "approved" | "rejected") {
     setBusy(id); setMessage("");
-    const note = decision === "rejected" ? window.prompt("Review note (optional)") : null;
+    const note = notes[id]?.trim() || null;
+    if (decision === "rejected" && !note) { setMessage(copy.reasonRequired); setBusy(null); return; }
     const { error } = await supabase.rpc("review_verification_request", { request_id: id, decision, note });
     setBusy(null);
     if (error) { setMessage(error.message); return; }
@@ -70,8 +72,8 @@ function VerificationContent() {
       <div className="verification-list">
         {requests.length === 0 && <div className="feedCard home-empty">{copy.empty}</div>}
         {requests.map((request) => <article className="feedCard verification-card" key={request.id}>
-          <div><span className="verification-type">{copy[request.requested_badge]}</span><h2>{request.profiles?.display_name || request.profiles?.email || request.user_id}</h2><p>{request.evidence}</p><time>{new Date(request.created_at).toLocaleString()}</time></div>
-          {request.status === "pending" && <div className="verification-actions"><button disabled={busy === request.id} onClick={() => review(request.id, "approved")}><Check size={16} />{copy.approve}</button><button className="reject" disabled={busy === request.id} onClick={() => review(request.id, "rejected")}><X size={16} />{copy.reject}</button></div>}
+          <div className="verification-detail"><span className="verification-type">{copy[request.requested_badge]}</span><h2>{request.profiles?.display_name || request.profiles?.email || request.user_id}</h2><p>{request.evidence}</p><time>{new Date(request.created_at).toLocaleString()}</time>{request.review_note && <blockquote>{request.review_note}</blockquote>}{request.reviewed_at && <time>{copy.reviewed}: {new Date(request.reviewed_at).toLocaleString()}</time>}</div>
+          {request.status === "pending" && <div className="verification-review"><textarea value={notes[request.id] || ""} onChange={(event) => setNotes((current) => ({ ...current, [request.id]: event.target.value }))} placeholder={copy.note} rows={3} /><div className="verification-actions"><button disabled={busy === request.id} onClick={() => review(request.id, "approved")}><Check size={16} />{copy.approve}</button><button className="reject" disabled={busy === request.id} onClick={() => review(request.id, "rejected")}><X size={16} />{copy.reject}</button></div></div>}
         </article>)}
       </div>
     </div></div>
