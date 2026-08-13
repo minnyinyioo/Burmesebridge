@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldAlert } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
 import RichMediaBlocks, { type MediaBlock } from "@/components/RichMediaBlocks";
@@ -27,13 +27,13 @@ export default function JobsPage() {
   const locale = String(params.locale || "my");
 
   const t = {
-    my: { title: "အလုပ်အကိုင်", empty: "အလုပ်အကိုင် အချက်အလက် မရှိသေးပါ", detail: "အသေးစိတ်ဖတ်ရန်" },
-    zh: { title: "工作信息", empty: "暂无工作信息", detail: "查看详情" },
-    en: { title: "Jobs", empty: "No jobs yet", detail: "Read more" },
+    my: { title: "အလုပ်အကိုင်", empty: "အလုပ်အကိုင် အချက်အလက် မရှိသေးပါ", detail: "အသေးစိတ်ဖတ်ရန်", safetyTitle:"အလုပ်ရှာဖွေသူ လုံခြုံရေး", safety:"BurmeseBridge သည် အလုပ်ရှာဖွေရေးအေဂျင်စီ မဟုတ်ပါ။ ပိုက်ဆံကြိုတောင်းခြင်း၊ passport/ID သိမ်းခြင်း၊ ခြိမ်းခြောက်ခြင်း၊ သွားလာခွင့်ကန့်သတ်ခြင်း သို့မဟုတ် ဖော်ပြချက်နှင့်မတူသောအလုပ်ကို မယုံကြည်ပါနှင့်။ အလုပ်ရှင်နှင့် စာချုပ်ကို ကိုယ်တိုင်စစ်ဆေးပြီး သံသယရှိပါက report လုပ်ပါ။" },
+    zh: { title: "工作信息", empty: "暂无工作信息", detail: "查看详情", safetyTitle:"求职安全提醒", safety:"BurmeseBridge 不是劳务中介，也不担保职位真实性。不要支付不明招聘费，不要交出护照或身份证；遇到限制人身自由、威胁、强迫劳动、实际工作与描述不符或疑似人口贩卖，请立即停止联系并向平台及当地执法机构举报。" },
+    en: { title: "Jobs", empty: "No jobs yet", detail: "Read more", safetyTitle:"Jobseeker safety", safety:"BurmeseBridge is not a recruitment agency and does not guarantee listings. Do not pay unexplained recruitment fees or surrender passports/IDs. Stop and report threats, restricted movement, forced labour, materially different work, or suspected human trafficking to the platform and local authorities." },
   }[locale as "my" | "zh" | "en"] || {
     title: "Jobs",
     empty: "No jobs yet",
-    detail: "Read more",
+    detail: "Read more", safetyTitle:"Jobseeker safety", safety:"Verify employers independently. Never pay unexplained fees or surrender identity documents. Report suspected trafficking, coercion, or forced labour.",
   };
 
   const [items, setItems] = useState<Item[]>([]);
@@ -108,6 +108,11 @@ export default function JobsPage() {
   return (
     <main className="feedShell">
       <h1 className="feedTitle">{t.title}</h1>
+
+      <aside className="job-safety-notice" role="note">
+        <ShieldAlert aria-hidden="true" />
+        <div><strong>{t.safetyTitle}</strong><p>{t.safety}</p><Link href={`/${locale}/terms`}>{locale === "zh" ? "查看招聘条款" : locale === "my" ? "အလုပ်ခန့်အပ်မှု စည်းမျဉ်းကို ကြည့်ရန်" : "Read recruitment terms"} <ArrowRight size={14} /></Link></div>
+      </aside>
 
       <div style={{ display: "grid", gap: 18 }}>
         {items.length === 0 && <div className="feedCard">{t.empty}</div>}
