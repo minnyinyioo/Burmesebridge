@@ -1,8 +1,9 @@
 "use client";
 
-import Badge from "@/components/Badges";
+import { Heart, MessageCircle } from "lucide-react";
+import Badge, { type BadgeType } from "@/components/Badges";
 import PostActions from "@/components/ui/PostActions";
-import CommentList from "./CommentList";
+import CommentList, { type CommentItem } from "./CommentList";
 
 type Profile = {
   display_name?: string | null;
@@ -26,7 +27,7 @@ type PostCardProps = {
   likesCount: number;
   commentsCount: number;
   liked: boolean;
-  comments: any[];
+  comments: CommentItem[];
   commentText: string;
   labels: {
     anonymous: string;
@@ -88,43 +89,33 @@ export default function PostCard({
   return (
     <article
       id={`post-${post.id}`}
-      className="feedCard"
+      className="feedCard forum-post-card"
     >
-      <div
-        style={{
-          display: "flex",
-          gap: 14,
-        }}
-      >
+      <div className="forum-post-layout">
         <div style={avatar}>{authorInitial}</div>
 
-        <div style={{ flex: 1 }}>
-          <div style={authorRow}>
+        <div className="forum-post-main">
+          <div className="forum-author-row">
             <strong>{author}</strong>
 
             {profile?.verified && (
               <Badge type="verified" />
             )}
 
-            <Badge type={badge as any} />
+            <Badge type={toBadgeType(badge)} />
           </div>
 
-          <div style={timeText}>
+          <div className="forum-post-time">
             {new Date(post.created_at).toLocaleString()}
           </div>
 
-          <div style={postContent}>
+          <div className="forum-post-content">
             {post.content}
           </div>
 
-          <div style={statsRow}>
-            <span>
-              {likesCount} {labels.like}
-            </span>
-
-            <span>
-              {commentsCount} {labels.comment}
-            </span>
+          <div className="forum-post-stats">
+            <span><span className="forum-like-bubble"><Heart size={11} fill="currentColor" /></span>{likesCount} {labels.like}</span>
+            <span><MessageCircle size={14} />{commentsCount} {labels.comment}</span>
           </div>
 
           <PostActions
@@ -136,6 +127,7 @@ export default function PostCard({
             deleteLabel={labels.delete}
             canDelete={currentUserId === post.user_id}
             onLike={() => onLike(post.id)}
+            onComment={() => document.getElementById(`comment-input-${post.id}`)?.focus()}
             onShare={() => onShare(post.id)}
             onDelete={() => onDelete(post.id)}
           />
@@ -169,6 +161,11 @@ function getProfile(post: Post): Profile | null {
   return post.profiles || null;
 }
 
+const badgeTypes = new Set<BadgeType>(["verified", "moderator", "admin", "teacher", "company", "author", "vip", "member", "pinned", "hot", "featured"]);
+function toBadgeType(value: string): BadgeType {
+  return badgeTypes.has(value as BadgeType) ? value as BadgeType : "member";
+}
+
 const avatar = {
   minWidth: "52px",
   width: "52px",
@@ -183,32 +180,3 @@ const avatar = {
   fontSize: "18px",
 };
 
-const authorRow = {
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  flexWrap: "wrap" as const,
-  color: "#0f172a",
-};
-
-const timeText = {
-  color: "#94a3b8",
-  fontSize: "13px",
-  marginTop: "4px",
-};
-
-const postContent = {
-  marginTop: "16px",
-  color: "#0f172a",
-  fontSize: "16px",
-  lineHeight: 1.9,
-  whiteSpace: "pre-wrap" as const,
-};
-
-const statsRow = {
-  marginTop: "16px",
-  display: "flex",
-  gap: "16px",
-  color: "#64748b",
-  fontSize: "14px",
-};

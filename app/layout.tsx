@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Padauk } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const appFont = Padauk({
   subsets: ["myanmar"],
@@ -20,9 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="my">
+    <html lang="my" suppressHydrationWarning>
       <body className={appFont.variable}>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

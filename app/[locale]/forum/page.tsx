@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import PostComposer from "@/components/forum/PostComposer";
 import PostCard from "@/components/forum/PostCard";
+import type { CommentItem } from "@/components/forum/CommentList";
 
 type Profile = {
   id?: string;
@@ -21,6 +22,8 @@ type Post = {
   user_id: string;
   profiles?: Profile | Profile[] | null;
 };
+
+type ForumComment = CommentItem & { post_id: number; user_id: string; created_at: string };
 
 export default function ForumPage() {
   const params = useParams();
@@ -84,11 +87,13 @@ export default function ForumPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [myLikes, setMyLikes] = useState<Record<number, boolean>>({});
-  const [comments, setComments] = useState<Record<number, any[]>>({});
+  const [comments, setComments] = useState<Record<number, CommentItem[]>>({});
   const [commentText, setCommentText] = useState<Record<number, string>>({});
 
   useEffect(() => {
     loadUserAndPosts();
+    // Initial synchronization is intentionally run once for this client page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -234,9 +239,9 @@ export default function ForumPage() {
       (commentProfiles || []).map((profile) => [profile.id, profile])
     );
 
-    const groupedComments: Record<number, any[]> = {};
+    const groupedComments: Record<number, CommentItem[]> = {};
 
-    rawComments.forEach((comment) => {
+    (rawComments as ForumComment[]).forEach((comment) => {
       if (!groupedComments[comment.post_id]) {
         groupedComments[comment.post_id] = [];
       }
@@ -369,7 +374,17 @@ export default function ForumPage() {
   <main className="feedShell">
     <h1 className="feedTitle">{t.title}</h1>
 
-    <div style={{ marginTop: 24, display: "grid", gap: 18 }}>
+    <div className="forum-composer-wrap">
+      <PostComposer
+        content={content}
+        placeholder={t.placeholder}
+        buttonText={t.post}
+        onContentChange={setContent}
+        onSubmit={createPost}
+      />
+    </div>
+
+    <div className="forum-feed-list">
       {posts.map((post) => (
         <PostCard
           key={post.id}
@@ -404,15 +419,6 @@ export default function ForumPage() {
       ))}
     </div>
 
-    <div style={{ marginTop: 24 }}>
-      <PostComposer
-        content={content}
-        placeholder={t.placeholder}
-        buttonText={t.post}
-        onContentChange={setContent}
-        onSubmit={createPost}
-      />
-    </div>
   </main>
 );
 }

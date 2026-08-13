@@ -32,17 +32,11 @@ export default function PostComposer({
         value={content}
         onChange={(event) => onContentChange(event.target.value)}
         placeholder={placeholder}
-        style={textarea}
+        className="forum-post-textarea"
       />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 14,
-        }}
-      >
-        <button onClick={onSubmit} style={primaryButton}>
+      <div className="forum-composer-footer">
+        <button onClick={onSubmit} className="forum-post-submit" disabled={!content.trim()}>
           <Send size={17} />{buttonText}
         </button>
       </div>
@@ -50,26 +44,3 @@ export default function PostComposer({
   );
 }
 
-const textarea = {
-  width: "100%",
-  minHeight: "120px",
-  padding: "16px",
-  borderRadius: "16px",
-  border: "1px solid #cbd5e1",
-  resize: "none" as const,
-  fontSize: "16px",
-  outline: "none",
-};
-
-const primaryButton = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "7px",
-  padding: "12px 22px",
-  borderRadius: "999px",
-  border: "none",
-  background: "#2563eb",
-  color: "white",
-  fontWeight: 700,
-  cursor: "pointer",
-};

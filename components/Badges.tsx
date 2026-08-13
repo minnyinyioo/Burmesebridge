@@ -17,7 +17,7 @@ import {
   PenLine,
 } from "lucide-react";
 
-type BadgeType =
+export type BadgeType =
   | "verified"
   | "moderator"
   | "admin"

@@ -5,7 +5,7 @@ type CommentProfile = {
   email?: string | null;
 };
 
-type CommentItem = {
+export type CommentItem = {
   id: number;
   content: string;
   profiles?: CommentProfile | CommentProfile[] | null;
@@ -46,27 +46,16 @@ export default function CommentList({
   onSubmitComment,
 }: CommentListProps) {
   return (
-    <div
-      style={{
-        marginTop: 16,
-        paddingTop: 16,
-        borderTop: "1px solid #e5e7eb",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          alignItems: "center",
-        }}
-      >
-        <div style={miniAvatar}>{authorInitial}</div>
+    <div className="forum-comments">
+      <div className="forum-comment-composer">
+        <div className="forum-mini-avatar">{authorInitial}</div>
 
         <input
+          id={`comment-input-${postId}`}
           value={commentText}
           onChange={(event) => onCommentChange(postId, event.target.value)}
           placeholder={placeholder}
-          style={commentInput}
+          className="forum-comment-input"
         />
 
         <button onClick={() => onSubmitComment(postId)} style={sendButton}>
@@ -74,13 +63,7 @@ export default function CommentList({
         </button>
       </div>
 
-      <div
-        style={{
-          marginTop: 14,
-          display: "grid",
-          gap: "10px",
-        }}
-      >
+      <div className="forum-comment-list">
         {comments.map((comment) => {
           const profile = Array.isArray(comment.profiles)
             ? comment.profiles[0]
@@ -90,7 +73,7 @@ export default function CommentList({
             profile?.display_name || profile?.email || anonymousText;
 
           return (
-            <div key={comment.id} style={commentBox}>
+            <div key={comment.id} className="forum-comment-item">
               <strong>{commentAuthor}</strong>
 
               <p style={{ marginTop: 4 }}>{comment.content}</p>
@@ -102,32 +85,12 @@ export default function CommentList({
   );
 }
 
-const miniAvatar = {
-  width: 34,
-  height: 34,
-  borderRadius: "999px",
-  background: "#2563eb",
-  color: "white",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: 700,
-};
-
-const commentInput = {
-  flex: 1,
-  padding: "12px 16px",
-  borderRadius: "999px",
-  border: "1px solid #e5e7eb",
-  background: "#f8fafc",
-};
-
 const sendButton = {
   display: "inline-flex",
   alignItems: "center",
   gap: "6px",
   border: "none",
-  background: "#2563eb",
+  background: "var(--green-800)",
   color: "white",
   padding: "10px 16px",
   borderRadius: "999px",
@@ -135,8 +98,3 @@ const sendButton = {
   fontWeight: 700,
 };
 
-const commentBox = {
-  background: "#f8fafc",
-  padding: "12px",
-  borderRadius: "16px",
-};

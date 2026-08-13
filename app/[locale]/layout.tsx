@@ -1,5 +1,6 @@
 import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
+import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
 import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, MessageCircle, Newspaper, Waypoints } from "lucide-react";
 
@@ -59,6 +60,7 @@ export default async function LocaleLayout({
 
         <div className="site-actions">
           <AuthMenu locale={locale} />
+          <ThemeToggle locale={locale} />
           <LanguageMenu locale={locale} />
         </div>
       </nav>
