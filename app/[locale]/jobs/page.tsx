@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
 import RichMediaBlocks, { type MediaBlock } from "@/components/RichMediaBlocks";
@@ -25,12 +27,13 @@ export default function JobsPage() {
   const locale = String(params.locale || "my");
 
   const t = {
-    my: { title: "အလုပ်အကိုင်", empty: "အလုပ်အကိုင် အချက်အလက် မရှိသေးပါ" },
-    zh: { title: "工作信息", empty: "暂无工作信息" },
-    en: { title: "Jobs", empty: "No jobs yet" },
+    my: { title: "အလုပ်အကိုင်", empty: "အလုပ်အကိုင် အချက်အလက် မရှိသေးပါ", detail: "အသေးစိတ်ဖတ်ရန်" },
+    zh: { title: "工作信息", empty: "暂无工作信息", detail: "查看详情" },
+    en: { title: "Jobs", empty: "No jobs yet", detail: "Read more" },
   }[locale as "my" | "zh" | "en"] || {
     title: "Jobs",
     empty: "No jobs yet",
+    detail: "Read more",
   };
 
   const [items, setItems] = useState<Item[]>([]);
@@ -134,9 +137,12 @@ export default function JobsPage() {
            )}
             </div>
             <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.9 }}>
-              {getContent(item)}
+              {getContent(item).length > 240 ? `${getContent(item).slice(0, 240)}…` : getContent(item)}
             </p>
-            <RichMediaBlocks blocks={item.media_blocks} />
+            <RichMediaBlocks blocks={item.media_blocks?.slice(0, 1) || null} />
+            <Link href={`/${locale}/content/${item.id}`} className="content-card-detail-link">
+              {t.detail}<ArrowRight size={16} />
+            </Link>
           </article>
         ))}
       </div>

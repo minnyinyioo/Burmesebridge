@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
 import RichMediaBlocks, { type MediaBlock } from "@/components/RichMediaBlocks";
@@ -36,6 +38,7 @@ export default function NewsPage() {
       news: "သတင်း",
       jobs: "အလုပ်အကိုင်",
       learn: "လေ့လာရန်",
+      detail: "အသေးစိတ်ဖတ်ရန်",
     },
     zh: {
       title: "信息中心",
@@ -44,6 +47,7 @@ export default function NewsPage() {
       news: "新闻",
       jobs: "工作信息",
       learn: "学习内容",
+      detail: "查看详情",
     },
     en: {
       title: "Information Center",
@@ -52,6 +56,7 @@ export default function NewsPage() {
       news: "News",
       jobs: "Jobs",
       learn: "Learning",
+      detail: "Read more",
     },
   };
 
@@ -239,10 +244,14 @@ export default function NewsPage() {
                 fontSize: 17,
               }}
             >
-              {getContent(item)}
+              {getContent(item).length > 240 ? `${getContent(item).slice(0, 240)}…` : getContent(item)}
             </p>
 
-            <RichMediaBlocks blocks={item.media_blocks} />
+            <RichMediaBlocks blocks={item.media_blocks?.slice(0, 1) || null} />
+
+            <Link href={`/${locale}/content/${item.id}`} className="content-card-detail-link">
+              {t.detail}<ArrowRight size={16} />
+            </Link>
 
             <div
               style={{

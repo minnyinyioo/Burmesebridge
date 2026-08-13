@@ -362,6 +362,19 @@ svg { display: block; flex: 0 0 auto; }
 .content-detail-heading h1 { margin: 0; font-size: clamp(28px, 5vw, 44px); line-height: 1.35; letter-spacing: -0.025em; }
 .content-detail-copy { color: var(--foreground); font-size: clamp(17px, 2vw, 19px); line-height: 2; white-space: pre-wrap; }
 
+.content-card-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  color: var(--brand);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.content-card-detail-link svg { transition: transform 160ms ease; }
+.content-card-detail-link:hover svg { transform: translateX(3px); }
+
 @media (max-width: 600px) {
   .content-detail-shell { width: min(100% - 22px, 900px); padding-top: 22px; }
   .content-detail-card { padding: 22px 18px; }
