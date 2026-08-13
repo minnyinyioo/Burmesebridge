@@ -12,6 +12,8 @@ import {
   Video,
   LibraryBig,
   Flag,
+  Gavel,
+  ScrollText,
 } from "lucide-react";
 
 /**
@@ -36,6 +38,7 @@ export default function AdminSidebar() {
       videos: "ဗီဒီယို",
       knowledge: "အခပေးသင်တန်း",
       reports: "တိုင်ကြားချက်များ",
+      appeals: "အယူခံများ", audit: "လုပ်ဆောင်ချက်မှတ်တမ်း",
     },
     zh: {
       dashboard: "总览",
@@ -47,6 +50,7 @@ export default function AdminSidebar() {
       videos: "视频管理",
       knowledge: "知识付费",
       reports: "举报审核",
+      appeals: "申诉审核", audit: "操作日志",
     },
     en: {
       dashboard: "Dashboard",
@@ -58,6 +62,7 @@ export default function AdminSidebar() {
       videos: "Videos",
       knowledge: "Knowledge",
       reports: "Reports",
+      appeals: "Appeals", audit: "Audit log",
     },
   };
 
@@ -92,6 +97,8 @@ export default function AdminSidebar() {
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
     { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },
     { label: t.reports, href: `/${locale}/admin/reports`, icon: Flag },
+    { label: t.appeals, href: `/${locale}/admin/appeals`, icon: Gavel },
+    { label: t.audit, href: `/${locale}/admin/audit`, icon: ScrollText },
     {
       label: t.ban,
       href: `/${locale}/admin/ban`,

@@ -11,6 +11,7 @@ import {
   LogOut,
   MessageSquareText,
   ShieldCheck,
+  Gavel,
   UserRound,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -168,6 +169,7 @@ export default function MePage() {
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },
     { href: `/${locale}/forum`, label: copy.forum, icon: MessageSquareText },
     { href: `/${locale}/jobs`, label: copy.jobs, icon: BriefcaseBusiness },
+    { href: `/${locale}/appeals`, label: locale === "zh" ? "申诉中心" : locale === "my" ? "အယူခံတင်ရန်" : "Appeals", icon: Gavel },
   ];
 
   return (
