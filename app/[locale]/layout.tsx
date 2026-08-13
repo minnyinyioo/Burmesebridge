@@ -121,6 +121,7 @@ export default async function LocaleLayout({
             <p>Burmese Chinese Learning Platform</p>
           </div>
           <SocialFooter />
+          <Link className="footer-feedback-link" href={`/${locale}/feedback`}>{locale === "zh" ? "反馈 / 报告 BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback / Report a bug"}</Link>
           <div>© 2026 BurmeseBridge</div>
         </div>
       </footer>

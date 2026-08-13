@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
+import HomeAds from "@/components/HomeAds";
 
 type Category = "news" | "jobs" | "learn";
 
@@ -207,6 +208,7 @@ export default function HomePage() {
           <div><Globe size={46} /></div>
         </div>
       </section>
+      <HomeAds />
 
       <ContentSection title={t.pinned} icon={<ShieldCheck size={20} />}>
         {pinnedItems.length === 0 ? (

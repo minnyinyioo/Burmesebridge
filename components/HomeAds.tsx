@@ -1,0 +1,6 @@
+"use client";
+import { useEffect, useState } from "react";
+import { ExternalLink } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+type Ad={id:number;title:string;subtitle:string|null;image_url:string|null;target_url:string|null};
+export default function HomeAds(){const[ads,setAds]=useState<Ad[]>([]);const[index,setIndex]=useState(0);useEffect(()=>{supabase.from("homepage_ads").select("id,title,subtitle,image_url,target_url").eq("active",true).order("sort_order").then(({data})=>setAds((data||[])as Ad[]))},[]);useEffect(()=>{if(ads.length<2)return;const timer=setInterval(()=>setIndex(value=>(value+1)%ads.length),5000);return()=>clearInterval(timer)},[ads.length]);if(!ads.length)return null;const ad=ads[index];const body=<><div><small>ADVERTISEMENT</small><h2>{ad.title}</h2>{ad.subtitle&&<p>{ad.subtitle}</p>}</div>{ad.target_url&&<ExternalLink size={20}/>}</>;return <section className="home-ad-slot" style={ad.image_url?{backgroundImage:`linear-gradient(90deg,rgba(6,42,36,.94),rgba(6,42,36,.45)),url(${ad.image_url})`}:undefined}>{ad.target_url?<a href={ad.target_url} target="_blank" rel="sponsored noopener">{body}</a>:body}{ads.length>1&&<div className="home-ad-dots">{ads.map((item,i)=><button key={item.id} className={i===index?"active":""} onClick={()=>setIndex(i)} aria-label={`Ad ${i+1}`}/>)}</div>}</section>}

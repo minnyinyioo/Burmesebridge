@@ -14,6 +14,8 @@ import {
   Flag,
   Gavel,
   ScrollText,
+  Bug,
+  Megaphone,
 } from "lucide-react";
 
 /**
@@ -99,6 +101,8 @@ export default function AdminSidebar() {
     { label: t.reports, href: `/${locale}/admin/reports`, icon: Flag },
     { label: t.appeals, href: `/${locale}/admin/appeals`, icon: Gavel },
     { label: t.audit, href: `/${locale}/admin/audit`, icon: ScrollText },
+    { label: locale === "zh" ? "反馈与 BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback & bugs", href: `/${locale}/admin/feedback`, icon: Bug },
+    { label: locale === "zh" ? "广告管理" : locale === "my" ? "ကြော်ငြာ" : "Ads", href: `/${locale}/admin/ads`, icon: Megaphone },
     {
       label: t.ban,
       href: `/${locale}/admin/ban`,
