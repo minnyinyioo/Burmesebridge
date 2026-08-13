@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 
 export default function LoginPage() {
   const params = useParams();
@@ -114,6 +115,8 @@ export default function LoginPage() {
         <button className="auth-submit" onClick={handleLogin} disabled={loading}>
           {loading ? t.loading : t.button}
         </button>
+
+        <SocialLoginButtons locale={locale} />
 
         <a
           href={`/${locale}/register`}

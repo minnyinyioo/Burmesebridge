@@ -142,6 +142,19 @@ svg { display: block; flex: 0 0 auto; }
 .auth-error { margin: 0 0 14px; padding: 10px 12px; border-radius: 9px; color: #9d3636; background: #fff0f0; font-size: 13px; line-height: 1.5; }
 .auth-success { color: #173d35; text-align: center; }.auth-success > svg { margin: 0 auto 14px; color: var(--green-700); }.auth-success p { color: #6d7c77; line-height: 1.7; }.auth-heading-icon { margin-bottom: 12px; color: var(--green-700); }
 .auth-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }.auth-submit-link { margin-top: 18px; display: flex; align-items: center; justify-content: center; }
+.social-auth { margin-top: 22px; }
+.social-auth-divider { display: flex; align-items: center; gap: 12px; color: #7a8581; font-size: 12px; text-align: center; }
+.social-auth-divider::before, .social-auth-divider::after { content: ""; height: 1px; flex: 1; background: #e2ddd2; }
+.social-auth-divider span { white-space: nowrap; }
+.social-auth-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+.social-auth-button { min-width: 0; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 10px; border: 1px solid #d9d3c6; border-radius: 11px; color: #263f39; background: #fff; font-size: 13px; font-weight: 750; cursor: pointer; transition: .18s ease; }
+.social-auth-button:hover { border-color: #b7c5c0; background: #f8faf9; transform: translateY(-1px); }
+.social-auth-button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+.social-auth-mark { width: 21px; height: 21px; display: inline-grid; place-items: center; border-radius: 50%; font-size: 10px; font-weight: 900; line-height: 1; }
+.social-auth-google .social-auth-mark { color: #fff; background: #4285f4; }
+.social-auth-github .social-auth-mark { color: #fff; background: #24292f; font-size: 8px; }
+.social-auth-facebook .social-auth-mark { color: #fff; background: #1877f2; font-family: Arial, sans-serif; font-size: 16px; }
+.social-auth-error { margin-top: 12px; margin-bottom: 0; }
 
 .home-page { display: grid; gap: 56px; }
 .home-hero { min-height: 430px; display: grid; grid-template-columns: minmax(0,1.4fr) minmax(240px,.6fr); align-items: end; gap: 40px; padding: clamp(38px,6vw,72px); overflow: hidden; position: relative; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; color: #102f29; background: rgba(255,255,255,.42); }
