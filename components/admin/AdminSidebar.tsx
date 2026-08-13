@@ -8,6 +8,7 @@ import {
   FileText,
   Newspaper,
   Shield,
+  BadgeCheck,
 } from "lucide-react";
 
 /**
@@ -28,6 +29,7 @@ export default function AdminSidebar() {
       posts: "ပို့စ်များ",
       publish: "အချက်အလက်တင်ရန်",
       ban: "ပိတ်ပင်မှု စင်တာ",
+      verification: "အတည်ပြုလျှောက်ထားမှု",
     },
     zh: {
       dashboard: "总览",
@@ -35,6 +37,7 @@ export default function AdminSidebar() {
       posts: "帖子",
       publish: "发布信息",
       ban: "封禁中心",
+      verification: "身份审核",
     },
     en: {
       dashboard: "Dashboard",
@@ -42,6 +45,7 @@ export default function AdminSidebar() {
       posts: "Posts",
       publish: "Publish",
       ban: "Ban Center",
+      verification: "Verification",
     },
   };
 
@@ -67,6 +71,11 @@ export default function AdminSidebar() {
       label: t.publish,
       href: `/${locale}/admin/news`,
       icon: Newspaper,
+    },
+    {
+      label: t.verification,
+      href: `/${locale}/admin/verification`,
+      icon: BadgeCheck,
     },
     {
       label: t.ban,
