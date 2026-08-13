@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { canAccessAdmin } from "@/lib/permissions";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminStatCard from "@/components/admin/AdminStatCard";
+import AdminGuard from "@/components/admin/AdminGuard";
 
 /**
  * Admin Dashboard
@@ -34,15 +34,10 @@ const text = {
 
   const t = text[locale as keyof typeof text] || text.en;
   const [loading, setLoading] = useState(true);
-  const [allowed, setAllowed] = useState(false);
   const [usersCount, setUsersCount] = useState(0);
   const [postsCount, setPostsCount] = useState(0);
 
-  useEffect(() => {
-    checkAdminAccess();
-  }, []);
-
-  async function checkAdminAccess() {
+  const checkAdminAccess = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -52,19 +47,6 @@ const text = {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (!canAccessAdmin(profile?.role)) {
-      window.location.href = `/${locale}`;
-      return;
-    }
-
-    setAllowed(true);
-
     const [users, posts] = await Promise.all([
       supabase.from("profiles").select("*", { count: "exact", head: true }),
       supabase.from("posts").select("*", { count: "exact", head: true }),
@@ -73,18 +55,19 @@ const text = {
     setUsersCount(users.count || 0);
     setPostsCount(posts.count || 0);
     setLoading(false);
-  }
+  }, [locale]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void checkAdminAccess();
+  }, [checkAdminAccess]);
 
   if (loading) {
     return <main style={{ padding: 40 }}>Loading...</main>;
   }
 
-  if (!allowed) {
-    return null;
-  }
-
   return (
-    <div className="adminShell">
+    <AdminGuard><div className="adminShell">
       <AdminSidebar />
 
       <div className="adminContent">
@@ -95,6 +78,6 @@ const text = {
           <AdminStatCard title={t.posts} value={postsCount} />
         </div>
       </div>
-    </div>
+    </div></AdminGuard>
   );
 }

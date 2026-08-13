@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { canAccessAdmin } from "@/lib/permissions";
 
@@ -20,12 +21,9 @@ export default function AdminGuard({
 
   const [loading, setLoading] = useState(true);
   const [allowed, setAllowed] = useState(false);
+  const [denied, setDenied] = useState(false);
 
-  useEffect(() => {
-    checkAccess();
-  }, []);
-
-  async function checkAccess() {
+  const checkAccess = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -42,20 +40,31 @@ export default function AdminGuard({
       .single();
 
     if (!canAccessAdmin(profile?.role)) {
-      window.location.href = `/${locale}`;
+      setDenied(true);
+      setLoading(false);
       return;
     }
 
     setAllowed(true);
     setLoading(false);
-  }
+  }, [locale]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void checkAccess();
+  }, [checkAccess]);
 
   if (loading) {
     return <main style={{ padding: 40 }}>Loading...</main>;
   }
 
   if (!allowed) {
-    return null;
+    const copy = locale === "zh"
+      ? { title: "无权访问后台", body: "此区域仅限管理员和版主使用。", back: "返回首页" }
+      : locale === "my"
+        ? { title: "စီမံခန့်ခွဲရေးသို့ ဝင်ခွင့်မရှိပါ", body: "ဤနေရာကို အက်မင်နှင့် မော်ဒရေတာများသာ အသုံးပြုနိုင်ပါသည်။", back: "ပင်မစာမျက်နှာသို့" }
+        : { title: "Admin access denied", body: "This area is available only to administrators and moderators.", back: "Back to home" };
+    return denied ? <main className="auth-page"><section className="auth-card admin-denied" role="alert"><h1>{copy.title}</h1><p className="auth-copy">{copy.body}</p><Link className="auth-submit auth-submit-link" href={`/${locale}`}>{copy.back}</Link></section></main> : null;
   }
 
   return <>{children}</>;

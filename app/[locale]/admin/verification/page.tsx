@@ -42,14 +42,15 @@ function VerificationContent() {
 
   const loadRequests = useCallback(async (nextFilter = filter) => {
     const { data, error } = await supabase.from("verification_requests")
-      .select("id, user_id, requested_badge, evidence, status, created_at, reviewed_at, review_note, profiles(display_name, email)")
+      .select("id, user_id, requested_badge, evidence, status, created_at, reviewed_at, review_note, profiles!verification_requests_user_id_fkey(display_name, email)")
       .eq("status", nextFilter).order("created_at", { ascending: true });
     if (error) { setMessage(error.message); return; }
     setRequests((data || []) as unknown as RequestRow[]);
   }, [filter]);
 
   useEffect(() => {
-    loadRequests();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadRequests();
   }, [loadRequests]);
 
   async function review(id: number, decision: "approved" | "rejected") {
