@@ -66,9 +66,21 @@ foreach ($version in $existingVersions) {
 }
 
 Write-Host "Pushing the pending security migration..."
-npx supabase db push --include-all
-if ($LASTEXITCODE -ne 0) {
-  throw "Database push failed"
+$pushCompleted = $false
+for ($attempt = 1; $attempt -le $MaxRetries; $attempt++) {
+  npx supabase db push --include-all --yes
+  if ($LASTEXITCODE -eq 0) {
+    $pushCompleted = $true
+    break
+  }
+  if ($attempt -lt $MaxRetries) {
+    $delay = 10 * $attempt
+    Write-Warning "Database connection failed. Retrying final push in $delay seconds ($attempt/$MaxRetries)..."
+    Start-Sleep -Seconds $delay
+  }
+}
+if (-not $pushCompleted) {
+  throw "Database push failed after $MaxRetries attempts. Run this same command again; completed migrations will remain unchanged."
 }
 
 Write-Host "Migration history repaired and security migration applied."
