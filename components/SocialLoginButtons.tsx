@@ -3,14 +3,15 @@
 import { useState } from "react";
 import type { Provider } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { FacebookIcon, GitHubIcon, GoogleIcon } from "@/components/icons/BrandIcons";
 
 type SocialProvider = Extract<Provider, "google" | "github" | "facebook">;
 
-const providers: Array<{ id: SocialProvider; label: string; mark: string }> = [
-  { id: "google", label: "Google", mark: "G" },
-  { id: "github", label: "GitHub", mark: "GH" },
-  { id: "facebook", label: "Facebook", mark: "f" },
-];
+const providers = [
+  { id: "google", label: "Google", icon: GoogleIcon },
+  { id: "github", label: "GitHub", icon: GitHubIcon },
+  { id: "facebook", label: "Facebook", icon: FacebookIcon },
+] as const;
 
 export default function SocialLoginButtons({ locale }: { locale: string }) {
   const [activeProvider, setActiveProvider] = useState<SocialProvider | null>(null);
@@ -43,7 +44,9 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
     <section className="social-auth" aria-label={copy.divider}>
       <div className="social-auth-divider"><span>{copy.divider}</span></div>
       <div className="social-auth-grid">
-        {providers.map((provider) => (
+        {providers.map((provider) => {
+          const Icon = provider.icon;
+          return (
           <button
             key={provider.id}
             type="button"
@@ -52,10 +55,11 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
             disabled={activeProvider !== null}
             aria-label={`${copy.divider} ${provider.label}`}
           >
-            <span className="social-auth-mark" aria-hidden="true">{provider.mark}</span>
+            <span className="social-auth-mark" aria-hidden="true"><Icon /></span>
             <span>{activeProvider === provider.id ? copy.loading : provider.label}</span>
           </button>
-        ))}
+          );
+        })}
       </div>
       {error && <p className="auth-error social-auth-error" role="alert">{error}</p>}
     </section>
