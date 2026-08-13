@@ -1,74 +1,80 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { MailCheck } from "lucide-react";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 import { supabase } from "@/lib/supabase";
 
 export default function RegisterPage() {
   const params = useParams();
   const locale = String(params.locale || "en");
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  // 新增：加一个状态用来判断是否还在检查用户信息
-  const [isChecking, setIsChecking] = useState(true);
+  const copy = locale === "zh" ? {
+    title: "创建账号", intro: "加入 BurmeseBridge，开始学习、交流和发现机会。", name: "显示名称", email: "邮箱", password: "密码（至少 8 位）", confirm: "确认密码", button: "创建账号", loading: "正在创建…", login: "已有账号？前往登录", mismatch: "两次输入的密码不一致。", short: "密码至少需要 8 位。", required: "请完整填写名称、邮箱和密码。", sentTitle: "检查你的邮箱", sent: "我们已发送验证链接。请完成邮箱验证后登录，也请检查垃圾邮件。", back: "返回登录",
+  } : locale === "my" ? {
+    title: "အကောင့်ဖွင့်ရန်", intro: "BurmeseBridge တွင် သင်ယူရန်၊ ဆက်သွယ်ရန်နှင့် အခွင့်အလမ်းများ ရှာရန်။", name: "ပြသမည့်အမည်", email: "အီးမေးလ်", password: "စကားဝှက် (အနည်းဆုံး ၈ လုံး)", confirm: "စကားဝှက် အတည်ပြုရန်", button: "အကောင့်ဖွင့်မည်", loading: "ဖန်တီးနေသည်…", login: "အကောင့်ရှိပြီးသားလား? ဝင်ရန်", mismatch: "စကားဝှက်နှစ်ခု မတူပါ။", short: "စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။", required: "အမည်၊ အီးမေးလ်နှင့် စကားဝှက်ကို ပြည့်စုံစွာ ဖြည့်ပါ။", sentTitle: "အီးမေးလ်ကို စစ်ဆေးပါ", sent: "အတည်ပြုလင့်ခ် ပို့ထားပါသည်။ အီးမေးလ်အတည်ပြုပြီးနောက် ဝင်နိုင်ပါသည်။ Spam ဖိုလ်ဒါကိုလည်း စစ်ဆေးပါ။", back: "အကောင့်ဝင်ရန်",
+  } : {
+    title: "Create your account", intro: "Join BurmeseBridge to learn, connect, and discover opportunities.", name: "Display name", email: "Email", password: "Password (at least 8 characters)", confirm: "Confirm password", button: "Create account", loading: "Creating…", login: "Already have an account? Log in", mismatch: "The passwords do not match.", short: "Password must be at least 8 characters.", required: "Complete your name, email, and password.", sentTitle: "Check your inbox", sent: "We sent you a verification link. Verify your email before signing in, and check your spam folder too.", back: "Back to login",
+  };
 
   useEffect(() => {
     async function checkUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        router.replace(`/${locale}/me`);
-      } else {
-        // 新增：确认没有登录，才放行，允许渲染表单
-        setIsChecking(false);
-      }
+      const { data } = await supabase.auth.getUser();
+      if (data.user) router.replace(`/${locale}/me`);
+      else setChecking(false);
     }
-
     checkUser();
   }, [locale, router]);
 
-  const text = {
-    my: { title: "အကောင့်ဖွင့်ရန်", intro: "သင်ယူရန်၊ အလုပ်ရှာရန်နှင့် Community နှင့် ချိတ်ဆက်ရန်", email: "အီးမေးလ်", password: "စကားဝှက်", button: "အကောင့်ဖွင့်မည်", loading: "ခေတ္တစောင့်ပါ...", login: "အကောင့်ရှိပြီးသားလား? ဝင်ရန်", success: "အကောင့်ဖွင့်မှု အောင်မြင်ပါသည်" },
-    zh: { title: "注册", intro: "开始学习、找工作并加入社区", email: "邮箱", password: "密码", button: "创建账号", loading: "加载中...", login: "已有账号？去登录", success: "注册成功" },
-    en: { title: "Register", intro: "Learn, find opportunities, and join the community", email: "Email", password: "Password", button: "Create Account", loading: "Loading...", login: "Already have an account? Login", success: "Register success" },
-  };
+  async function handleRegister(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (loading) return;
+    setError("");
+    if (!name.trim() || !email.trim() || !password) { setError(copy.required); return; }
+    if (password.length < 8) { setError(copy.short); return; }
+    if (password !== confirmPassword) { setError(copy.mismatch); return; }
 
-  const t = text[locale as keyof typeof text] || text.en;
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleRegister() {
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      alert(error.message);
-    } else {
-      alert(t.success);
-      window.location.href = `/${locale}/login`;
-    }
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        data: { full_name: name.trim() },
+        emailRedirectTo: `${window.location.origin}/${locale}/me`,
+      },
+    });
     setLoading(false);
+    if (signUpError) { setError(signUpError.message); return; }
+    if (data.session) { router.replace(`/${locale}/me`); return; }
+    setSubmitted(true);
   }
 
-  // 新增：如果还在检查登录状态，直接返回 null（白屏）或者加载动画，不渲染下面的表单
-  if (isChecking) {
-    return null; 
-  }
+  if (checking) return <main className="auth-page"><p className="account-loading">{copy.loading}</p></main>;
 
-  return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <span className="auth-eyebrow">BurmeseBridge</span>
-        <h1>{t.title}</h1>
-        <p className="auth-copy">{t.intro}</p>
-        <input type="email" placeholder={t.email} className="auth-input" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder={t.password} className="auth-input" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button className="auth-submit" onClick={handleRegister} disabled={loading}>{loading ? t.loading : t.button}</button>
-        <a href={`/${locale}/login`} className="auth-switch">{t.login}</a>
-      </div>
-    </main>
-  );
+  return <main className="auth-page"><div className="auth-card">
+    <span className="auth-eyebrow">BurmeseBridge</span>
+    {submitted ? <div className="auth-success"><MailCheck size={34} /><h1>{copy.sentTitle}</h1><p>{copy.sent}</p><a href={`/${locale}/login`} className="auth-submit auth-submit-link">{copy.back}</a></div> : <>
+      <h1>{copy.title}</h1><p className="auth-copy">{copy.intro}</p>
+      <form onSubmit={handleRegister}>
+        <input type="text" autoComplete="name" className="auth-input" aria-label={copy.name} placeholder={copy.name} value={name} onChange={(event) => setName(event.target.value)} />
+        <input type="email" autoComplete="email" className="auth-input" aria-label={copy.email} placeholder={copy.email} value={email} onChange={(event) => setEmail(event.target.value)} />
+        <input type="password" autoComplete="new-password" className="auth-input" aria-label={copy.password} placeholder={copy.password} value={password} onChange={(event) => setPassword(event.target.value)} />
+        <input type="password" autoComplete="new-password" className="auth-input" aria-label={copy.confirm} placeholder={copy.confirm} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
+        {error && <p className="auth-error" role="alert">{error}</p>}
+        <button type="submit" className="auth-submit" disabled={loading}>{loading ? copy.loading : copy.button}</button>
+      </form>
+      <SocialLoginButtons locale={locale} />
+      <a href={`/${locale}/login`} className="auth-switch">{copy.login}</a>
+    </>}
+  </div></main>;
 }

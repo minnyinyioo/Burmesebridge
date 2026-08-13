@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
@@ -68,7 +68,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleLogin() {
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     if (loading) return;
     setLoading(true);
     setError("");
@@ -94,7 +95,8 @@ export default function LoginPage() {
         <h1>{t.title}</h1>
         <p className="auth-copy">{t.intro}</p>
 
-        <input
+        <form onSubmit={handleLogin}>
+          <input
           type="email"
           autoComplete="email"
           aria-label={t.email}
@@ -102,9 +104,9 @@ export default function LoginPage() {
           className="auth-input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
+          />
 
-        <input
+          <input
           type="password"
           autoComplete="current-password"
           aria-label={t.password}
@@ -112,17 +114,18 @@ export default function LoginPage() {
           className="auth-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        />
+          />
 
-        <a href={`/${locale}/forgot-password`} className="auth-forgot-link">
-          {t.forgot}
-        </a>
+          <a href={`/${locale}/forgot-password`} className="auth-forgot-link">
+            {t.forgot}
+          </a>
 
-        {error && <p className="auth-error" role="alert">{error}</p>}
+          {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <button className="auth-submit" onClick={handleLogin} disabled={loading}>
-          {loading ? t.loading : t.button}
-        </button>
+          <button type="submit" className="auth-submit" disabled={loading}>
+            {loading ? t.loading : t.button}
+          </button>
+        </form>
 
         <SocialLoginButtons locale={locale} />
 
