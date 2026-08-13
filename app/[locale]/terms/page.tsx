@@ -9,7 +9,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "5. 付费内容", paragraphs: ["商品价格、访问期限和付款方式以购买页面为准。人工审核的付款应在确认后开通。退款申请将根据内容访问状态、付款渠道能力和适用法律逐案处理。"] },
     { title: "6. 第三方链接", paragraphs: ["平台可能包含第三方网站、职位、视频或社交平台链接。第三方内容和服务由其提供者负责，访问前请自行核实。"] },
     { title: "7. 服务可用性与责任", paragraphs: ["我们会合理维护服务，但不保证永不中断或所有用户内容完全准确。在法律允许范围内，平台不对用户发布内容或不可控制的第三方服务承担责任。"] },
-    { title: "8. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 minnyinyi006161@gmail.com。"] },
+    { title: "8. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 minnyinyioo6161@gmail.com。"] },
   ] },
   my: { title: "ဝန်ဆောင်မှု စည်းမျဉ်းများ", summary: "BurmeseBridge ကို အသုံးပြုခြင်းဖြင့် ဤစည်းမျဉ်းများနှင့် သက်ဆိုင်ရာဥပဒေများကို လိုက်နာရန် သဘောတူပါသည်။", updated: "၂၀၂၆ ဩဂုတ် ၁၄", sections: [
     { title: "၁။ ဝန်ဆောင်မှု", paragraphs: ["BurmeseBridge တွင် သင်ယူမှု၊ သတင်း၊ အလုပ်အကိုင်၊ community၊ ဗီဒီယိုနှင့် paid knowledge content များ ပါဝင်သည်။ လုပ်ဆောင်ချက်များကို အချိန်နှင့်အမျှ ပြောင်းလဲနိုင်သည်။"] },
@@ -19,7 +19,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "၅။ ငွေပေးချေသည့်အကြောင်းအရာ", paragraphs: ["စျေးနှုန်း၊ ဝင်ရောက်ခွင့်ကာလနှင့် ငွေပေးချေမှုကို purchase page အတိုင်း သတ်မှတ်သည်။ Refund ကို content access၊ payment channel နှင့် သက်ဆိုင်ရာဥပဒေအတိုင်း စိစစ်မည်။"] },
     { title: "၆။ ပြင်ပလင့်ခ်", paragraphs: ["ပြင်ပဝဘ်ဆိုက်၊ အလုပ်၊ ဗီဒီယို သို့မဟုတ် social link များ ပါနိုင်သည်။ ပြင်ပဝန်ဆောင်မှုကို အသုံးမပြုမီ ကိုယ်တိုင်စစ်ဆေးပါ။"] },
     { title: "၇။ ဝန်ဆောင်မှုနှင့် တာဝန်", paragraphs: ["ဝန်ဆောင်မှုကို ထိန်းသိမ်းရန် ကြိုးစားသော်လည်း အမြဲမပြတ်ရရှိမည် သို့မဟုတ် အသုံးပြုသူအကြောင်းအရာအားလုံး မှန်ကန်မည်ဟု အာမမခံပါ။"] },
-    { title: "၈။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသောပြောင်းလဲမှုကို ဝဘ်ဆိုက်တွင် အသိပေးပါမည်။ မေးခွန်းများကို minnyinyi006161@gmail.com သို့ ပို့ပါ။"] },
+    { title: "၈။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသောပြောင်းလဲမှုကို ဝဘ်ဆိုက်တွင် အသိပေးပါမည်။ မေးခွန်းများကို minnyinyioo6161@gmail.com သို့ ပို့ပါ။"] },
   ] },
   en: { title: "Terms of Service", summary: "By using BurmeseBridge, you agree to these terms and applicable laws.", updated: "August 14, 2026", sections: [
     { title: "1. The service", paragraphs: ["BurmeseBridge provides learning, news, job information, community discussions, videos, and knowledge content. Features may change as the product develops."] },
@@ -29,7 +29,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "5. Paid content", paragraphs: ["Prices, access periods, and payment methods are shown at purchase. Manually reviewed payments are activated after confirmation. Refund requests are assessed according to content access, payment-channel capabilities, and applicable law."] },
     { title: "6. Third-party links", paragraphs: ["The service may link to third-party websites, jobs, videos, or social platforms. Those providers are responsible for their services; verify them before relying on them."] },
     { title: "7. Availability and liability", paragraphs: ["We use reasonable efforts to maintain the service but cannot guarantee uninterrupted availability or accuracy of all user content. Liability is limited to the extent permitted by applicable law."] },
-    { title: "8. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact minnyinyi006161@gmail.com with questions."] },
+    { title: "8. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact minnyinyioo6161@gmail.com with questions."] },
   ] },
 };
 
