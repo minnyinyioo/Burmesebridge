@@ -218,7 +218,7 @@ export default function HomePage() {
               item={item}
               title={getTitle(item)}
               content={getContent(item)}
-              href={`/${locale}/${item.category || "news"}`}
+              href={`/${locale}/content/${item.id}`}
               action={t.readMore}
             />
           ))
@@ -235,7 +235,7 @@ export default function HomePage() {
               item={item}
               title={getTitle(item)}
               content={getContent(item)}
-              href={`/${locale}/jobs`}
+              href={`/${locale}/content/${item.id}`}
               action={t.go}
             />
           ))
@@ -252,7 +252,7 @@ export default function HomePage() {
               item={item}
               title={getTitle(item)}
               content={getContent(item)}
-              href={`/${locale}/learn`}
+              href={`/${locale}/content/${item.id}`}
               action={t.go}
             />
           ))
@@ -269,7 +269,7 @@ export default function HomePage() {
               item={item}
               title={getTitle(item)}
               content={getContent(item)}
-              href={`/${locale}/news`}
+              href={`/${locale}/content/${item.id}`}
               action={t.readMore}
             />
           ))
