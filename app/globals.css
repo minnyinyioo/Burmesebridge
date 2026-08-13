@@ -183,6 +183,7 @@ svg { display: block; flex: 0 0 auto; }
 .adminLink { display: flex; gap: 10px; padding: 11px 12px; border-radius: 10px; color: #596b65; font-weight: 700; transition: .18s; }
 .adminLink:hover { color: var(--green-800); background: #eef5f2; }
 .adminContent { min-width: 0; }
+.admin-action-button{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--foreground);font:inherit;font-weight:750;cursor:pointer}.admin-action-button:hover{border-color:var(--brand);color:var(--brand)}.admin-action-button:disabled{cursor:wait;opacity:.6}
 .adminGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 16px; margin-top: 22px; }
 .adminCard { padding: 22px; background: #fff; border: 1px solid #e3ddd0; border-radius: 17px; }
 .adminTitle { color: #71817c; }

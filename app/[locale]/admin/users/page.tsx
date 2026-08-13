@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import Badge from "@/components/Badges";
+import Badge, { type BadgeType } from "@/components/Badges";
+import { KeyRound } from "lucide-react";
 
 type AdminUser = {
   id: string;
@@ -25,12 +26,9 @@ export default function AdminUsersPage() {
 
 function UsersContent() {
   const [users, setUsers] = useState<AdminUser[]>([]);
+  const [resetting, setResetting] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  async function loadUsers() {
+  const loadUsers = useCallback(async () => {
     const { data, error } = await supabase
       .from("profiles")
       .select("id, display_name, role, badge, verified, banned_until")
@@ -42,7 +40,7 @@ function UsersContent() {
     }
 
     setUsers(data || []);
-  }
+  }, []);
 
   async function updateRole(userId: string, role: string) {
     const { error } = await supabase
@@ -60,6 +58,34 @@ function UsersContent() {
     }
 
     await loadUsers();
+  }
+
+  useEffect(() => {
+    // Data fetching populates this client-only admin view after authentication.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadUsers();
+  }, [loadUsers]);
+
+  async function resetPassword(user: AdminUser) {
+    const name = user.display_name || user.id;
+    if (!confirm(`Reset the password for ${name}? A one-time temporary password will be shown.`)) return;
+    setResetting(user.id);
+    const { data: sessionData } = await supabase.auth.getSession();
+    const response = await fetch("/api/admin/users/reset-password", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${sessionData.session?.access_token || ""}`,
+      },
+      body: JSON.stringify({ userId: user.id }),
+    });
+    const result = await response.json().catch(() => ({})) as { message?: string; temporaryPassword?: string };
+    setResetting(null);
+    if (!response.ok || !result.temporaryPassword) {
+      alert(result.message || "Password reset failed.");
+      return;
+    }
+    window.prompt("Copy this temporary password now. It will not be shown again:", result.temporaryPassword);
   }
 
   return (
@@ -86,25 +112,25 @@ function UsersContent() {
 
                 <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
                   {user.verified && <Badge type="verified" />}
-                  <Badge type={(user.badge || user.role || "member") as any} />
+                  <Badge type={(user.badge || user.role || "member") as BadgeType} />
                 </div>
               </div>
 
-              <select
-                value={user.role || "member"}
-                onChange={(event) => updateRole(user.id, event.target.value)}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid #e2e8f0",
-                  fontWeight: 700,
-                }}
-              >
-                <option value="member">member</option>
-                <option value="moderator">moderator</option>
-                <option value="admin">admin</option>
-                <option value="banned">banned</option>
-              </select>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                <button className="admin-action-button" onClick={() => resetPassword(user)} disabled={resetting === user.id}>
+                  <KeyRound size={16} /> {resetting === user.id ? "Resetting…" : "Reset password"}
+                </button>
+                <select
+                  value={user.role || "member"}
+                  onChange={(event) => updateRole(user.id, event.target.value)}
+                  style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #e2e8f0", fontWeight: 700 }}
+                >
+                  <option value="member">member</option>
+                  <option value="moderator">moderator</option>
+                  <option value="admin">admin</option>
+                  <option value="banned">banned</option>
+                </select>
+              </div>
             </div>
           ))}
         </div>
