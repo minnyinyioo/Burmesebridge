@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { BookOpen, CheckCircle2, LockKeyhole, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -174,14 +175,12 @@ export default function KnowledgePage() {
             })
             .eq("product_id", productId)
             .eq("user_id", userId)
-        : supabase
-            .from("knowledge_purchase_requests")
-            .insert({
-              product_id: productId,
-              user_id: userId,
-              payment_reference,
-              status: "pending",
-            });
+        : supabase.from("knowledge_purchase_requests").insert({
+            product_id: productId,
+            user_id: userId,
+            payment_reference,
+            status: "pending",
+          });
     const { error } = await query;
     if (error) setMessage(error.message);
     else await load();
@@ -277,6 +276,17 @@ export default function KnowledgePage() {
                     )}
                   </div>
                 )}
+                <Link
+                  href={`/${locale}/knowledge/${product.id}`}
+                  className="knowledge-enter-course"
+                >
+                  <PlayCircle size={16} />
+                  {locale === "zh"
+                    ? "查看课程"
+                    : locale === "my"
+                      ? "သင်တန်းကြည့်ရန်"
+                      : "View course"}
+                </Link>
               </div>
             </article>
           );

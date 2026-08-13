@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { getYouTubeId } from "@/lib/youtube";
 import CourseCoverUploader from "@/components/admin/CourseCoverUploader";
 import PaymentMethodsManager from "@/components/admin/PaymentMethodsManager";
+import LessonManager from "@/components/admin/LessonManager";
 
 type RequestItem = {
   id: number;
@@ -333,6 +334,17 @@ function KnowledgeAdmin() {
             </article>
           ))}
         </div>
+        <LessonManager
+          locale={locale}
+          products={products.map((product) => ({
+            id: product.id,
+            title:
+              product.title_zh ||
+              product.title_my ||
+              product.title_en ||
+              `#${product.id}`,
+          }))}
+        />
         <PaymentMethodsManager locale={locale} />
         <h2 className="knowledge-request-title">{c.requests}</h2>
         {msg && <p className="verification-message">{msg}</p>}
