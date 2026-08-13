@@ -1,6 +1,13 @@
 "use client";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { ListVideo, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Eye,
+  EyeOff,
+  ListVideo,
+  Trash2,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { getYouTubeId } from "@/lib/youtube";
 type Product = { id: number; title: string };
@@ -12,6 +19,7 @@ type Lesson = {
   title_en: string | null;
   position: number;
   free_preview: boolean;
+  status: "draft" | "published";
 };
 export default function LessonManager({
   locale,
@@ -32,6 +40,10 @@ export default function LessonManager({
           add: "添加课时",
           empty: "请先创建课程",
           remove: "删除课时",
+          online: "下架",
+          offline: "发布",
+          previewOn: "关闭试看",
+          previewOff: "设为试看",
         }
       : locale === "my"
         ? {
@@ -44,6 +56,10 @@ export default function LessonManager({
             add: "သင်ခန်းစာထည့်ရန်",
             empty: "သင်တန်းအရင်ဖန်တီးပါ",
             remove: "ဖျက်ရန်",
+            online: "ပိတ်မည်",
+            offline: "ထုတ်ဝေမည်",
+            previewOn: "အစမ်းပိတ်မည်",
+            previewOff: "အစမ်းဖွင့်မည်",
           }
         : {
             heading: "Lesson management",
@@ -55,6 +71,10 @@ export default function LessonManager({
             add: "Add lesson",
             empty: "Create a course first",
             remove: "Delete lesson",
+            online: "Take offline",
+            offline: "Publish",
+            previewOn: "Disable preview",
+            previewOff: "Make preview",
           };
   const [selected, setSelected] = useState("");
   const [title, setTitle] = useState("");
@@ -70,7 +90,9 @@ export default function LessonManager({
     }
     const { data, error } = await supabase
       .from("knowledge_lessons")
-      .select("id,product_id,title_my,title_zh,title_en,position,free_preview")
+      .select(
+        "id,product_id,title_my,title_zh,title_en,position,free_preview,status",
+      )
       .eq("product_id", Number(selected))
       .order("position")
       .order("id");
@@ -127,6 +149,35 @@ export default function LessonManager({
       .from("knowledge_lessons")
       .delete()
       .eq("id", id);
+    if (error) setMessage(error.message);
+    else await load();
+  }
+  async function updateLesson(
+    id: number,
+    values: Partial<Pick<Lesson, "position" | "free_preview" | "status">>,
+  ) {
+    const { error } = await supabase
+      .from("knowledge_lessons")
+      .update({ ...values, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) setMessage(error.message);
+    else await load();
+  }
+  async function move(lesson: Lesson, direction: -1 | 1) {
+    const currentIndex = lessons.findIndex((item) => item.id === lesson.id);
+    const target = lessons[currentIndex + direction];
+    if (!target) return;
+    const [resultA, resultB] = await Promise.all([
+      supabase
+        .from("knowledge_lessons")
+        .update({ position: target.position })
+        .eq("id", lesson.id),
+      supabase
+        .from("knowledge_lessons")
+        .update({ position: lesson.position })
+        .eq("id", target.id),
+    ]);
+    const error = resultA.error || resultB.error;
     if (error) setMessage(error.message);
     else await load();
   }
@@ -188,10 +239,56 @@ export default function LessonManager({
                   {lesson.title_zh || lesson.title_my || lesson.title_en}
                   {lesson.free_preview ? " · Preview" : ""}
                 </span>
-                <button type="button" onClick={() => remove(lesson.id)}>
-                  <Trash2 size={15} />
-                  {copy.remove}
-                </button>
+                <div className="lesson-admin-actions">
+                  <button
+                    type="button"
+                    aria-label="Move up"
+                    onClick={() => move(lesson, -1)}
+                  >
+                    <ArrowUp size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Move down"
+                    onClick={() => move(lesson, 1)}
+                  >
+                    <ArrowDown size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateLesson(lesson.id, {
+                        free_preview: !lesson.free_preview,
+                      })
+                    }
+                  >
+                    {lesson.free_preview ? (
+                      <EyeOff size={15} />
+                    ) : (
+                      <Eye size={15} />
+                    )}{" "}
+                    {lesson.free_preview ? copy.previewOn : copy.previewOff}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateLesson(lesson.id, {
+                        status:
+                          lesson.status === "published" ? "draft" : "published",
+                      })
+                    }
+                  >
+                    {lesson.status === "published" ? copy.online : copy.offline}
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => remove(lesson.id)}
+                  >
+                    <Trash2 size={15} />
+                    {copy.remove}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

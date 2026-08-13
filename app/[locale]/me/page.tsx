@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { BookOpen, BriefcaseBusiness, CalendarCheck, FileText, LogOut, MessageSquareText, ShieldCheck, UserRound } from "lucide-react";
+import {
+  BookOpen,
+  BriefcaseBusiness,
+  CalendarCheck,
+  FileText,
+  LogOut,
+  MessageSquareText,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 type Profile = {
@@ -23,13 +32,60 @@ export default function MePage() {
   const [checkinCount, setCheckinCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
 
-  const copy = locale === "zh" ? {
-    fallback: "BurmeseBridge 用户", member: "普通会员", verified: "已认证", points: "积分", checkins: "累计签到", posts: "我的帖子", quick: "快捷入口", learn: "学习中心", checkin: "每日签到", forum: "社区论坛", jobs: "工作信息", profile: "编辑资料", logout: "退出登录", load: "正在加载账户…", day: "天",
-  } : locale === "my" ? {
-    fallback: "BurmeseBridge အသုံးပြုသူ", member: "အဖွဲ့ဝင်", verified: "အတည်ပြုပြီး", points: "အမှတ်", checkins: "စုစုပေါင်း Check-in", posts: "ကျွန်ုပ်၏ ပို့စ်များ", quick: "အမြန်ဝင်ရန်", learn: "သင်ယူရန်", checkin: "နေ့စဉ် Check-in", forum: "Community", jobs: "အလုပ်အကိုင်", profile: "ကိုယ်ရေးအချက်အလက် ပြင်ရန်", logout: "အကောင့်ထွက်ရန်", load: "အကောင့်ကို ဖွင့်နေသည်…", day: "ရက်",
-  } : {
-    fallback: "BurmeseBridge User", member: "Member", verified: "Verified", points: "Points", checkins: "Total check-ins", posts: "My posts", quick: "Quick access", learn: "Learning center", checkin: "Daily check-in", forum: "Community forum", jobs: "Jobs", profile: "Edit profile", logout: "Log out", load: "Loading your account…", day: "days",
-  };
+  const copy =
+    locale === "zh"
+      ? {
+          fallback: "BurmeseBridge 用户",
+          member: "普通会员",
+          verified: "已认证",
+          points: "积分",
+          checkins: "累计签到",
+          posts: "我的帖子",
+          quick: "快捷入口",
+          learn: "学习中心",
+          checkin: "每日签到",
+          forum: "社区论坛",
+          jobs: "工作信息",
+          profile: "编辑资料",
+          logout: "退出登录",
+          load: "正在加载账户…",
+          day: "天",
+        }
+      : locale === "my"
+        ? {
+            fallback: "BurmeseBridge အသုံးပြုသူ",
+            member: "အဖွဲ့ဝင်",
+            verified: "အတည်ပြုပြီး",
+            points: "အမှတ်",
+            checkins: "စုစုပေါင်း Check-in",
+            posts: "ကျွန်ုပ်၏ ပို့စ်များ",
+            quick: "အမြန်ဝင်ရန်",
+            learn: "သင်ယူရန်",
+            checkin: "နေ့စဉ် Check-in",
+            forum: "Community",
+            jobs: "အလုပ်အကိုင်",
+            profile: "ကိုယ်ရေးအချက်အလက် ပြင်ရန်",
+            logout: "အကောင့်ထွက်ရန်",
+            load: "အကောင့်ကို ဖွင့်နေသည်…",
+            day: "ရက်",
+          }
+        : {
+            fallback: "BurmeseBridge User",
+            member: "Member",
+            verified: "Verified",
+            points: "Points",
+            checkins: "Total check-ins",
+            posts: "My posts",
+            quick: "Quick access",
+            learn: "Learning center",
+            checkin: "Daily check-in",
+            forum: "Community forum",
+            jobs: "Jobs",
+            profile: "Edit profile",
+            logout: "Log out",
+            load: "Loading your account…",
+            day: "days",
+          };
 
   useEffect(() => {
     let mounted = true;
@@ -42,9 +98,19 @@ export default function MePage() {
 
       const user = authData.user;
       const [profileResult, checkinResult, postResult] = await Promise.all([
-        supabase.from("profiles").select("display_name, avatar_url, verified, badge, points").eq("id", user.id).maybeSingle(),
-        supabase.from("checkins").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-        supabase.from("posts").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+        supabase
+          .from("profiles")
+          .select("display_name, avatar_url, verified, badge, points")
+          .eq("id", user.id)
+          .maybeSingle(),
+        supabase
+          .from("checkins")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id),
+        supabase
+          .from("posts")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id),
       ]);
 
       if (!mounted) return;
@@ -55,7 +121,9 @@ export default function MePage() {
       setLoading(false);
     }
     loadAccount();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [locale, router]);
 
   async function handleLogout() {
@@ -63,33 +131,107 @@ export default function MePage() {
     router.replace(`/${locale}/login`);
   }
 
-  if (loading) return <main className="account-page"><p className="account-loading">{copy.load}</p></main>;
+  if (loading)
+    return (
+      <main className="account-page">
+        <p className="account-loading">{copy.load}</p>
+      </main>
+    );
 
   const name = profile?.display_name || email.split("@")[0] || copy.fallback;
-  const badge = profile?.verified ? (profile.badge || copy.verified) : copy.member;
+  const badge = profile?.verified
+    ? profile.badge || copy.verified
+    : copy.member;
   const links = [
+    {
+      href: `/${locale}/my-courses`,
+      label:
+        locale === "zh"
+          ? "我的课程"
+          : locale === "my"
+            ? "ကျွန်ုပ်၏ သင်တန်းများ"
+            : "My courses",
+      icon: BookOpen,
+    },
     { href: `/${locale}/learn`, label: copy.learn, icon: BookOpen },
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },
     { href: `/${locale}/forum`, label: copy.forum, icon: MessageSquareText },
     { href: `/${locale}/jobs`, label: copy.jobs, icon: BriefcaseBusiness },
   ];
 
-  return <main className="account-page"><section className="account-shell">
-    <div className="account-hero">
-      <div className="account-avatar">
-        {profile?.avatar_url ? <span style={{ backgroundImage: `url(${profile.avatar_url})` }} role="img" aria-label={name} /> : <UserRound size={36} />}
-      </div>
-      <div className="account-identity"><div className="account-name-row"><h1>{name}</h1><span className={profile?.verified ? "account-badge verified" : "account-badge"}>{profile?.verified && <ShieldCheck size={14} />}{badge}</span></div><p>{email}</p></div>
-      <a href={`/${locale}/profile`} className="account-edit">{copy.profile}</a>
-    </div>
+  return (
+    <main className="account-page">
+      <section className="account-shell">
+        <div className="account-hero">
+          <div className="account-avatar">
+            {profile?.avatar_url ? (
+              <span
+                style={{ backgroundImage: `url(${profile.avatar_url})` }}
+                role="img"
+                aria-label={name}
+              />
+            ) : (
+              <UserRound size={36} />
+            )}
+          </div>
+          <div className="account-identity">
+            <div className="account-name-row">
+              <h1>{name}</h1>
+              <span
+                className={
+                  profile?.verified ? "account-badge verified" : "account-badge"
+                }
+              >
+                {profile?.verified && <ShieldCheck size={14} />}
+                {badge}
+              </span>
+            </div>
+            <p>{email}</p>
+          </div>
+          <a href={`/${locale}/profile`} className="account-edit">
+            {copy.profile}
+          </a>
+        </div>
 
-    <div className="account-stats">
-      <article><strong>{profile?.points || 0}</strong><span>{copy.points}</span></article>
-      <article><strong>{checkinCount}</strong><span>{copy.checkins} · {copy.day}</span></article>
-      <article><strong>{postCount}</strong><span>{copy.posts}</span></article>
-    </div>
+        <div className="account-stats">
+          <article>
+            <strong>{profile?.points || 0}</strong>
+            <span>{copy.points}</span>
+          </article>
+          <article>
+            <strong>{checkinCount}</strong>
+            <span>
+              {copy.checkins} · {copy.day}
+            </span>
+          </article>
+          <article>
+            <strong>{postCount}</strong>
+            <span>{copy.posts}</span>
+          </article>
+        </div>
 
-    <div className="account-section"><h2>{copy.quick}</h2><div className="account-links">{links.map(({ href, label, icon: Icon }) => <a key={href} href={href}><Icon size={20} /><span>{label}</span></a>)}</div></div>
-    <div className="account-footer"><a href={`/${locale}/forum`}><FileText size={17} />{copy.posts}</a><button type="button" onClick={handleLogout}><LogOut size={17} />{copy.logout}</button></div>
-  </section></main>;
+        <div className="account-section">
+          <h2>{copy.quick}</h2>
+          <div className="account-links">
+            {links.map(({ href, label, icon: Icon }) => (
+              <a key={href} href={href}>
+                <Icon size={20} />
+                <span>{label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className="account-footer">
+          <a href={`/${locale}/forum`}>
+            <FileText size={17} />
+            {copy.posts}
+          </a>
+          <button type="button" onClick={handleLogout}>
+            <LogOut size={17} />
+            {copy.logout}
+          </button>
+        </div>
+      </section>
+    </main>
+  );
 }

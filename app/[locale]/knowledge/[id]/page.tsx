@@ -2,7 +2,14 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, CheckCircle2, LockKeyhole, PlayCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  CheckCircle2,
+  Circle,
+  LockKeyhole,
+  PlayCircle,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 type Product = {
   id: number;
@@ -43,6 +50,10 @@ export default function CoursePage() {
           locked: "购买后解锁",
           empty: "课程还没有添加课时",
           missing: "课程不存在或已下架",
+          complete: "标记完成",
+          completed: "已完成",
+          progress: "学习进度",
+          loginProgress: "登录后可保存学习进度",
         }
       : locale === "my"
         ? {
@@ -52,6 +63,10 @@ export default function CoursePage() {
             locked: "ဝယ်ပြီးမှ ဖွင့်မည်",
             empty: "သင်ခန်းစာ မရှိသေးပါ",
             missing: "သင်တန်းမရှိပါ",
+            complete: "ပြီးဆုံးကြောင်း မှတ်မည်",
+            completed: "ပြီးဆုံး",
+            progress: "သင်ယူမှု တိုးတက်မှု",
+            loginProgress: "အကောင့်ဝင်ပြီး တိုးတက်မှု သိမ်းပါ",
           }
         : {
             back: "Back to courses",
@@ -60,17 +75,30 @@ export default function CoursePage() {
             locked: "Unlock after purchase",
             empty: "No lessons have been added",
             missing: "Course not found or offline",
+            complete: "Mark complete",
+            completed: "Completed",
+            progress: "Course progress",
+            loginProgress: "Sign in to save progress",
           };
   const [product, setProduct] = useState<Product | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [contents, setContents] = useState<LessonContent[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [completed, setCompleted] = useState<number[]>([]);
   const load = useCallback(async () => {
     if (!Number.isSafeInteger(id) || id < 1) {
       setLoaded(true);
       return;
     }
-    const [{ data: p }, { data: l }, { data: c }] = await Promise.all([
+    const [
+      { data: p },
+      { data: l },
+      { data: c },
+      {
+        data: { user },
+      },
+    ] = await Promise.all([
       supabase
         .from("knowledge_products")
         .select(
@@ -89,10 +117,20 @@ export default function CoursePage() {
       supabase
         .from("knowledge_lesson_content")
         .select("lesson_id,body_my,body_zh,body_en,youtube_id"),
+      supabase.auth.getUser(),
     ]);
     setProduct(p as Product | null);
     setLessons((l || []) as Lesson[]);
     setContents((c || []) as LessonContent[]);
+    setUserId(user?.id || null);
+    if (user) {
+      const { data: progress } = await supabase
+        .from("knowledge_lesson_progress")
+        .select("lesson_id")
+        .eq("user_id", user.id)
+        .eq("completed", true);
+      setCompleted((progress || []).map((item) => item.lesson_id));
+    }
     setLoaded(true);
   }, [id]);
   useEffect(() => {
@@ -100,6 +138,30 @@ export default function CoursePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
+  async function toggleComplete(lessonId: number) {
+    if (!userId) return;
+    const isCompleted = completed.includes(lessonId);
+    if (isCompleted) {
+      const { error } = await supabase
+        .from("knowledge_lesson_progress")
+        .delete()
+        .eq("lesson_id", lessonId)
+        .eq("user_id", userId);
+      if (!error)
+        setCompleted((current) => current.filter((id) => id !== lessonId));
+    } else {
+      const { error } = await supabase
+        .from("knowledge_lesson_progress")
+        .upsert({
+          lesson_id: lessonId,
+          user_id: userId,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+      if (!error) setCompleted((current) => [...current, lessonId]);
+    }
+  }
   const localize = (
     item: Product | Lesson | LessonContent,
     field: "title" | "description" | "body",
@@ -147,6 +209,31 @@ export default function CoursePage() {
         </div>
       </header>
       <h2 className="course-section-title">{copy.lessons}</h2>
+      <div className="course-progress">
+        <div>
+          <strong>{copy.progress}</strong>
+          <span>
+            {lessons.length
+              ? Math.round(
+                  (completed.filter((item) =>
+                    lessons.some((lesson) => lesson.id === item),
+                  ).length /
+                    lessons.length) *
+                    100,
+                )
+              : 0}
+            %
+          </span>
+        </div>
+        <div>
+          <i
+            style={{
+              width: `${lessons.length ? (completed.filter((item) => lessons.some((lesson) => lesson.id === item)).length / lessons.length) * 100 : 0}%`,
+            }}
+          />
+        </div>
+        {!userId && <small>{copy.loginProgress}</small>}
+      </div>
       <div className="lesson-list">
         {lessons.length === 0 && <div className="feedCard">{copy.empty}</div>}
         {lessons.map((lesson, index) => {
@@ -184,6 +271,22 @@ export default function CoursePage() {
                       </div>
                     )}
                     <p>{localize(content, "body")}</p>
+                    {userId && (
+                      <button
+                        type="button"
+                        className={`lesson-complete ${completed.includes(lesson.id) ? "active" : ""}`}
+                        onClick={() => toggleComplete(lesson.id)}
+                      >
+                        {completed.includes(lesson.id) ? (
+                          <Check size={16} />
+                        ) : (
+                          <Circle size={16} />
+                        )}{" "}
+                        {completed.includes(lesson.id)
+                          ? copy.completed
+                          : copy.complete}
+                      </button>
+                    )}
                   </>
                 ) : (
                   <div className="lesson-lock">
