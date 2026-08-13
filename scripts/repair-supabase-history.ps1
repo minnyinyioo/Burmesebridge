@@ -1,3 +1,8 @@
+param(
+  [string]$StartAt = "20260813000001",
+  [int]$MaxRetries = 4
+)
+
 $ErrorActionPreference = "Stop"
 
 # The production schema predates CLI migration tracking. Mark the existing
@@ -38,10 +43,25 @@ $existingVersions = @(
 )
 
 foreach ($version in $existingVersions) {
+  if ([string]::CompareOrdinal($version, $StartAt) -lt 0) {
+    continue
+  }
   Write-Host "Marking existing migration $version as applied..."
-  npx supabase migration repair $version --status applied
-  if ($LASTEXITCODE -ne 0) {
-    throw "Failed to repair migration $version"
+  $completed = $false
+  for ($attempt = 1; $attempt -le $MaxRetries; $attempt++) {
+    npx supabase migration repair $version --status applied
+    if ($LASTEXITCODE -eq 0) {
+      $completed = $true
+      break
+    }
+    if ($attempt -lt $MaxRetries) {
+      $delay = 5 * $attempt
+      Write-Warning "Connection failed for $version. Retrying in $delay seconds ($attempt/$MaxRetries)..."
+      Start-Sleep -Seconds $delay
+    }
+  }
+  if (-not $completed) {
+    throw "Failed to repair migration $version after $MaxRetries attempts. Resume with: .\scripts\repair-supabase-history.ps1 -StartAt $version"
   }
 }
 
