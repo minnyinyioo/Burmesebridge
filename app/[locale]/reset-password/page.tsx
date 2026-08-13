@@ -27,8 +27,17 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     let mounted = true;
     async function prepareRecovery() {
-      const code = new URLSearchParams(window.location.search).get("code");
+      const query = new URLSearchParams(window.location.search);
+      const code = query.get("code");
+      const tokenHash = query.get("token_hash");
       if (code) await supabase.auth.exchangeCodeForSession(code);
+      if (tokenHash) await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "recovery" });
+      if (window.location.hash) {
+        const hash = new URLSearchParams(window.location.hash.slice(1));
+        const accessToken = hash.get("access_token");
+        const refreshToken = hash.get("refresh_token");
+        if (accessToken && refreshToken) await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+      }
       const { data } = await supabase.auth.getSession();
       if (mounted) { setReady(Boolean(data.session)); setChecking(false); }
     }
