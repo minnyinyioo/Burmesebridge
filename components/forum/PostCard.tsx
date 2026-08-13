@@ -171,7 +171,7 @@ const avatar = {
   width: "52px",
   height: "52px",
   borderRadius: "999px",
-  background: "linear-gradient(135deg,#2563eb,#7c3aed)",
+  background: "linear-gradient(135deg,var(--brand-primary),var(--brand-accent))",
   color: "white",
   display: "flex",
   justifyContent: "center",

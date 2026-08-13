@@ -134,7 +134,7 @@ const button = {
   padding: "16px 28px",
   borderRadius: "14px",
   border: "none",
-  background: "#2563eb",
+  background: "var(--brand-primary)",
   color: "white",
   fontSize: "18px",
   fontWeight: 700,

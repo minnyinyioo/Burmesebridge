@@ -99,7 +99,7 @@ const badges={
 
 verified:{
 icon:<BadgeCheck size={16}/>,
-color:"#2563eb"
+color:"var(--brand-primary)"
 },
 
 moderator:{

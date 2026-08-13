@@ -142,7 +142,7 @@ function BanContent() {
 
 const button = {
   border: "none",
-  background: "#2563eb",
+  background: "var(--brand-primary)",
   color: "white",
   padding: "10px 16px",
   borderRadius: 999,

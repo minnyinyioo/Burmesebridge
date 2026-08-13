@@ -210,7 +210,7 @@ const input = {
 };
 
 const button = {
-  background: "#2563eb",
+  background: "var(--brand-primary)",
   color: "white",
   padding: "14px 18px",
   borderRadius: "12px",

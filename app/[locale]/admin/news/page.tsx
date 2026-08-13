@@ -362,7 +362,8 @@ function NewsContent() {
               onClick={generateDraft}
               style={{
                 ...button,
-                background: "#7c3aed",
+                background: "var(--brand-accent)",
+                color: "#30240e",
               }}
             >
               {t.generateDraft}
@@ -428,7 +429,7 @@ const textarea = {
 
 const button = {
   border: "none",
-  background: "#2563eb",
+  background: "var(--brand-primary)",
   color: "white",
   padding: "10px 16px",
   borderRadius: 999,
