@@ -42,7 +42,7 @@ export default async function LocaleLayout({
   const t = nav[locale as keyof typeof nav] || nav.en;
 
   return (
-    <div className="site-shell">
+    <div className="site-shell" lang={locale}>
       <nav className="site-nav">
         <Link href={`/${locale}`} className="site-logo">
           <span className="site-logo-mark">B</span>

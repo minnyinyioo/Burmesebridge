@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Noto_Serif_Myanmar } from "next/font/google";
+import { Noto_Sans_Myanmar } from "next/font/google";
 import "./globals.css";
 
-const appFont = Noto_Serif_Myanmar({
+const appFont = Noto_Sans_Myanmar({
   subsets: ["myanmar"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-app",
