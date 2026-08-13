@@ -137,7 +137,11 @@ svg { display: block; flex: 0 0 auto; }
 .auth-input:focus { border-color: var(--green-700); background: #fff; box-shadow: 0 0 0 3px rgba(19,112,90,.1); }
 .auth-submit { width: 100%; min-height: 50px; border: 0; border-radius: 12px; color: #fff; background: var(--green-800); font-weight: 800; cursor: pointer; transition: .18s; }
 .auth-submit:hover { background: var(--green-700); transform: translateY(-1px); }
-.auth-switch { display: block; margin-top: 18px; color: var(--green-700); text-align: center; font-size: 14px; font-weight: 750; }
+.auth-switch { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 18px; color: var(--green-700); text-align: center; font-size: 14px; font-weight: 750; }
+.auth-forgot-link { display: block; width: fit-content; margin: -4px 0 16px auto; color: var(--green-700); font-size: 13px; font-weight: 750; }
+.auth-error { margin: 0 0 14px; padding: 10px 12px; border-radius: 9px; color: #9d3636; background: #fff0f0; font-size: 13px; line-height: 1.5; }
+.auth-success { color: #173d35; text-align: center; }.auth-success > svg { margin: 0 auto 14px; color: var(--green-700); }.auth-success p { color: #6d7c77; line-height: 1.7; }.auth-heading-icon { margin-bottom: 12px; color: var(--green-700); }
+.auth-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }.auth-submit-link { margin-top: 18px; display: flex; align-items: center; justify-content: center; }
 
 .home-page { display: grid; gap: 56px; }
 .home-hero { min-height: 430px; display: grid; grid-template-columns: minmax(0,1.4fr) minmax(240px,.6fr); align-items: end; gap: 40px; padding: clamp(38px,6vw,72px); overflow: hidden; position: relative; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; color: #102f29; background: rgba(255,255,255,.42); }

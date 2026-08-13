@@ -34,6 +34,7 @@ export default function LoginPage() {
       register: "အကောင့်မရှိသေးဘူးလား? အကောင့်ဖွင့်ရန်",
       success: "ဝင်ရောက်မှု အောင်မြင်ပါသည်",
       intro: "BurmeseBridge မှ ကြိုဆိုပါတယ်",
+      forgot: "စကားဝှက် မေ့နေပါသလား?",
     },
     zh: {
       title: "登录",
@@ -44,6 +45,7 @@ export default function LoginPage() {
       register: "没有账号？创建账号",
       success: "登录成功",
       intro: "欢迎回到 BurmeseBridge",
+      forgot: "忘记密码？",
     },
     en: {
       title: "Login",
@@ -54,6 +56,7 @@ export default function LoginPage() {
       register: "No account? Create one",
       success: "Login success",
       intro: "Welcome back to BurmeseBridge",
+      forgot: "Forgot password?",
     },
   };
 
@@ -103,6 +106,10 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        <a href={`/${locale}/forgot-password`} className="auth-forgot-link">
+          {t.forgot}
+        </a>
 
         <button className="auth-submit" onClick={handleLogin} disabled={loading}>
           {loading ? t.loading : t.button}
