@@ -66,9 +66,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleLogin() {
+    if (loading) return;
     setLoading(true);
+    setError("");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -76,9 +79,8 @@ export default function LoginPage() {
     });
 
     if (error) {
-      alert(error.message);
+      setError(error.message);
     } else {
-      alert(t.success);
       window.location.href = `/${locale}/me`;
     }
 
@@ -94,6 +96,8 @@ export default function LoginPage() {
 
         <input
           type="email"
+          autoComplete="email"
+          aria-label={t.email}
           placeholder={t.email}
           className="auth-input"
           value={email}
@@ -102,6 +106,8 @@ export default function LoginPage() {
 
         <input
           type="password"
+          autoComplete="current-password"
+          aria-label={t.password}
           placeholder={t.password}
           className="auth-input"
           value={password}
@@ -111,6 +117,8 @@ export default function LoginPage() {
         <a href={`/${locale}/forgot-password`} className="auth-forgot-link">
           {t.forgot}
         </a>
+
+        {error && <p className="auth-error" role="alert">{error}</p>}
 
         <button className="auth-submit" onClick={handleLogin} disabled={loading}>
           {loading ? t.loading : t.button}
