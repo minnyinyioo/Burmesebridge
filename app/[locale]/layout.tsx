@@ -1,8 +1,19 @@
 import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import ThemeToggle from "@/components/ThemeToggle";
+import NotificationLink from "@/components/NotificationLink";
 import Link from "next/link";
-import { BriefcaseBusiness, CalendarCheck, GraduationCap, Home, LibraryBig, MessageCircle, Newspaper, PlaySquare, Waypoints } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CalendarCheck,
+  GraduationCap,
+  Home,
+  LibraryBig,
+  MessageCircle,
+  Newspaper,
+  PlaySquare,
+  Waypoints,
+} from "lucide-react";
 
 export default async function LocaleLayout({
   children,
@@ -49,21 +60,47 @@ export default async function LocaleLayout({
     <div className="site-shell" lang={locale}>
       <nav className="site-nav">
         <Link href={`/${locale}`} className="site-logo">
-          <span className="site-logo-mark" aria-hidden="true"><Waypoints size={20} /></span>
-          <span>Burmese<span>Bridge</span></span>
+          <span className="site-logo-mark" aria-hidden="true">
+            <Waypoints size={20} />
+          </span>
+          <span>
+            Burmese<span>Bridge</span>
+          </span>
         </Link>
 
         <div className="site-menu">
-          <Link href={`/${locale}`}><Home size={16} />{t.home}</Link>
-          <Link href={`/${locale}/learn`}><GraduationCap size={16} />{t.learn}</Link>
-          <Link href={`/${locale}/jobs`}><BriefcaseBusiness size={16} />{t.jobs}</Link>
-          <Link href={`/${locale}/news`}><Newspaper size={16} />{t.news}</Link>
-          <Link href={`/${locale}/forum`}><MessageCircle size={16} />{t.forum}</Link>
-          <Link href={`/${locale}/videos`}><PlaySquare size={16} />{locale === "zh" ? "视频" : locale === "my" ? "ဗီဒီယို" : "Videos"}</Link>
-          <Link href={`/${locale}/knowledge`}><LibraryBig size={16} />{t.knowledge}</Link>
+          <Link href={`/${locale}`}>
+            <Home size={16} />
+            {t.home}
+          </Link>
+          <Link href={`/${locale}/learn`}>
+            <GraduationCap size={16} />
+            {t.learn}
+          </Link>
+          <Link href={`/${locale}/jobs`}>
+            <BriefcaseBusiness size={16} />
+            {t.jobs}
+          </Link>
+          <Link href={`/${locale}/news`}>
+            <Newspaper size={16} />
+            {t.news}
+          </Link>
+          <Link href={`/${locale}/forum`}>
+            <MessageCircle size={16} />
+            {t.forum}
+          </Link>
+          <Link href={`/${locale}/videos`}>
+            <PlaySquare size={16} />
+            {locale === "zh" ? "视频" : locale === "my" ? "ဗီဒီယို" : "Videos"}
+          </Link>
+          <Link href={`/${locale}/knowledge`}>
+            <LibraryBig size={16} />
+            {t.knowledge}
+          </Link>
         </div>
 
         <div className="site-actions">
+          <NotificationLink locale={locale} />
           <AuthMenu locale={locale} />
           <ThemeToggle locale={locale} />
           <LanguageMenu locale={locale} />
@@ -74,10 +111,22 @@ export default async function LocaleLayout({
 
       {/* 手机底部导航保留：这是移动端主要入口，不能删。 */}
       <div className="mobile-tabbar">
-        <Link href={`/${locale}`}><Home size={19} />{t.home}</Link>
-        <Link href={`/${locale}/learn`}><GraduationCap size={19} />{t.learn}</Link>
-        <Link href={`/${locale}/forum`}><MessageCircle size={19} />{t.forum}</Link>
-        <Link href={`/${locale}/checkin`}><CalendarCheck size={19} />{t.checkin}</Link>
+        <Link href={`/${locale}`}>
+          <Home size={19} />
+          {t.home}
+        </Link>
+        <Link href={`/${locale}/learn`}>
+          <GraduationCap size={19} />
+          {t.learn}
+        </Link>
+        <Link href={`/${locale}/forum`}>
+          <MessageCircle size={19} />
+          {t.forum}
+        </Link>
+        <Link href={`/${locale}/checkin`}>
+          <CalendarCheck size={19} />
+          {t.checkin}
+        </Link>
       </div>
 
       <footer className="site-footer">
