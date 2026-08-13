@@ -3,17 +3,16 @@ import AuthMenu from "@/components/AuthMenu";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationLink from "@/components/NotificationLink";
 import GlobalSearch from "@/components/GlobalSearch";
+import MobileTabBar from "@/components/MobileTabBar";
 import Link from "next/link";
 import {
   BriefcaseBusiness,
-  CalendarCheck,
   GraduationCap,
   Home,
   LibraryBig,
   MessageCircle,
   Newspaper,
   PlaySquare,
-  Search,
   Waypoints,
 } from "lucide-react";
 
@@ -112,29 +111,7 @@ export default async function LocaleLayout({
 
       <main className="site-main">{children}</main>
 
-      {/* 手机底部导航保留：这是移动端主要入口，不能删。 */}
-      <div className="mobile-tabbar">
-        <Link href={`/${locale}`}>
-          <Home size={19} />
-          {t.home}
-        </Link>
-        <Link href={`/${locale}/learn`}>
-          <GraduationCap size={19} />
-          {t.learn}
-        </Link>
-        <Link href={`/${locale}/forum`}>
-          <MessageCircle size={19} />
-          {t.forum}
-        </Link>
-        <Link href={`/${locale}/search`}>
-          <Search size={19} />
-          {locale === "zh" ? "搜索" : locale === "my" ? "ရှာရန်" : "Search"}
-        </Link>
-        <Link href={`/${locale}/checkin`}>
-          <CalendarCheck size={19} />
-          {t.checkin}
-        </Link>
-      </div>
+      <MobileTabBar locale={locale} />
 
       <footer className="site-footer">
         <div className="site-footer-inner">
