@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PlayCircle, Video } from "lucide-react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import ContentInteractions from "@/components/ContentInteractions";
 
 type VideoItem = { id: number; youtube_id: string; title: string; description: string; featured: boolean; created_at: string };
 
@@ -24,7 +25,7 @@ export default function VideosPage() {
   return <main className="video-page"><header className="video-page-head"><span><Video size={22} /></span><div><h1>{copy.title}</h1><p>{copy.intro}</p></div></header>
     <div className="video-grid">{!loading && items.length === 0 && <div className="feedCard video-empty"><PlayCircle size={28} />{copy.empty}</div>}{items.map((item) => <article className="video-card" id={`video-${item.id}`} key={item.id}>
       <div className="video-player"><iframe src={`https://www.youtube-nocookie.com/embed/${item.youtube_id}?rel=0`} title={item.title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /></div>
-      <div className="video-card-copy">{item.featured && <span>{copy.featured}</span>}<h2>{item.title}</h2>{item.description && <p>{item.description}</p>}</div>
+      <div className="video-card-copy">{item.featured && <span>{copy.featured}</span>}<h2>{item.title}</h2>{item.description && <p>{item.description}</p>}<ContentInteractions type="video" contentId={item.id} locale={locale} title={item.title} /></div>
     </article>)}</div>
   </main>;
 }

@@ -4,6 +4,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import NotificationLink from "@/components/NotificationLink";
 import GlobalSearch from "@/components/GlobalSearch";
 import MobileTabBar from "@/components/MobileTabBar";
+import SocialFooter from "@/components/SocialFooter";
 import Link from "next/link";
 import {
   BriefcaseBusiness,
@@ -119,7 +120,7 @@ export default async function LocaleLayout({
             <h3>BurmeseBridge</h3>
             <p>Burmese Chinese Learning Platform</p>
           </div>
-
+          <SocialFooter />
           <div>© 2026 BurmeseBridge</div>
         </div>
       </footer>

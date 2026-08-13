@@ -11,6 +11,7 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import ContentInteractions from "@/components/ContentInteractions";
 type Product = {
   id: number;
   title_my: string | null;
@@ -299,6 +300,7 @@ export default function CoursePage() {
           );
         })}
       </div>
+      <ContentInteractions type="knowledge" contentId={product.id} locale={locale} title={localize(product, "title")} />
     </main>
   );
 }

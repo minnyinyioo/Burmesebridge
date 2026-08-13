@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import Badge from "@/components/Badges";
 import RichMediaBlocks, { type MediaBlock } from "@/components/RichMediaBlocks";
 import { supabase } from "@/lib/supabase";
+import ContentInteractions from "@/components/ContentInteractions";
 
 type Category = "news" | "jobs" | "learn";
 type ContentItem = {
@@ -63,6 +64,7 @@ export default function ContentDetailPage() {
           <div className="content-detail-heading"><h1>{title}</h1>{item.pinned && <Badge type="pinned" />}{item.hot && <Badge type="hot" />}{item.featured && <Badge type="featured" />}</div>
           <div className="content-detail-copy">{content}</div>
           <RichMediaBlocks blocks={item.media_blocks} />
+          <ContentInteractions type="news" contentId={item.id} locale={locale} title={title} />
         </article>
       )}
     </main>
