@@ -32,7 +32,7 @@ export default function GlobalSearch({ locale }: { locale: string }) {
     <form className="global-search-form" role="search" onSubmit={submit}>
       <Search size={16} aria-hidden="true" />
       <input ref={inputRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={placeholder} aria-label={placeholder} />
-      <kbd>⌘K</kbd>
+      <kbd>Ctrl K</kbd>
     </form>
   );
 }
