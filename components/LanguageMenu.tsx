@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
+import { Check, ChevronDown, Languages } from "lucide-react";
 
 /**
  * 语言菜单
@@ -75,64 +76,44 @@ export default function LanguageMenu({
   }
 
   return (
-    <div
-      ref={menuRef}
-      style={{
-        position:"relative"
-      }}
-    >
+    <div ref={menuRef} className="menu-popover">
       <button
         onClick={()=>
           setOpen(!open)
         }
-        style={{
-          background:"transparent",
-          border:"1px solid #e2e8f0",
-          borderRadius:"999px",
-          padding:"8px 12px",
-          fontWeight:700,
-          cursor:"pointer"
-        }}
+        className="site-action-button language-button"
+        aria-expanded={open}
       >
+        <Languages size={17} />
         {
           label[
           locale as keyof typeof label
           ] || "EN"
         }
 
-        {" "}▾
+        <ChevronDown size={14} />
       </button>
 
       {open && (
 
-      <div
-      style={{
-      position:"absolute",
-      right:0,
-      top:42,
-      width:140,
-      background:"white",
-      borderRadius:14,
-      overflow:"hidden",
-      border:
-      "1px solid #e2e8f0",
-      zIndex:999
-      }}
-      >
+      <div className="site-dropdown language-dropdown">
 
       <LangLink
       href={getLocalePath("my")}
       label="မြန်မာ"
+      active={locale === "my"}
       />
 
       <LangLink
       href={getLocalePath("zh")}
       label="中文"
+      active={locale === "zh"}
       />
 
       <LangLink
       href={getLocalePath("en")}
       label="English"
+      active={locale === "en"}
       />
 
       </div>
@@ -145,25 +126,17 @@ export default function LanguageMenu({
 function LangLink({
   href,
   label
+  ,active
 }:{
   href:string
   label:string
+  active:boolean
 }){
 
 return(
 
-<Link
-href={href}
-style={{
-display:"block",
-padding:"12px",
-fontWeight:700,
-borderBottom:
-"1px solid #f1f5f9"
-}}
->
-
-{label}
+<Link href={href} className="dropdown-link language-option">
+{label}{active && <Check size={15} />}
 
 </Link>
 
