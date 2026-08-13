@@ -121,27 +121,6 @@ export default function HomePage() {
   const t = text[locale as keyof typeof text] || text.en;
   const [items, setItems] = useState<HomeItem[]>([]);
 
-  useEffect(() => {
-    loadItems();
-
-    const channel = supabase
-      .channel("home-news-live")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "news",
-        },
-        () => loadItems()
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
   async function loadItems() {
     const { data, error } = await supabase
       .from("news")
@@ -163,6 +142,29 @@ export default function HomePage() {
     setItems((data || []) as HomeItem[]);
   }
 
+  useEffect(() => {
+    // Initial remote data synchronization; state updates happen after Supabase resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadItems();
+
+    const channel = supabase
+      .channel("home-news-live")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "news",
+        },
+        () => loadItems()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   function getTitle(item: HomeItem) {
     if (locale === "zh") return item.title_zh || item.title_my || item.title_en || "";
     if (locale === "en") return item.title_en || item.title_my || item.title_zh || "";
@@ -181,38 +183,36 @@ export default function HomePage() {
   const latestNews = items.filter((item) => item.category === "news").slice(0, 3);
 
   return (
-    <main style={{ display: "grid", gap: 34 }}>
-      <section
-        style={{
-          background: "linear-gradient(135deg,#0f2a3b,#0a1928)",
-          borderRadius: 28,
-          padding: "34px 26px",
-          border: "1px solid rgba(200,166,91,0.25)",
-          color: "white",
-        }}
-      >
-        <div style={heroBadge}>
+    <main className="home-page">
+      <section className="home-hero">
+        <div className="home-hero-content">
+        <div className="home-eyebrow">
           <Globe size={15} />
           {t.heroBadge}
         </div>
 
-        <h1 style={heroTitle}>{t.heroTitle}</h1>
-        <p style={heroSub}>{t.heroSub}</p>
+        <h1>{t.heroTitle}</h1>
+        <p>{t.heroSub}</p>
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
-          <Link href={`/${locale}/login`} style={primaryBtn}>
+        <div className="home-hero-actions">
+          <Link href={`/${locale}/login`} className="home-primary-button">
             <Users size={16} />
             {t.register}
           </Link>
 
-          <Link href={`/${locale}/learn`} style={outlineBtn}>
+          <Link href={`/${locale}/learn`} className="home-secondary-button">
             <Crown size={16} />
             {t.member}
           </Link>
         </div>
+        </div>
+        <div className="home-hero-art" aria-hidden="true">
+          <span>မြန်မာ</span><span>中文</span><span>TH</span>
+          <div><Globe size={46} /></div>
+        </div>
       </section>
 
-      <section style={gridLinks}>
+      <section className="home-quick-grid" aria-label="Quick links">
         <HomeLink href={`/${locale}/learn`} icon={<GraduationCap />} label={t.learn} />
         <HomeLink href={`/${locale}/jobs`} icon={<Briefcase />} label={t.jobs} />
         <HomeLink href={`/${locale}/news`} icon={<Newspaper />} label={t.news} />
@@ -289,26 +289,26 @@ export default function HomePage() {
         )}
       </ContentSection>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16 }}>
+      <section className="home-support-grid">
         <div className="feedCard">
-          <div style={smallHead}>
+          <div className="small-head">
             <CalendarCheck size={22} color="#c8a65b" />
             <strong>{t.checkinTitle}</strong>
           </div>
-          <p style={muted}>{t.checkinText}</p>
-          <Link href={`/${locale}/checkin`} style={smallLink}>
+          <p className="muted-copy">{t.checkinText}</p>
+          <Link href={`/${locale}/checkin`} className="text-link">
             {t.go}
             <ChevronRight size={15} />
           </Link>
         </div>
 
         <div className="feedCard">
-          <div style={smallHead}>
+          <div className="small-head">
             <Crown size={22} color="#c8a65b" />
             <strong>{t.memberTitle}</strong>
           </div>
-          <p style={muted}>{t.memberText}</p>
-          <Link href={`/${locale}/learn`} style={smallLink}>
+          <p className="muted-copy">{t.memberText}</p>
+          <Link href={`/${locale}/learn`} className="text-link">
             {t.go}
             <ChevronRight size={15} />
           </Link>
@@ -317,12 +317,12 @@ export default function HomePage() {
     </main>
   );
 }
-
 function HomeLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <Link href={href} className="feedCard" style={homeLink}>
-      <span style={{ color: "#c8a65b" }}>{icon}</span>
-      <strong style={{ fontSize: 13 }}>{label}</strong>
+    <Link href={href} className="home-quick-link">
+      <span>{icon}</span>
+      <strong>{label}</strong>
+      <ChevronRight size={16} />
     </Link>
   );
 }
@@ -330,11 +330,11 @@ function HomeLink({ href, icon, label }: { href: string; icon: React.ReactNode; 
 function ContentSection({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <section>
-      <div style={sectionHead}>
-        <span style={{ color: "#c8a65b" }}>{icon}</span>
-        <h2 style={{ fontSize: 22 }}>{title}</h2>
+      <div className="home-section-head">
+        <span>{icon}</span>
+        <h2>{title}</h2>
       </div>
-      <div style={{ display: "grid", gap: 14 }}>{children}</div>
+      <div className="home-content-grid">{children}</div>
     </section>
   );
 }
@@ -361,11 +361,11 @@ function ContentCard({
         {item.featured && <Badge type="featured" />}
       </div>
 
-      <p style={cardText}>
+      <p className="home-card-copy">
         {content.length > 160 ? `${content.slice(0, 160)}...` : content}
       </p>
 
-      <Link href={href} style={smallLink}>
+      <Link href={href} className="text-link">
         {action}
         <ChevronRight size={15} />
       </Link>
@@ -375,114 +375,9 @@ function ContentCard({
 
 function Empty({ text }: { text: string }) {
   return (
-    <div className="feedCard" style={{ color: "#64748b" }}>
+    <div className="feedCard home-empty">
       {text}
     </div>
   );
 }
 
-const heroBadge = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  color: "#c8a65b",
-  background: "rgba(200,166,91,0.1)",
-  borderRadius: 999,
-  padding: "7px 12px",
-  fontSize: 13,
-  fontWeight: 800,
-  marginBottom: 14,
-};
-
-const heroTitle = {
-  fontSize: "clamp(24px,4vw,42px)",
-  lineHeight: 1.35,
-  marginBottom: 14,
-  maxWidth: 880,
-};
-
-const heroSub = {
-  color: "#cbd5e1",
-  fontSize: 15,
-  lineHeight: 1.8,
-  maxWidth: 760,
-};
-
-const primaryBtn = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  background: "#c8a65b",
-  color: "#0a1928",
-  padding: "11px 18px",
-  borderRadius: 999,
-  fontWeight: 900,
-  textDecoration: "none",
-};
-
-const outlineBtn = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  border: "1px solid #c8a65b",
-  color: "#c8a65b",
-  padding: "11px 18px",
-  borderRadius: 999,
-  fontWeight: 900,
-  textDecoration: "none",
-};
-
-const gridLinks = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3,minmax(0,1fr))",
-  gap: 12,
-};
-
-const homeLink = {
-  display: "flex",
-  flexDirection: "column" as const,
-  alignItems: "center",
-  gap: 8,
-  textDecoration: "none",
-  color: "#0f172a",
-  padding: 16,
-};
-
-const sectionHead = {
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
-  borderLeft: "4px solid #c8a65b",
-  paddingLeft: 10,
-  marginBottom: 14,
-  color: "#0f172a",
-};
-
-const cardText = {
-  marginTop: 10,
-  color: "#475569",
-  lineHeight: 1.8,
-  whiteSpace: "pre-wrap" as const,
-};
-
-const smallHead = {
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
-};
-
-const muted = {
-  color: "#64748b",
-  marginTop: 10,
-  lineHeight: 1.8,
-};
-
-const smallLink = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 4,
-  color: "#c8a65b",
-  fontWeight: 800,
-  textDecoration: "none",
-  marginTop: 12,
-};

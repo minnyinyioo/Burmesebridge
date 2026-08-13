@@ -33,6 +33,7 @@ export default function LoginPage() {
       loading: "ခေတ္တစောင့်ပါ...",
       register: "အကောင့်မရှိသေးဘူးလား? အကောင့်ဖွင့်ရန်",
       success: "ဝင်ရောက်မှု အောင်မြင်ပါသည်",
+      intro: "BurmeseBridge မှ ကြိုဆိုပါတယ်",
     },
     zh: {
       title: "登录",
@@ -42,6 +43,7 @@ export default function LoginPage() {
       loading: "加载中...",
       register: "没有账号？创建账号",
       success: "登录成功",
+      intro: "欢迎回到 BurmeseBridge",
     },
     en: {
       title: "Login",
@@ -51,6 +53,7 @@ export default function LoginPage() {
       loading: "Loading...",
       register: "No account? Create one",
       success: "Login success",
+      intro: "Welcome back to BurmeseBridge",
     },
   };
 
@@ -79,35 +82,16 @@ export default function LoginPage() {
   }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f8fafc",
-        padding: "24px",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-          background: "white",
-          padding: "32px",
-          borderRadius: "20px",
-          border: "1px solid #e2e8f0",
-          boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
-        }}
-      >
-        <h1 style={{ fontSize: "36px", marginBottom: "24px" }}>
-          {t.title}
-        </h1>
+    <main className="auth-page">
+      <div className="auth-card">
+        <span className="auth-eyebrow">BurmeseBridge</span>
+        <h1>{t.title}</h1>
+        <p className="auth-copy">{t.intro}</p>
 
         <input
           type="email"
           placeholder={t.email}
-          style={input}
+          className="auth-input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -115,24 +99,18 @@ export default function LoginPage() {
         <input
           type="password"
           placeholder={t.password}
-          style={input}
+          className="auth-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button style={button} onClick={handleLogin}>
+        <button className="auth-submit" onClick={handleLogin} disabled={loading}>
           {loading ? t.loading : t.button}
         </button>
 
         <a
           href={`/${locale}/register`}
-          style={{
-            display: "block",
-            marginTop: "18px",
-            textAlign: "center",
-            color: "#2563eb",
-            fontWeight: 700,
-          }}
+          className="auth-switch"
         >
           {t.register}
         </a>
@@ -140,24 +118,3 @@ export default function LoginPage() {
     </main>
   );
 }
-
-const input = {
-  width: "100%",
-  padding: "14px",
-  marginBottom: "16px",
-  borderRadius: "12px",
-  border: "1px solid #cbd5e1",
-  fontSize: "16px",
-};
-
-const button = {
-  width: "100%",
-  padding: "14px",
-  borderRadius: "12px",
-  border: "none",
-  background: "#2563eb",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "16px",
-  cursor: "pointer",
-};

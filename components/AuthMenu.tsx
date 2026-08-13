@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut, UserRound } from "lucide-react";
 
 export default function AuthMenu({
   locale,
@@ -94,95 +95,57 @@ export default function AuthMenu({
 
   if (!email) {
     return (
-      <Link href={`/${locale}/login`}>
-        {t.login}
+      <Link href={`/${locale}/login`} className="auth-login-button">
+        <LogIn size={16} />{t.login}
       </Link>
     );
   }
 
   return (
-    <div
-      ref={menuRef}
-      style={{
-        position: "relative",
-      }}
-    >
+    <div ref={menuRef} className="menu-popover">
       <button
         onClick={() => setOpen(!open)}
-        style={{
-          background: "transparent",
-          border: "none",
-          color: "inherit",
-          cursor: "pointer",
-          fontWeight: 700,
-          fontSize: "15px",
-        }}
+        className="site-action-button"
+        aria-expanded={open}
       >
-        {t.me} ▾
+        <CircleUserRound size={18} />{t.me}<ChevronDown size={14} />
       </button>
 
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "42px",
-            width: "240px",
-            background: "white",
-            borderRadius: "16px",
-            border: "1px solid #e2e8f0",
-            boxShadow:
-              "0 12px 30px rgba(15,23,42,0.12)",
-            overflow: "hidden",
-            zIndex: 999,
-          }}
-        >
-          <div
-            style={{
-              padding: "16px",
-              borderBottom:
-                "1px solid #e2e8f0",
-              fontSize: "14px",
-              color: "#64748b",
-            }}
-          >
+        <div className="site-dropdown auth-dropdown">
+          <div className="dropdown-account">
             {email}
           </div>
 
           <MenuLink
             href={`/${locale}/dashboard`}
             label={t.dashboard}
+            icon={<LayoutDashboard size={17} />}
           />
 
           <MenuLink
             href={`/${locale}/profile`}
             label={t.profile}
+            icon={<UserRound size={17} />}
           />
 
           <MenuLink
             href={`/${locale}/me`}
             label={t.account}
+            icon={<CircleUserRound size={17} />}
           />
 
           <MenuLink
             href={`/${locale}/checkin`}
             label={t.checkin}
+            icon={<span>✓</span>}
           />
 
           <button
             onClick={handleLogout}
-            style={{
-              width: "100%",
-              textAlign: "left",
-              padding: "14px 18px",
-              background: "white",
-              border: "none",
-              cursor: "pointer",
-              color: "#ef4444",
-              fontWeight: 700,
-            }}
+            className="dropdown-link dropdown-danger"
           >
-            {t.logout}
+            <LogOut size={17} />{t.logout}
           </button>
         </div>
       )}
@@ -193,24 +156,15 @@ export default function AuthMenu({
 function MenuLink({
   href,
   label,
+  icon,
 }: {
   href: string;
   label: string;
+  icon: React.ReactNode;
 }) {
   return (
-    <Link
-      href={href}
-      style={{
-        display: "block",
-        padding: "14px 18px",
-        color: "#0f172a",
-        textDecoration: "none",
-        borderBottom:
-          "1px solid #f1f5f9",
-        fontWeight: 600,
-      }}
-    >
-      {label}
+    <Link href={href} className="dropdown-link">
+      {icon}{label}
     </Link>
   );
 }

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Noto_Serif_Myanmar } from "next/font/google";
+import { Padauk } from "next/font/google";
 import "./globals.css";
 
-const appFont = Noto_Serif_Myanmar({
+const appFont = Padauk({
   subsets: ["myanmar"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   variable: "--font-app",
 });
 
