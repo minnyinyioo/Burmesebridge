@@ -121,7 +121,12 @@ export default async function LocaleLayout({
             <p>Burmese Chinese Learning Platform</p>
           </div>
           <SocialFooter />
-          <Link className="footer-feedback-link" href={`/${locale}/feedback`}>{locale === "zh" ? "反馈 / 报告 BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback / Report a bug"}</Link>
+          <nav className="footer-legal" aria-label="Legal and support">
+            <Link href={`/${locale}/privacy`}>{locale === "zh" ? "隐私政策" : locale === "my" ? "ကိုယ်ရေးမူဝါဒ" : "Privacy"}</Link>
+            <Link href={`/${locale}/terms`}>{locale === "zh" ? "服务条款" : locale === "my" ? "ဝန်ဆောင်မှုစည်းမျဉ်း" : "Terms"}</Link>
+            <Link href={`/${locale}/data-deletion`}>{locale === "zh" ? "数据删除" : locale === "my" ? "ဒေတာဖျက်ရန်" : "Data deletion"}</Link>
+            <Link href={`/${locale}/feedback`}>{locale === "zh" ? "反馈 / BUG" : locale === "my" ? "အကြံပြုချက် / BUG" : "Feedback / Bug"}</Link>
+          </nav>
           <div>© 2026 BurmeseBridge</div>
         </div>
       </footer>
