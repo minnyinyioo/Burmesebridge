@@ -90,8 +90,9 @@ svg { display: block; flex: 0 0 auto; }
 .site-logo { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 850; letter-spacing: -.03em; }
 .site-logo > span:last-child span { color: var(--green-700); }
 .site-logo-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #fff; background: linear-gradient(145deg,var(--brand-primary),#0a4438); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 6px 14px rgba(11,70,59,.2), 5px 5px 0 rgba(43,127,134,.2); font-family: Georgia, serif; }
-.site-menu { display: flex; justify-content: center; align-items: center; gap: 4px; }
-.site-menu a { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #536560; font-size: 14px; font-weight: 700; line-height: 1; transition: .18s ease; }
+.site-menu { min-width:0;display:flex;justify-content:center;align-items:center;gap:4px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none; }
+.site-menu::-webkit-scrollbar{display:none}
+.site-menu a { flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 10px;border-radius:10px;color:#536560;font-size:14px;font-weight:700;line-height:1;white-space:nowrap;word-break:keep-all;writing-mode:horizontal-tb;transition:.18s ease; }
 .site-menu a:hover { color: var(--green-800); background: rgba(14,90,73,.07); }
 .site-actions { display: flex; align-items: center; gap: 8px; }
 .menu-popover { position: relative; }
