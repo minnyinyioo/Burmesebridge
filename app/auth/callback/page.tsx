@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -18,7 +19,14 @@ export default function AuthCallbackPage() {
       const code = params.get("code");
       const tokenHash = params.get("token_hash");
       const type = params.get("type") || "recovery";
+      const hashParams = new URLSearchParams(window.location.hash.slice(1));
+      const providerError = params.get("error_description") || hashParams.get("error_description");
       let authError: Error | null = null;
+
+      if (providerError) {
+        setError(decodeURIComponent(providerError.replace(/\+/g, " ")));
+        return;
+      }
 
       if (code) {
         const result = await supabase.auth.exchangeCodeForSession(code);
@@ -27,9 +35,8 @@ export default function AuthCallbackPage() {
         const result = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as "recovery" });
         authError = result.error;
       } else if (window.location.hash) {
-        const hash = new URLSearchParams(window.location.hash.slice(1));
-        const accessToken = hash.get("access_token");
-        const refreshToken = hash.get("refresh_token");
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
         if (accessToken && refreshToken) {
           const result = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
           authError = result.error;
@@ -46,5 +53,5 @@ export default function AuthCallbackPage() {
     void finish();
   }, [router]);
 
-  return <main className="auth-page"><div className="auth-card"><span className="auth-eyebrow">BurmeseBridge</span>{error ? <><h1>Recovery link error</h1><p className="auth-error">{error}</p><a className="auth-submit auth-submit-link" href="/zh/forgot-password">Request a new link</a></> : <p className="auth-copy">Verifying your recovery link…</p>}</div></main>;
+  return <main className="auth-page"><div className="auth-card"><span className="auth-eyebrow">BurmeseBridge</span>{error ? <><h1>Recovery link error</h1><p className="auth-error">{error}</p><Link className="auth-submit auth-submit-link" href="/zh/forgot-password">Request a new link</Link></> : <p className="auth-copy">Verifying your recovery link…</p>}</div></main>;
 }
