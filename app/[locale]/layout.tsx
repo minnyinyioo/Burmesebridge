@@ -2,6 +2,7 @@ import LanguageMenu from "@/components/LanguageMenu";
 import AuthMenu from "@/components/AuthMenu";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationLink from "@/components/NotificationLink";
+import GlobalSearch from "@/components/GlobalSearch";
 import Link from "next/link";
 import {
   BriefcaseBusiness,
@@ -12,6 +13,7 @@ import {
   MessageCircle,
   Newspaper,
   PlaySquare,
+  Search,
   Waypoints,
 } from "lucide-react";
 
@@ -100,6 +102,7 @@ export default async function LocaleLayout({
         </div>
 
         <div className="site-actions">
+          <GlobalSearch locale={locale} />
           <NotificationLink locale={locale} />
           <AuthMenu locale={locale} />
           <ThemeToggle locale={locale} />
@@ -122,6 +125,10 @@ export default async function LocaleLayout({
         <Link href={`/${locale}/forum`}>
           <MessageCircle size={19} />
           {t.forum}
+        </Link>
+        <Link href={`/${locale}/search`}>
+          <Search size={19} />
+          {locale === "zh" ? "搜索" : locale === "my" ? "ရှာရန်" : "Search"}
         </Link>
         <Link href={`/${locale}/checkin`}>
           <CalendarCheck size={19} />
