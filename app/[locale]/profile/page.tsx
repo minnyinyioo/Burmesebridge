@@ -17,6 +17,7 @@ export default function ProfilePage() {
       save: "သိမ်းမည်",
       saved: "သိမ်းပြီးပါပြီ",
       loading: "ခေတ္တစောင့်ပါ...",
+      verifyTitle: "ပရော်ဖက်ရှင်နယ် အထောက်အထား", verifyCopy: "ဆရာ၊ ကုမ္ပဏီ သို့မဟုတ် စာရေးသူ အဖြစ် လျှောက်ထားနိုင်ပါသည်။", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", evidence: "သင့်အတွေ့အကြုံ၊ အဖွဲ့အစည်း သို့မဟုတ် အထောက်အထား လင့်ခ်များ", submit: "လျှောက်ထားမည်", pending: "သင့်လျှောက်လွှာကို စစ်ဆေးနေပါသည်", submitted: "လျှောက်လွှာ တင်ပြီးပါပြီ",
     },
     zh: {
       title: "编辑个人资料",
@@ -26,6 +27,7 @@ export default function ProfilePage() {
       save: "保存",
       saved: "保存成功",
       loading: "加载中...",
+      verifyTitle: "专业身份认证", verifyCopy: "申请教师、企业或作者认证，审核通过后将展示认证徽章。", teacher: "教师", company: "企业", author: "作者", evidence: "请填写经历、所属机构或证明链接", submit: "提交申请", pending: "你的申请正在审核中", submitted: "申请已提交",
     },
     en: {
       title: "Edit Profile",
@@ -35,6 +37,7 @@ export default function ProfilePage() {
       save: "Save",
       saved: "Saved successfully",
       loading: "Loading...",
+      verifyTitle: "Professional verification", verifyCopy: "Apply as a teacher, company, or author. Approved profiles receive a public badge.", teacher: "Teacher", company: "Company", author: "Author", evidence: "Describe your experience, organization, or supporting links", submit: "Submit application", pending: "Your application is under review", submitted: "Application submitted",
     },
   };
 
@@ -44,6 +47,9 @@ export default function ProfilePage() {
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
+  const [verificationType, setVerificationType] = useState<"teacher" | "company" | "author">("teacher");
+  const [evidence, setEvidence] = useState("");
+  const [hasPendingRequest, setHasPendingRequest] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -67,6 +73,9 @@ export default function ProfilePage() {
 
     setEmail(data?.email || user.email || "");
     setDisplayName(data?.display_name || "");
+    const { data: pendingRequest } = await supabase.from("verification_requests")
+      .select("id").eq("user_id", user.id).eq("status", "pending").maybeSingle();
+    setHasPendingRequest(Boolean(pendingRequest));
     setLoading(false);
   }
 
@@ -86,7 +95,6 @@ export default function ProfilePage() {
       id: user.id,
       email: user.email,
       display_name: displayName,
-      role: "user",
     });
 
     if (error) {
@@ -96,6 +104,20 @@ export default function ProfilePage() {
 
     setMessage(t.saved);
     await loadProfile();
+  }
+
+  async function submitVerification() {
+    setMessage("");
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) { window.location.href = `/${locale}/login`; return; }
+    if (!evidence.trim()) return;
+    const { error } = await supabase.from("verification_requests").insert({
+      user_id: userData.user.id,
+      requested_badge: verificationType,
+      evidence: evidence.trim(),
+    });
+    if (error) { setMessage(error.message); return; }
+    setEvidence(""); setHasPendingRequest(true); setMessage(t.submitted);
   }
 
   if (loading) {
@@ -130,6 +152,17 @@ export default function ProfilePage() {
           {message && (
             <p style={{ marginTop: 16, color: "#10b981" }}>{message}</p>
           )}
+        </div>
+
+        <div className="verification-apply-card">
+          <h2>{t.verifyTitle}</h2><p>{t.verifyCopy}</p>
+          {hasPendingRequest ? <div className="verification-pending">{t.pending}</div> : <>
+            <select value={verificationType} onChange={(event) => setVerificationType(event.target.value as typeof verificationType)}>
+              <option value="teacher">{t.teacher}</option><option value="company">{t.company}</option><option value="author">{t.author}</option>
+            </select>
+            <textarea value={evidence} onChange={(event) => setEvidence(event.target.value)} placeholder={t.evidence} rows={5} />
+            <button onClick={submitVerification} disabled={!evidence.trim()}>{t.submit}</button>
+          </>}
         </div>
       </section>
     </main>

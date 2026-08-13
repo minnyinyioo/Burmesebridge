@@ -12,15 +12,18 @@ import {
   UserRound,
   Pin,
   Flame,
-  Sparkles
+  Sparkles,
+  Building2,
+  PenLine,
 } from "lucide-react";
-import { features } from "node:process";
 
 type BadgeType =
   | "verified"
   | "moderator"
   | "admin"
   | "teacher"
+  | "company"
+  | "author"
   | "vip"
   | "member"
   | "pinned"
@@ -48,6 +51,8 @@ verified:"အတည်ပြုပြီး",
 moderator:"စီမံခန့်ခွဲသူ",
 admin:"အက်မင်",
 teacher:"ဆရာ",
+company:"ကုမ္ပဏီ",
+author:"စာရေးသူ",
 vip:"VIP",
 member:"အသင်းဝင်",
 pinned:"ထိပ်ဆုံးပို့စ်",
@@ -60,6 +65,8 @@ verified:"已认证",
 moderator:"版主",
 admin:"管理员",
 teacher:"老师",
+company:"企业",
+author:"作者",
 vip:"VIP",
 member:"会员",
 pinned:"置顶",
@@ -72,6 +79,8 @@ verified:"Verified",
 moderator:"Moderator",
 admin:"Admin",
 teacher:"Teacher",
+company:"Company",
+author:"Author",
 vip:"VIP",
 member:"Member",
 pinned:"Pinned",
@@ -106,6 +115,16 @@ color:"#dc2626"
 teacher:{
 icon:<GraduationCap size={16}/>,
 color:"#7c3aed"
+},
+
+company:{
+icon:<Building2 size={16}/>,
+color:"#0f766e"
+},
+
+author:{
+icon:<PenLine size={16}/>,
+color:"#b45309"
 },
 
 vip:{

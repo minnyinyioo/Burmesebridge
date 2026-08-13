@@ -117,6 +117,10 @@ svg { display: block; flex: 0 0 auto; }
 .adminCard { padding: 22px; background: #fff; border: 1px solid #e3ddd0; border-radius: 17px; }
 .adminTitle { color: #71817c; }
 .adminValue { margin-top: 10px; color: var(--green-800); font-size: 38px; font-weight: 850; }
+.admin-page-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }.admin-page-head h1 { margin: 0; color: #143d34; font-size: 36px; }.admin-page-head p { margin: 7px 0 0; color: #71817c; }
+.verification-filters { display: flex; gap: 7px; margin-bottom: 18px; }.verification-filters button { padding: 9px 13px; border: 1px solid #ddd6c9; border-radius: 9px; background: #fff; color: #61716c; font-weight: 700; cursor: pointer; }.verification-filters button.active { border-color: var(--green-800); color: #fff; background: var(--green-800); }
+.verification-list { display: grid; gap: 12px; }.verification-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; }.verification-card h2 { margin: 8px 0; font-size: 19px; }.verification-card p { margin: 0; color: #596b65; white-space: pre-wrap; }.verification-card time { display: block; margin-top: 12px; color: #8a9692; font-size: 12px; }.verification-type { color: var(--green-700); font-size: 12px; font-weight: 850; text-transform: uppercase; }.verification-actions { display: flex; gap: 7px; }.verification-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 10px 13px; border: 0; border-radius: 9px; color: #fff; background: var(--green-800); font-weight: 750; cursor: pointer; }.verification-actions button.reject { background: #a83c3c; }.verification-actions button:disabled { opacity: .55; cursor: wait; }.verification-message { padding: 11px 13px; border-radius: 9px; color: #8a3434; background: #fff0f0; }
+.verification-apply-card { margin-top: 20px; padding: 28px; border: 1px solid #ded7ca; border-radius: 18px; background: #fff; }.verification-apply-card h2 { margin: 0; color: #153d34; }.verification-apply-card > p { color: #687a74; line-height: 1.7; }.verification-apply-card select,.verification-apply-card textarea { width: 100%; margin-top: 12px; padding: 12px 13px; border: 1px solid #d8d1c4; border-radius: 10px; background: #fbfaf7; }.verification-apply-card textarea { resize: vertical; }.verification-apply-card button { margin-top: 12px; padding: 11px 16px; border: 0; border-radius: 10px; color: #fff; background: var(--green-800); font-weight: 800; cursor: pointer; }.verification-apply-card button:disabled { opacity: .45; cursor: not-allowed; }.verification-pending { margin-top: 16px; padding: 13px; border-radius: 10px; color: #795c16; background: #fff7dc; font-weight: 700; }
 
 .badgeTooltipWrap { position: relative; display: inline-flex; align-items: center; }
 .badgeIconGlow { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(148,163,184,.25); border-radius: 999px; }
@@ -182,6 +186,7 @@ svg { display: block; flex: 0 0 auto; }
   .mobile-tabbar a:hover { background: rgba(255,255,255,.1); color: #fff; }
   .adminShell { grid-template-columns: 1fr; }
   .adminSidebar { position: static; width: 100%; display: grid; grid-template-columns: repeat(2,1fr); }
+  .verification-card { align-items: flex-start; flex-direction: column; }.verification-actions { width: 100%; }.verification-actions button { flex: 1; justify-content: center; }
   .feedTitle { font-size: 34px; }
   .feedCard { padding: 18px; border-radius: 16px; }
   .auth-card { padding: 26px 20px; }
