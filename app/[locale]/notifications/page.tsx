@@ -25,6 +25,12 @@ export default function NotificationsPage() {
           remove: "删除",
           approved: "课程已开通",
           rejected: "付款审核结果",
+          report: "举报处理结果",
+          appeal: "申诉处理结果",
+          jobReviewed: "招聘已审核",
+          jobVerified: "招聘已验证",
+          jobReturned: "招聘已退回",
+          system: "系统通知",
         }
       : locale === "my"
         ? {
@@ -34,6 +40,12 @@ export default function NotificationsPage() {
             remove: "ဖျက်ရန်",
             approved: "သင်တန်းဖွင့်ပြီး",
             rejected: "ငွေပေးချေမှုရလဒ်",
+            report: "တိုင်ကြားမှုရလဒ်",
+            appeal: "အယူခံရလဒ်",
+            jobReviewed: "အလုပ်ကြော်ငြာ စိစစ်ပြီး",
+            jobVerified: "အလုပ်ကြော်ငြာ အတည်ပြုပြီး",
+            jobReturned: "အလုပ်ကြော်ငြာ ပြန်ပို့ထားသည်",
+            system: "စနစ်အသိပေးချက်",
           }
         : {
             title: "Notifications",
@@ -42,6 +54,12 @@ export default function NotificationsPage() {
             remove: "Delete",
             approved: "Course unlocked",
             rejected: "Payment review result",
+            report: "Report review result",
+            appeal: "Appeal review result",
+            jobReviewed: "Job listing reviewed",
+            jobVerified: "Job listing verified",
+            jobReturned: "Job listing returned",
+            system: "System notification",
           };
   const [items, setItems] = useState<Notice[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
@@ -92,6 +110,16 @@ export default function NotificationsPage() {
       .eq("user_id", userId);
     await load();
   }
+  function typeLabel(type: string) {
+    if (type === "purchase_approved") return copy.approved;
+    if (type === "purchase_rejected") return copy.rejected;
+    if (type.startsWith("report_")) return copy.report;
+    if (type.startsWith("appeal_")) return copy.appeal;
+    if (type === "job_reviewed") return copy.jobReviewed;
+    if (type === "job_verified") return copy.jobVerified;
+    if (type === "job_returned") return copy.jobReturned;
+    return copy.system;
+  }
   return (
     <main className="notifications-page">
       <header>
@@ -114,11 +142,7 @@ export default function NotificationsPage() {
               href={item.href ? `/${locale}${item.href}` : `/${locale}/orders`}
               onClick={() => mark(item.id)}
             >
-              <span>
-                {item.type === "purchase_approved"
-                  ? copy.approved
-                  : copy.rejected}
-              </span>
+              <span>{typeLabel(item.type)}</span>
               <h2>{item.title}</h2>
               {item.body && <p>{item.body}</p>}
               <time>{new Date(item.created_at).toLocaleString()}</time>
