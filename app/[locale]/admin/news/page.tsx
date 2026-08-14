@@ -24,6 +24,8 @@ type NewsItem = {
   content_en: string | null;
   created_at: string;
   media_blocks: MediaBlock[] | null;
+  employer_name: string | null;
+  recruitment_verification: "unverified" | "reviewed" | "verified";
 };
 
 export default function AdminNewsPage() {
@@ -63,6 +65,7 @@ function NewsContent() {
       featured: "အကြံပြု",
       hot: "လူကြိုက်များ",
       media: "ပုံနှင့် ဗီဒီယို",
+      employer:"အလုပ်ရှင်/ကုမ္ပဏီ", registration:"မှတ်ပုံတင်/လိုင်စင် (ရှိလျှင်)", location:"အလုပ်နေရာ", salary:"လစာနှင့်ခံစားခွင့်", contact:"လျှောက်ထားရန် ဆက်သွယ်မှု", verification:"စိစစ်မှုအခြေအနေ", safetyConfirm:"ဤကြော်ငြာတွင် လူကုန်ကူးမှု၊ အဓမ္မအလုပ်၊ စာရွက်စာတမ်းသိမ်းမှု သို့မဟုတ် လိမ်လည် recruitment မပါဝင်ကြောင်း စစ်ဆေးပြီးဖြစ်သည်။", jobRequired:"အလုပ်ကြော်ငြာအတွက် အလုပ်ရှင်၊ နေရာ၊ ဆက်သွယ်မှုနှင့် safety confirmation လိုအပ်သည်။",
       image: "ပုံတင်ရန် (5MB အောက်)", video: "YouTube လင့်ခ်", caption: "စာတန်း", addVideo: "ဗီဒီယိုထည့်ရန်", removeMedia: "ဖယ်ရှားရန်", uploadFailed: "ပုံတင်၍ မရပါ",
     },
     zh: {
@@ -88,6 +91,7 @@ function NewsContent() {
       featured: "推荐",
       hot: "热门",
       media: "图片与视频", image: "上传图片（不超过 5MB）", video: "YouTube 链接", caption: "图片/视频字幕", addVideo: "添加视频", removeMedia: "移除", uploadFailed: "图片上传失败",
+      employer:"雇主/公司名称", registration:"登记号或招聘许可（如有）", location:"工作地点", salary:"工资与待遇", contact:"申请方式与联系方式", verification:"核验状态", safetyConfirm:"我已检查该职位不涉及人口贩卖、强迫劳动、扣押证件或欺诈招聘。", jobRequired:"工作信息必须填写雇主、地点、申请方式并完成安全确认。",
     },
     en: {
       pageTitle: "Publish",
@@ -112,6 +116,7 @@ function NewsContent() {
       featured: "Featured",
       hot: "Hot",
       media: "Images and video", image: "Upload image (max 5MB)", video: "YouTube link", caption: "Image/video caption", addVideo: "Add video", removeMedia: "Remove", uploadFailed: "Image upload failed",
+      employer:"Employer/company", registration:"Registration or licence (if available)", location:"Job location", salary:"Salary and benefits", contact:"Application method/contact", verification:"Verification status", safetyConfirm:"I checked that this listing does not involve trafficking, forced labour, document retention, or fraudulent recruitment.", jobRequired:"Jobs require employer, location, application contact, and safety confirmation.",
     },
   };
 
@@ -135,6 +140,13 @@ function NewsContent() {
   const [videoUrl, setVideoUrl] = useState("");
   const [mediaCaption, setMediaCaption] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [employerName,setEmployerName]=useState("");
+  const [employerRegistration,setEmployerRegistration]=useState("");
+  const [jobLocation,setJobLocation]=useState("");
+  const [salaryDetails,setSalaryDetails]=useState("");
+  const [applicationContact,setApplicationContact]=useState("");
+  const [recruitmentVerification,setRecruitmentVerification]=useState<"unverified"|"reviewed"|"verified">("unverified");
+  const [recruitmentSafetyConfirmed,setRecruitmentSafetyConfirmed]=useState(false);
 
   useEffect(() => {
     loadItems();
@@ -144,7 +156,7 @@ function NewsContent() {
     const { data, error } = await supabase
       .from("news")
       .select(
-        "id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, created_at"
+        "id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, employer_name, recruitment_verification, created_at"
       )
       .order("pinned", { ascending: false })
       .order("hot", { ascending: false })
@@ -207,6 +219,7 @@ function NewsContent() {
   async function createNews() {
     if (!titleMy.trim() && !titleZh.trim() && !titleEn.trim()) return;
     if (!contentMy.trim() && !contentZh.trim() && !contentEn.trim()) return;
+    if(category==="jobs"&&(!employerName.trim()||!jobLocation.trim()||!applicationContact.trim()||!recruitmentSafetyConfirmed)){alert(t.jobRequired);return}
 
     const {
       data: { user },
@@ -236,6 +249,13 @@ function NewsContent() {
       content_zh: contentZh || fallbackContent,
       content_en: contentEn || fallbackContent,
       media_blocks: mediaBlocks,
+      employer_name:category==="jobs"?employerName.trim():null,
+      employer_registration:category==="jobs"?employerRegistration.trim()||null:null,
+      job_location:category==="jobs"?jobLocation.trim():null,
+      salary_details:category==="jobs"?salaryDetails.trim()||null:null,
+      application_contact:category==="jobs"?applicationContact.trim():null,
+      recruitment_verification:category==="jobs"?recruitmentVerification:"unverified",
+      recruitment_safety_confirmed:category==="jobs"?recruitmentSafetyConfirmed:false,
     });
 
     if (error) {
@@ -255,6 +275,7 @@ function NewsContent() {
     setContentZh("");
     setContentEn("");
     setMediaBlocks([]);
+    setEmployerName("");setEmployerRegistration("");setJobLocation("");setSalaryDetails("");setApplicationContact("");setRecruitmentVerification("unverified");setRecruitmentSafetyConfirmed(false);
 
     await loadItems();
   }
@@ -355,6 +376,8 @@ function NewsContent() {
             </label>
           </div>
 
+          {category === "jobs" && <fieldset className="job-admin-fields"><legend>{t.jobs} · {t.verification}</legend><input value={employerName} onChange={e=>setEmployerName(e.target.value)} placeholder={t.employer} maxLength={160}/><input value={employerRegistration} onChange={e=>setEmployerRegistration(e.target.value)} placeholder={t.registration} maxLength={200}/><input value={jobLocation} onChange={e=>setJobLocation(e.target.value)} placeholder={t.location} maxLength={200}/><input value={salaryDetails} onChange={e=>setSalaryDetails(e.target.value)} placeholder={t.salary} maxLength={200}/><input value={applicationContact} onChange={e=>setApplicationContact(e.target.value)} placeholder={t.contact} maxLength={300}/><select value={recruitmentVerification} onChange={e=>setRecruitmentVerification(e.target.value as "unverified"|"reviewed"|"verified")}><option value="unverified">unverified</option><option value="reviewed">reviewed</option><option value="verified">verified</option></select><label className="job-safety-check"><input type="checkbox" checked={recruitmentSafetyConfirmed} onChange={e=>setRecruitmentSafetyConfirmed(e.target.checked)}/><span>{t.safetyConfirm}</span></label></fieldset>}
+
           <input
             value={titleMy}
             onChange={(event) => setTitleMy(event.target.value)}
@@ -433,6 +456,7 @@ function NewsContent() {
           {items.map((item) => (
             <div key={item.id} className="feedCard">
               <strong>{getCategoryLabel(item.category)}</strong>
+              {item.category === "jobs" && <span className={`job-verification is-${item.recruitment_verification}`}>{item.recruitment_verification}</span>}
 
               <h3 style={{ marginTop: 10 }}>
                 {item.title_my || item.title_zh || item.title_en}
