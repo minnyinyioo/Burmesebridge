@@ -16,6 +16,7 @@ import {
   ScrollText,
   Bug,
   Megaphone,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 /**
@@ -96,6 +97,7 @@ export default function AdminSidebar() {
       href: `/${locale}/admin/verification`,
       icon: BadgeCheck,
     },
+    { label: locale === "zh" ? "招聘审核" : locale === "my" ? "အလုပ်ကြော်ငြာ စိစစ်ရေး" : "Job reviews", href: `/${locale}/admin/jobs`, icon: BriefcaseBusiness },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
     { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },
     { label: t.reports, href: `/${locale}/admin/reports`, icon: Flag },
