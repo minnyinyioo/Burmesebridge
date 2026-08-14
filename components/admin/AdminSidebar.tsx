@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import BrandLogo from "@/components/BrandLogo";
 import {
   LayoutDashboard,
   Users,
@@ -114,6 +115,9 @@ export default function AdminSidebar() {
 
   return (
     <div className="adminSidebar">
+      <Link href={`/${locale}`} className="adminBrand" aria-label="BurmeseBridge">
+        <BrandLogo size={38} />
+      </Link>
       {items.map((item) => {
         const Icon = item.icon;
 

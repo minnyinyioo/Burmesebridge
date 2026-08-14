@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { MailCheck } from "lucide-react";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import { supabase } from "@/lib/supabase";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function RegisterPage() {
   const params = useParams();
@@ -62,7 +63,7 @@ export default function RegisterPage() {
   if (checking) return <main className="auth-page"><p className="account-loading">{copy.loading}</p></main>;
 
   return <main className="auth-page"><div className="auth-card">
-    <span className="auth-eyebrow">BurmeseBridge</span>
+    <BrandLogo size={30} className="auth-brand" />
     {submitted ? <div className="auth-success"><MailCheck size={34} /><h1>{copy.sentTitle}</h1><p>{copy.sent}</p><a href={`/${locale}/login`} className="auth-submit auth-submit-link">{copy.back}</a></div> : <>
       <h1>{copy.title}</h1><p className="auth-copy">{copy.intro}</p>
       <form onSubmit={handleRegister}>

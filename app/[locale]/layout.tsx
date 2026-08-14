@@ -5,6 +5,7 @@ import NotificationLink from "@/components/NotificationLink";
 import GlobalSearch from "@/components/GlobalSearch";
 import MobileTabBar from "@/components/MobileTabBar";
 import SocialFooter from "@/components/SocialFooter";
+import BrandLogo from "@/components/BrandLogo";
 import Link from "next/link";
 import {
   BriefcaseBusiness,
@@ -14,7 +15,6 @@ import {
   MessageCircle,
   Newspaper,
   PlaySquare,
-  Waypoints,
 } from "lucide-react";
 
 export default async function LocaleLayout({
@@ -62,12 +62,7 @@ export default async function LocaleLayout({
     <div className="site-shell" lang={locale}>
       <nav className="site-nav">
         <Link href={`/${locale}`} className="site-logo">
-          <span className="site-logo-mark" aria-hidden="true">
-            <Waypoints size={20} />
-          </span>
-          <span>
-            Burmese<span>Bridge</span>
-          </span>
+          <BrandLogo size={36} priority />
         </Link>
 
         <div className="site-menu">
@@ -118,7 +113,9 @@ export default async function LocaleLayout({
         <div className="site-footer-inner">
           <div className="site-footer-main">
             <div className="site-footer-brand">
-              <h3>BurmeseBridge</h3>
+              <Link href={`/${locale}`} className="site-footer-logo" aria-label="BurmeseBridge">
+                <BrandLogo size={44} />
+              </Link>
               <p>{locale === "zh" ? "连接缅甸与中文世界的学习、资讯和社区平台。" : locale === "my" ? "မြန်မာနှင့် တရုတ်ဘာသာကမ္ဘာကို ချိတ်ဆက်ပေးသည့် သင်ယူမှု၊ သတင်းနှင့် community platform။" : "A learning, information, and community platform connecting Myanmar and the Chinese-speaking world."}</p>
             </div>
             <nav className="site-footer-column" aria-label="Platform">

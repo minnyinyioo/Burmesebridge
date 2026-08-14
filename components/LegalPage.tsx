@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 
 export type LegalSection = { title: string; paragraphs: string[]; items?: string[] };
 
@@ -15,7 +16,7 @@ export default function LegalPage({ locale, title, summary, updated, sections }:
   return <article className="legal-page">
     <header className="legal-hero">
       <Link href={`/${locale}`}>← {back}</Link>
-      <p className="legal-eyebrow">BurmeseBridge</p>
+      <Link href={`/${locale}`} className="legal-brand" aria-label="BurmeseBridge"><BrandLogo size={30} /></Link>
       <h1>{title}</h1>
       <p>{summary}</p>
       <time dateTime="2026-08-14">{label}: {updated}</time>

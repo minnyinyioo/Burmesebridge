@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import BrandLogo from "@/components/BrandLogo";
 
 /**
  * 全站统一外壳组件
@@ -52,7 +53,7 @@ export default function SiteShell({
     <div style={shell}>
       <header style={header}>
         <Link href={`/${locale}`} style={logo}>
-          BurmeseBridge
+          <BrandLogo size={36} />
         </Link>
 
         <nav style={nav}>

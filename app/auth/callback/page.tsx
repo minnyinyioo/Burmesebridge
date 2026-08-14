@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -53,5 +54,5 @@ export default function AuthCallbackPage() {
     void finish();
   }, [router]);
 
-  return <main className="auth-page"><div className="auth-card"><span className="auth-eyebrow">BurmeseBridge</span>{error ? <><h1>Recovery link error</h1><p className="auth-error">{error}</p><Link className="auth-submit auth-submit-link" href="/zh/forgot-password">Request a new link</Link></> : <p className="auth-copy">Verifying your recovery link…</p>}</div></main>;
+  return <main className="auth-page"><div className="auth-card"><BrandLogo size={30} className="auth-brand" />{error ? <><h1>Recovery link error</h1><p className="auth-error">{error}</p><Link className="auth-submit auth-submit-link" href="/zh/forgot-password">Request a new link</Link></> : <p className="auth-copy">Verifying your recovery link…</p>}</div></main>;
 }

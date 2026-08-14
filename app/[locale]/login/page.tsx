@@ -4,6 +4,7 @@ import { FormEvent, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function LoginPage() {
   const params = useParams();
@@ -82,7 +83,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      window.location.href = `/${locale}/me`;
+      router.push(`/${locale}/me`);
+      router.refresh();
     }
 
     setLoading(false);
@@ -91,7 +93,7 @@ export default function LoginPage() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <span className="auth-eyebrow">BurmeseBridge</span>
+        <BrandLogo size={30} className="auth-brand" />
         <h1>{t.title}</h1>
         <p className="auth-copy">{t.intro}</p>
 

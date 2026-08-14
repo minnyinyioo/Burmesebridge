@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CheckCircle2, KeyRound } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function ResetPasswordPage() {
   const params = useParams();
@@ -61,7 +62,7 @@ export default function ResetPasswordPage() {
   }
 
   return <main className="auth-page"><div className="auth-card">
-    <span className="auth-eyebrow">BurmeseBridge</span>
+    <BrandLogo size={30} className="auth-brand" />
     {complete ? <div className="auth-success"><CheckCircle2 size={34} /><h1>{copy.done}</h1><p>{copy.doneCopy}</p><a href={`/${locale}/login`} className="auth-submit auth-submit-link">{copy.login}</a></div> : <>
       <KeyRound className="auth-heading-icon" size={28} /><h1>{copy.title}</h1><p className="auth-copy">{copy.intro}</p>
       {checking ? <p className="auth-copy">{copy.checking}</p> : !ready ? <><p className="auth-error" role="alert">{copy.invalid}</p><a href={`/${locale}/forgot-password`} className="auth-submit auth-submit-link">{copy.requestNew}</a></> : <>

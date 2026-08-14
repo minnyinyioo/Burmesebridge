@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ArrowLeft, MailCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function ForgotPasswordPage() {
   const params = useParams();
@@ -36,7 +37,7 @@ export default function ForgotPasswordPage() {
   }
 
   return <main className="auth-page"><div className="auth-card">
-    <span className="auth-eyebrow">BurmeseBridge</span>
+    <BrandLogo size={30} className="auth-brand" />
     {sent ? <div className="auth-success"><MailCheck size={34} /><h1>{copy.sentTitle}</h1><p>{copy.sent}</p></div> : <>
       <h1>{copy.title}</h1><p className="auth-copy">{copy.intro}</p>
       <input type="email" autoComplete="email" className="auth-input" aria-label={copy.email} placeholder={copy.email} value={email} onChange={(event) => setEmail(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") sendResetLink(); }} />
