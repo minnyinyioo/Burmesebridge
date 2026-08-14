@@ -5,8 +5,13 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!url || !anonKey || !serviceRoleKey) {
-  console.error("Missing Supabase test environment variables.");
+const unavailable = [url, anonKey, serviceRoleKey].some(
+  (value) => !value || value === "[Sensitive]",
+);
+if (unavailable) {
+  console.error(
+    "Missing usable Supabase test variables. Sensitive Vercel values cannot be pulled by the CLI; provide NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY in the local process environment.",
+  );
   process.exit(1);
 }
 
@@ -18,6 +23,8 @@ const anonymous = createClient(url, anonKey, {
 });
 const results = [];
 let testUserId;
+let moderatorUserId;
+let testJobId;
 
 function check(name, passed) {
   results.push({ name, passed });
@@ -69,8 +76,56 @@ try {
     .neq("user_id", testUserId)
     .limit(1);
   check("ordinary user cannot read other users' feedback", !otherFeedback.error && otherFeedback.data.length === 0);
+
+  const moderatorEmail = `codex-moderator-${Date.now()}@example.com`;
+  const moderatorPassword = `T!${randomUUID()}m8`;
+  const { data: createdModerator, error: moderatorCreateError } = await admin.auth.admin.createUser({
+    email: moderatorEmail,
+    password: moderatorPassword,
+    email_confirm: true,
+    user_metadata: { full_name: "Temporary moderator test" },
+  });
+  if (moderatorCreateError) throw moderatorCreateError;
+  moderatorUserId = createdModerator.user.id;
+  await new Promise((resolve) => setTimeout(resolve, 700));
+  const { error: roleError } = await admin.from("profiles").update({ role: "moderator" }).eq("id", moderatorUserId);
+  if (roleError) throw roleError;
+
+  const moderator = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { error: moderatorSignInError } = await moderator.auth.signInWithPassword({
+    email: moderatorEmail,
+    password: moderatorPassword,
+  });
+  if (moderatorSignInError) throw moderatorSignInError;
+
+  const uniqueTitle = `SECURITY TEST JOB ${Date.now()}`;
+  const { data: createdJob, error: jobCreateError } = await moderator.from("news").insert({
+    title: uniqueTitle,
+    content: "Temporary security test listing.",
+    title_en: uniqueTitle,
+    content_en: "Temporary security test listing.",
+    category: "jobs",
+    status: "draft",
+    author_id: moderatorUserId,
+    recruitment_verification: "unverified",
+    recruitment_safety_confirmed: true,
+  }).select("id").single();
+  if (jobCreateError) throw jobCreateError;
+  testJobId = createdJob.id;
+
+  const moderatorReview = await moderator.from("news").update({
+    recruitment_verification: "reviewed",
+    recruitment_review_note: "Automated security review.",
+  }).eq("id", testJobId).select("recruitment_verification").single();
+  check("moderator can mark a job reviewed", !moderatorReview.error && moderatorReview.data?.recruitment_verification === "reviewed");
+
+  const moderatorVerify = await moderator.from("news").update({ recruitment_verification: "verified" }).eq("id", testJobId);
+  const finalJob = await admin.from("news").select("recruitment_verification").eq("id", testJobId).single();
+  check("moderator cannot verify a job", Boolean(moderatorVerify.error) && finalJob.data?.recruitment_verification === "reviewed");
 } finally {
   await admin.from("homepage_ads").delete().eq("title", "SECURITY TEST - SHOULD FAIL");
+  if (testJobId) await admin.from("news").delete().eq("id", testJobId);
+  if (moderatorUserId) await admin.auth.admin.deleteUser(moderatorUserId);
   if (testUserId) await admin.auth.admin.deleteUser(testUserId);
 }
 
