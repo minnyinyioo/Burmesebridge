@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">BurmeseBridge</title>
+  <desc id="description">A geometric B formed from two bridge-like arches</desc>
+  <rect width="1024" height="1024" rx="224" fill="#0B6B57"/>
+  <path d="M300 202v620" fill="none" stroke="#F7F4EC" stroke-width="104" stroke-linecap="round"/>
+  <path d="M316 222h206c128 0 216 58 216 157s-88 157-216 157H316" fill="none" stroke="#F7F4EC" stroke-width="104" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M316 536h236c136 0 230 52 230 143s-94 143-230 143H316" fill="none" stroke="#F7F4EC" stroke-width="104" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
