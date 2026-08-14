@@ -111,7 +111,7 @@ export default function JobsPage() {
 
       <aside className="job-safety-notice" role="note">
         <ShieldAlert aria-hidden="true" />
-        <div><strong>{t.safetyTitle}</strong><p>{t.safety}</p><Link href={`/${locale}/terms`}>{locale === "zh" ? "查看招聘条款" : locale === "my" ? "အလုပ်ခန့်အပ်မှု စည်းမျဉ်းကို ကြည့်ရန်" : "Read recruitment terms"} <ArrowRight size={14} /></Link></div>
+        <div><strong>{t.safetyTitle}</strong><p>{t.safety}</p><div className="job-safety-links"><Link href={`/${locale}/safety`}>{locale === "zh" ? "打开求职安全中心" : locale === "my" ? "လုံခြုံရေးစင်တာ ဖွင့်ရန်" : "Open Safety Center"} <ArrowRight size={14} /></Link><Link href={`/${locale}/terms`}>{locale === "zh" ? "招聘条款" : locale === "my" ? "အလုပ်ခန့်စည်းမျဉ်း" : "Recruitment terms"}</Link></div></div>
       </aside>
 
       <div style={{ display: "grid", gap: 18 }}>
