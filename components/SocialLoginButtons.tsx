@@ -30,7 +30,8 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/${locale}/me`,
+        redirectTo: `${window.location.origin}/auth/callback?locale=${encodeURIComponent(locale)}&next=${encodeURIComponent(`/${locale}/me`)}`,
+        ...(provider === "facebook" ? { scopes: "public_profile,email" } : {}),
       },
     });
 
