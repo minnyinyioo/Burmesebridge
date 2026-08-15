@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import BrandLogo from "@/components/BrandLogo";
@@ -10,6 +10,11 @@ export default function LoginPage() {
   const params = useParams();
   const locale = String(params.locale || "en");
   const router = useRouter(); // 引入 router
+  const searchParams = useSearchParams();
+  const requestedNext = searchParams.get("next");
+  const safeNext = requestedNext?.startsWith(`/${locale}/`)
+    ? requestedNext
+    : `/${locale}/me`;
 
   // 新增：检查用户是否已登录，如果已登录则重定向
   useEffect(() => {
@@ -19,12 +24,12 @@ export default function LoginPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.replace(`/${locale}/me`);
+        router.replace(safeNext);
       }
     }
 
     checkUser();
-  }, [locale, router]);
+  }, [router, safeNext]);
 
   const text = {
     my: {
@@ -83,7 +88,7 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      router.push(`/${locale}/me`);
+      router.push(safeNext);
       router.refresh();
     }
 
