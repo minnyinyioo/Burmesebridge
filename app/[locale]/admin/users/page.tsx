@@ -68,7 +68,12 @@ function UsersContent() {
 
   async function resetPassword(user: AdminUser) {
     const name = user.display_name || user.id;
-    if (!confirm(`Reset the password for ${name}? A one-time temporary password will be shown.`)) return;
+    if (!confirm(`Reset the password for ${name}? The user will be forced to choose a new password after signing in.`)) return;
+    const typedName = window.prompt(`Second confirmation: type the exact account name below.\n\n${name}`);
+    if (typedName !== name) {
+      if (typedName !== null) alert("Confirmation did not match. Nothing was changed.");
+      return;
+    }
     setResetting(user.id);
     const { data: sessionData } = await supabase.auth.getSession();
     const response = await fetch("/api/admin/users/reset-password", {
@@ -77,7 +82,7 @@ function UsersContent() {
         "content-type": "application/json",
         authorization: `Bearer ${sessionData.session?.access_token || ""}`,
       },
-      body: JSON.stringify({ userId: user.id }),
+      body: JSON.stringify({ userId: user.id, confirmation: user.id }),
     });
     const result = await response.json().catch(() => ({})) as { message?: string; temporaryPassword?: string };
     setResetting(null);
