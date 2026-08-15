@@ -7,6 +7,7 @@ import { BookOpen, CheckCircle2, LockKeyhole, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PaymentMethodsLoader from "@/components/knowledge/PaymentMethodsLoader";
 import PaymentProofInput from "@/components/knowledge/PaymentProofInput";
+import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 
 type Product = {
   id: number;
@@ -167,7 +168,9 @@ export default function KnowledgePage() {
     let proof_path: string | null = null;
     const proof = proofs[productId];
     if (proof) {
-      const extension = proof.name.split(".").pop()?.toLowerCase() || "jpg";
+      const validProof = await validateUpload(proof, ["image/jpeg", "image/png", "image/webp", "application/pdf"]);
+      if (!validProof) { setMessage("Invalid or unsafe payment proof file."); return; }
+      const extension = safeFileExtension(proof);
       proof_path = `${userId}/${productId}-${crypto.randomUUID()}.${extension}`;
       const { error: uploadError } = await supabase.storage
         .from("payment-proofs")

@@ -7,6 +7,7 @@ import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import type { MediaBlock } from "@/components/RichMediaBlocks";
 import { getYouTubeId } from "@/lib/youtube";
+import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 
 type Category = "news" | "jobs" | "learn";
 
@@ -281,11 +282,11 @@ function NewsContent() {
   }
 
   async function uploadImage(file?: File) {
-    if (!file || file.size > 5 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
+    if (!file || !(await validateUpload(file, ["image/jpeg", "image/png", "image/webp", "image/gif"]))) {
       alert(t.uploadFailed); return;
     }
     setUploading(true);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const extension = safeFileExtension(file);
     const path = `news/${crypto.randomUUID()}.${extension}`;
     const { error } = await supabase.storage.from("content-media").upload(path, file, { contentType: file.type, upsert: false });
     if (error) { setUploading(false); alert(error.message); return; }

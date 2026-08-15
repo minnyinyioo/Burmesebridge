@@ -133,6 +133,8 @@ export default async function LocaleLayout({
               <Link href={`/${locale}/safety`}>{locale === "zh" ? "求职安全中心" : locale === "my" ? "အလုပ်ရှာဖွေသူ လုံခြုံရေး" : "Jobseeker safety"}</Link>
               <Link href={`/${locale}/privacy`}>{locale === "zh" ? "隐私政策" : locale === "my" ? "ကိုယ်ရေးအချက်အလက် မူဝါဒ" : "Privacy policy"}</Link>
               <Link href={`/${locale}/terms`}>{locale === "zh" ? "服务条款" : locale === "my" ? "ဝန်ဆောင်မှု စည်းမျဉ်းများ" : "Terms of service"}</Link>
+              <Link href={`/${locale}/community-guidelines`}>{locale === "zh" ? "社区规则" : locale === "my" ? "Community စည်းမျဉ်းများ" : "Community guidelines"}</Link>
+              <Link href={`/${locale}/copyright`}>{locale === "zh" ? "版权投诉" : locale === "my" ? "Copyright တိုင်ကြားရန်" : "Copyright complaints"}</Link>
               <Link href={`/${locale}/data-deletion`}>{locale === "zh" ? "用户数据删除" : locale === "my" ? "အသုံးပြုသူဒေတာ ဖျက်ရန်" : "User data deletion"}</Link>
             </nav>
             <div className="site-footer-connect">

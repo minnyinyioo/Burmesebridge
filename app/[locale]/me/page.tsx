@@ -15,6 +15,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import DeleteAccountPanel from "@/components/DeleteAccountPanel";
 
 type Profile = {
   display_name: string | null;
@@ -244,6 +245,7 @@ export default function MePage() {
             {copy.logout}
           </button>
         </div>
+        {email ? <DeleteAccountPanel locale={locale} email={email} /> : null}
       </section>
     </main>
   );

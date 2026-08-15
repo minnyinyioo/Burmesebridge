@@ -2,6 +2,7 @@
 import { ChangeEvent, useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 export default function CourseCoverUploader({
   locale,
   onUploaded,
@@ -18,14 +19,9 @@ export default function CourseCoverUploader({
         : "Upload course cover (max 5MB)";
   async function upload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    if (
-      !file ||
-      file.size > 5 * 1024 * 1024 ||
-      !["image/jpeg", "image/png", "image/webp"].includes(file.type)
-    )
-      return;
+    if (!file || !(await validateUpload(file, ["image/jpeg", "image/png", "image/webp"]))) return;
     setBusy(true);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const extension = safeFileExtension(file);
     const path = `courses/${crypto.randomUUID()}.${extension}`;
     const { error } = await supabase.storage
       .from("content-media")
