@@ -1,10 +1,25 @@
 import { randomBytes } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { appConfig } from "@/lib/config";
 
 export const runtime = "nodejs";
 
 function json(message: string, status: number, extra: Record<string, unknown> = {}) {
   return Response.json({ message, ...extra }, { status, headers: { "cache-control": "no-store" } });
+}
+
+function requestOrigin(request: Request): string {
+  for (const header of ["origin", "referer"]) {
+    const value = request.headers.get(header);
+    if (!value) continue;
+    try {
+      const parsed = new URL(value);
+      if (parsed.protocol === "https:" || parsed.hostname === "localhost") return parsed.origin;
+    } catch {
+      // Ignore malformed headers and keep falling back.
+    }
+  }
+  return appConfig.domain;
 }
 
 export async function POST(request: Request) {
@@ -48,10 +63,12 @@ export async function POST(request: Request) {
 
   const { data: targetData, error: targetError } = await adminClient.auth.admin.getUserById(userId);
   if (targetError || !targetData.user) return json("User not found.", 404);
+  const email = targetData.user.email;
+  if (!email) return json("This account has no email address.", 400);
 
-  const temporaryPassword = `${randomBytes(18).toString("base64url")}!9a`;
+  const rotatedPassword = `${randomBytes(18).toString("base64url")}!9a`;
   const { error: updateError } = await adminClient.auth.admin.updateUserById(userId, {
-    password: temporaryPassword,
+    password: rotatedPassword,
     user_metadata: {
       ...targetData.user.user_metadata,
       password_reset_by_admin_at: new Date().toISOString(),
@@ -63,13 +80,19 @@ export async function POST(request: Request) {
   });
   if (updateError) return json("The password could not be reset.", 500);
 
+  const referer = request.headers.get("referer") || "";
+  const locale = referer.match(/\/(my|zh|en)(?:\/|$)/)?.[1] || appConfig.defaultLocale;
+  const redirectTo = `${requestOrigin(request)}/auth/callback?locale=${encodeURIComponent(locale)}&next=${encodeURIComponent(`/${locale}/reset-password`)}`;
+  const { error: emailError } = await adminClient.auth.resetPasswordForEmail(email, { redirectTo });
+  if (emailError) return json("The reset email could not be sent.", 500);
+
   await adminClient.from("admin_audit_logs").insert({
     actor_id: actorData.user.id,
     action: "PASSWORD_RESET",
     target_table: "auth.users",
     target_id: userId,
-    after_data: { reset_at: new Date().toISOString() },
+    after_data: { reset_at: new Date().toISOString(), email_sent: true },
   });
 
-  return json("Temporary password created.", 200, { temporaryPassword });
+  return json("Password reset email sent. The user must set a new password from that email.", 200);
 }

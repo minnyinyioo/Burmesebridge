@@ -68,12 +68,8 @@ function UsersContent() {
 
   async function resetPassword(user: AdminUser) {
     const name = user.display_name || user.id;
-    if (!confirm(`Reset the password for ${name}? The user will be forced to choose a new password after signing in.`)) return;
-    const typedName = window.prompt(`Second confirmation: type the exact account name below.\n\n${name}`);
-    if (typedName !== name) {
-      if (typedName !== null) alert("Confirmation did not match. Nothing was changed.");
-      return;
-    }
+    if (!confirm(`Reset the password for ${name}? A reset email will be sent and the user will be required to choose a new password.`)) return;
+    if (!confirm(`Second confirmation: send a password reset email for ${name}? This cannot be undone from this screen.`)) return;
     setResetting(user.id);
     const { data: sessionData } = await supabase.auth.getSession();
     const response = await fetch("/api/admin/users/reset-password", {
@@ -84,13 +80,13 @@ function UsersContent() {
       },
       body: JSON.stringify({ userId: user.id, confirmation: user.id }),
     });
-    const result = await response.json().catch(() => ({})) as { message?: string; temporaryPassword?: string };
+    const result = await response.json().catch(() => ({})) as { message?: string };
     setResetting(null);
-    if (!response.ok || !result.temporaryPassword) {
+    if (!response.ok) {
       alert(result.message || "Password reset failed.");
       return;
     }
-    window.prompt("Copy this temporary password now. It will not be shown again:", result.temporaryPassword);
+    alert(result.message || "Password reset email sent.");
   }
 
   return (
