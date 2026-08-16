@@ -6,6 +6,11 @@ import { ArrowLeft, MailCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import BrandLogo from "@/components/BrandLogo";
 
+/** GoTrue custom SMTP (Brevo) often exceeds 10s; Auth returns 504 after the mail still goes out. */
+function isMailTimeout(code: string, message: string) {
+  return /timeout|deadline exceeded|504|request_timeout/i.test(`${code} ${message}`);
+}
+
 export default function ForgotPasswordPage() {
   const params = useParams();
   const locale = String(params.locale || "en");
@@ -29,6 +34,10 @@ export default function ForgotPasswordPage() {
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo });
     setLoading(false);
     if (resetError) {
+      if (isMailTimeout(resetError.code || "", resetError.message)) {
+        setSent(true);
+        return;
+      }
       const limited = /rate limit|too many requests|over_email_send_rate_limit/i.test(resetError.message);
       setError(limited ? copy.rateLimit : copy.genericError);
       return;

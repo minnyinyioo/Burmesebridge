@@ -7,6 +7,11 @@ import SocialLoginButtons from "@/components/SocialLoginButtons";
 import { supabase } from "@/lib/supabase";
 import BrandLogo from "@/components/BrandLogo";
 
+/** GoTrue custom SMTP (Brevo) often exceeds 10s; Auth returns 504 after the mail still goes out. */
+function isMailTimeout(code: string, message: string) {
+  return /timeout|deadline exceeded|504|request_timeout/i.test(`${code} ${message}`);
+}
+
 export default function RegisterPage() {
   const params = useParams();
   const locale = String(params.locale || "en");
@@ -58,6 +63,7 @@ export default function RegisterPage() {
     if (signUpError) {
       const code = signUpError.code || "";
       const raw = signUpError.message.toLowerCase();
+      if (isMailTimeout(code, signUpError.message)) { setSubmitted(true); return; }
       if (/smtp|email.*send|sending.*email/.test(raw)) setError(copy.smtp);
       else if (/rate|too many/.test(raw) || code.includes("rate_limit")) setError(copy.rate);
       else if (/already|exists/.test(raw) || code === "user_already_exists" || code === "email_exists") setError(copy.exists);
