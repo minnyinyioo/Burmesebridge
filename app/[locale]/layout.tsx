@@ -8,6 +8,7 @@ import SocialFooter from "@/components/SocialFooter";
 import BrandLogo from "@/components/BrandLogo";
 import Link from "next/link";
 import PasswordChangeGuard from "@/components/PasswordChangeGuard";
+import MfaGuard from "@/components/MfaGuard";
 import {
   BriefcaseBusiness,
   GraduationCap,
@@ -62,6 +63,7 @@ export default async function LocaleLayout({
   return (
     <div className="site-shell" lang={locale}>
       <PasswordChangeGuard locale={locale} />
+      <MfaGuard locale={locale} />
       <nav className="site-nav">
         <Link href={`/${locale}`} className="site-logo">
           <BrandLogo size={36} priority />

@@ -24,12 +24,13 @@ export default function LoginPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        router.replace(safeNext);
+        const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        router.replace(aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2" ? `/${locale}/mfa-verify` : safeNext);
       }
     }
 
     checkUser();
-  }, [router, safeNext]);
+  }, [locale, router, safeNext]);
 
   const text = {
     my: {
@@ -88,7 +89,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      router.push(safeNext);
+      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      router.push(aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2" ? `/${locale}/mfa-verify` : safeNext);
       router.refresh();
     }
 

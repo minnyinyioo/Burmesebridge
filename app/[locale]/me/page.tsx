@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import DeleteAccountPanel from "@/components/DeleteAccountPanel";
+import AccountSecurityPanel from "@/components/AccountSecurityPanel";
 
 type Profile = {
   display_name: string | null;
@@ -245,6 +246,7 @@ export default function MePage() {
             {copy.logout}
           </button>
         </div>
+        <AccountSecurityPanel locale={locale} />
         {email ? <DeleteAccountPanel locale={locale} email={email} /> : null}
       </section>
     </main>

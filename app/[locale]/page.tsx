@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Sparkles,
   TrendingUp,
-  Users,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
@@ -192,11 +191,6 @@ export default function HomePage() {
         <p>{t.heroSub}</p>
 
         <div className="home-hero-actions">
-          <Link href={`/${locale}/login`} className="home-primary-button">
-            <Users size={16} />
-            {t.register}
-          </Link>
-
           <Link href={`/${locale}/learn`} className="home-secondary-button">
             <Crown size={16} />
             {t.member}
