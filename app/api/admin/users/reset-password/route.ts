@@ -21,6 +21,12 @@ function requestOrigin(request: Request): string {
   return appConfig.domain;
 }
 
+/** GoTrue custom SMTP (Brevo) often exceeds 10s; Auth returns 504 after the mail still goes out. */
+function isMailTimeout(error: { code?: string; message?: string } | null) {
+  if (!error) return false;
+  return /timeout|deadline exceeded|504|request_timeout/i.test(`${error.code || ""} ${error.message || ""}`);
+}
+
 export async function POST(request: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -69,7 +75,7 @@ export async function POST(request: Request) {
   const locale = referer.match(/\/(my|zh|en)(?:\/|$)/)?.[1] || appConfig.defaultLocale;
   const redirectTo = `${requestOrigin(request)}/auth/callback?locale=${encodeURIComponent(locale)}&next=${encodeURIComponent(`/${locale}/reset-password`)}`;
   const { error: emailError } = await adminClient.auth.resetPasswordForEmail(email, { redirectTo });
-  if (emailError) return json("The reset email could not be sent.", 500);
+  if (emailError && !isMailTimeout(emailError)) return json("The reset email could not be sent.", 500);
 
   const { error: updateError } = await adminClient.auth.admin.updateUserById(userId, {
     user_metadata: {
