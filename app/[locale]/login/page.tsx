@@ -139,7 +139,7 @@ export default function LoginPage() {
         <SocialLoginButtons locale={locale} />
 
         <a
-          href={`/${locale}/register`}
+          href={`/${locale}/signup`}
           className="auth-switch"
         >
           {t.register}
