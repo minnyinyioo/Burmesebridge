@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { appConfig } from "@/lib/config";
 
@@ -66,9 +65,13 @@ export async function POST(request: Request) {
   const email = targetData.user.email;
   if (!email) return json("This account has no email address.", 400);
 
-  const rotatedPassword = `${randomBytes(18).toString("base64url")}!9a`;
+  const referer = request.headers.get("referer") || "";
+  const locale = referer.match(/\/(my|zh|en)(?:\/|$)/)?.[1] || appConfig.defaultLocale;
+  const redirectTo = `${requestOrigin(request)}/auth/callback?locale=${encodeURIComponent(locale)}&next=${encodeURIComponent(`/${locale}/reset-password`)}`;
+  const { error: emailError } = await adminClient.auth.resetPasswordForEmail(email, { redirectTo });
+  if (emailError) return json("The reset email could not be sent.", 500);
+
   const { error: updateError } = await adminClient.auth.admin.updateUserById(userId, {
-    password: rotatedPassword,
     user_metadata: {
       ...targetData.user.user_metadata,
       password_reset_by_admin_at: new Date().toISOString(),
@@ -78,13 +81,7 @@ export async function POST(request: Request) {
       must_change_password: true,
     },
   });
-  if (updateError) return json("The password could not be reset.", 500);
-
-  const referer = request.headers.get("referer") || "";
-  const locale = referer.match(/\/(my|zh|en)(?:\/|$)/)?.[1] || appConfig.defaultLocale;
-  const redirectTo = `${requestOrigin(request)}/auth/callback?locale=${encodeURIComponent(locale)}&next=${encodeURIComponent(`/${locale}/reset-password`)}`;
-  const { error: emailError } = await adminClient.auth.resetPasswordForEmail(email, { redirectTo });
-  if (emailError) return json("The reset email could not be sent.", 500);
+  if (updateError) return json("The reset email was sent, but the account could not be marked to change password.", 500);
 
   await adminClient.from("admin_audit_logs").insert({
     actor_id: actorData.user.id,
