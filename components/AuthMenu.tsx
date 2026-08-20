@@ -18,11 +18,11 @@ export default function AuthMenu({
   const text = {
     my: {
       login: "အကောင့်ဝင်ရန်",
-      me: "ကျွန်ုပ်",
-      dashboard: "ဒက်ရှ်ဘုတ်",
-      profile: "ပရိုဖိုင်",
-      account: "ကျွန်ုပ်အကောင့်",
-      checkin: "ချက်အင်",
+      me: "ကျွန်ုပ်၏အကောင့်",
+      dashboard: "ထိန်းချုပ်ခန်း",
+      profile: "ကိုယ်ရေးအချက်အလက်",
+      account: "အကောင့်ဆက်တင်များ",
+      checkin: "နေ့စဉ်မှတ်တမ်း",
       logout: "အကောင့်ထွက်ရန်",
     },
 

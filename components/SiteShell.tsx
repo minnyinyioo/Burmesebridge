@@ -26,10 +26,10 @@ export default function SiteShell({
   const text = {
     my: {
       home: "ပင်မစာမျက်နှာ",
-      learn: "သင်ယူရန်",
-      forum: "Community",
-      jobs: "အလုပ်အကိုင်",
-      me: "ပရိုဖိုင်",
+      learn: "လေ့လာရေး",
+      forum: "ဆွေးနွေးခန်း",
+      jobs: "အလုပ်အကိုင်များ",
+      me: "ကျွန်ုပ်၏အကောင့်",
     },
     zh: {
       home: "首页",

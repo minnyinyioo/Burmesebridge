@@ -9,7 +9,7 @@ export default function MobileTabBar({ locale }: { locale: string }) {
   const labels = locale === "zh"
     ? { home: "首页", learn: "学习视频", forum: "社区", search: "搜索", me: "我的" }
     : locale === "my"
-      ? { home: "ပင်မ", learn: "လေ့လာဗီဒီယို", forum: "Community", search: "ရှာရန်", me: "ကျွန်ုပ်" }
+      ? { home: "ပင်မစာမျက်နှာ", learn: "လေ့လာရေးဗီဒီယို", forum: "ဆွေးနွေးခန်း", search: "ရှာဖွေရန်", me: "ကျွန်ုပ်၏အကောင့်" }
       : { home: "Home", learn: "Learn video", forum: "Community", search: "Search", me: "Me" };
   const tabs = [
     { key: "home", href: `/${locale}`, icon: Home, exact: true },
