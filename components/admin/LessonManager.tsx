@@ -36,6 +36,7 @@ export default function LessonManager({
           title: "课时标题",
           body: "课时正文",
           video: "课时 YouTube 视频（可选）",
+          invalidVideo: "请输入有效的 YouTube 链接或视频 ID。",
           preview: "允许免费试看",
           add: "添加课时",
           empty: "请先创建课程",
@@ -52,6 +53,7 @@ export default function LessonManager({
             title: "သင်ခန်းစာခေါင်းစဉ်",
             body: "သင်ခန်းစာအကြောင်းအရာ",
             video: "YouTube ဗီဒီယို (မလိုအပ်)",
+            invalidVideo: "မှန်ကန်သော YouTube လင့်ခ် သို့မဟုတ် ဗီဒီယို ID ထည့်ပါ။",
             preview: "အခမဲ့အစမ်းကြည့်ရန်",
             add: "သင်ခန်းစာထည့်ရန်",
             empty: "သင်တန်းအရင်ဖန်တီးပါ",
@@ -67,6 +69,7 @@ export default function LessonManager({
             title: "Lesson title",
             body: "Lesson body",
             video: "Lesson YouTube video (optional)",
+            invalidVideo: "Enter a valid YouTube URL or video ID.",
             preview: "Free preview",
             add: "Add lesson",
             empty: "Create a course first",
@@ -111,6 +114,11 @@ export default function LessonManager({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!selected) return;
+    const youtubeId = getYouTubeId(video);
+    if (video.trim() && !youtubeId) {
+      setMessage(copy.invalidVideo);
+      return;
+    }
     const suffix = locale === "zh" ? "zh" : locale === "en" ? "en" : "my";
     const { data: lesson, error } = await supabase
       .from("knowledge_lessons")
@@ -132,7 +140,7 @@ export default function LessonManager({
       .insert({
         lesson_id: lesson.id,
         [`body_${suffix}`]: body.trim(),
-        youtube_id: getYouTubeId(video) || null,
+        youtube_id: youtubeId || null,
       });
     if (contentError) setMessage(contentError.message);
     else {

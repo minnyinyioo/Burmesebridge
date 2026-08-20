@@ -10,6 +10,7 @@ import { getYouTubeId } from "@/lib/youtube";
 import CourseCoverUploader from "@/components/admin/CourseCoverUploader";
 import PaymentMethodsManager from "@/components/admin/PaymentMethodsManager";
 import LessonManager from "@/components/admin/LessonManager";
+import MembershipManager from "@/components/admin/MembershipManager";
 
 type RequestItem = {
   id: number;
@@ -355,6 +356,7 @@ function KnowledgeAdmin() {
           }))}
         />
         <PaymentMethodsManager locale={locale} />
+        <MembershipManager locale={locale} />
         <h2 className="knowledge-request-title">{c.requests}</h2>
         {msg && <p className="verification-message">{msg}</p>}
         <div className="verification-list">

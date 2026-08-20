@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { BadgeCheck, Save, UserRound } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 type VerificationRequest = {
@@ -17,6 +18,7 @@ type VerificationRequest = {
 export default function ProfilePage() {
   const params = useParams();
   const locale = String(params.locale || "my");
+  const router = useRouter();
 
   const text = {
     my: {
@@ -67,7 +69,7 @@ export default function ProfilePage() {
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
-      window.location.href = `/${locale}/login`;
+      router.replace(`/${locale}/login`);
       return;
     }
 
@@ -89,10 +91,12 @@ export default function ProfilePage() {
     setRequests(history);
     setHasPendingRequest(history.some((request) => request.status === "pending"));
     setLoading(false);
-  }, [locale]);
+  }, [locale, router]);
 
   useEffect(() => {
-    loadProfile();
+    // Initial Supabase fetch resolves asynchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadProfile();
   }, [loadProfile]);
 
   async function saveProfile() {
@@ -101,7 +105,7 @@ export default function ProfilePage() {
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
-      window.location.href = `/${locale}/login`;
+      router.replace(`/${locale}/login`);
       return;
     }
 
@@ -125,7 +129,7 @@ export default function ProfilePage() {
   async function submitVerification() {
     setMessage("");
     const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) { window.location.href = `/${locale}/login`; return; }
+    if (!userData.user) { router.replace(`/${locale}/login`); return; }
     if (!evidence.trim()) return;
     const { error } = await supabase.from("verification_requests").insert({
       user_id: userData.user.id,
@@ -137,41 +141,27 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <main style={{ padding: 40 }}>{t.loading}</main>;
+    return <main className="profile-settings"><p className="account-loading">{t.loading}</p></main>;
   }
 
   return (
-    <main style={{ padding: "48px 24px", minHeight: "100vh" }}>
-      <section style={{ maxWidth: "640px", margin: "0 auto" }}>
-        <h1 style={{ fontSize: "42px", marginBottom: "24px" }}>{t.title}</h1>
-
-        <div style={card}>
-          <label style={label}>
+    <main className="profile-settings">
+      <header className="profile-settings-head"><span><UserRound size={18}/>{t.title}</span><h1>{t.title}</h1></header>
+      <div className="profile-settings-grid">
+        <section className="profile-settings-card profile-basic-card">
+          <div className="settings-card-head"><UserRound size={20}/><div><h2>{t.title}</h2><p>{email}</p></div></div>
+          <label>
             {t.email}
-            <input value={email} disabled style={input} />
+            <input value={email} disabled />
           </label>
-
-          <label style={label}>
+          <label>
             {t.name}
-            <input
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              style={input}
-              placeholder={t.placeholder}
-            />
+            <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t.placeholder}/>
           </label>
-
-          <button onClick={saveProfile} style={button}>
-            {t.save}
-          </button>
-
-          {message && (
-            <p style={{ marginTop: 16, color: "#10b981" }}>{message}</p>
-          )}
-        </div>
-
-        <div className="verification-apply-card">
-          <h2>{t.verifyTitle}</h2><p>{t.verifyCopy}</p>
+          <button type="button" onClick={saveProfile}><Save size={16}/>{t.save}</button>
+        </section>
+        <section className="profile-settings-card verification-apply-card">
+          <div className="settings-card-head"><BadgeCheck size={20}/><div><h2>{t.verifyTitle}</h2><p>{t.verifyCopy}</p></div></div>
           {isVerified ? <div className="verification-approved">{t.verified}</div> : hasPendingRequest ? <div className="verification-pending">{t.pending}</div> : <>
             <select value={verificationType} onChange={(event) => setVerificationType(event.target.value as typeof verificationType)}>
               <option value="teacher">{t.teacher}</option><option value="company">{t.company}</option><option value="author">{t.author}</option>
@@ -180,41 +170,9 @@ export default function ProfilePage() {
             <button onClick={submitVerification} disabled={!evidence.trim()}>{t.submit}</button>
           </>}
           {requests.length > 0 && <div className="verification-history"><h3>{t.history}</h3>{requests.map((request) => <article key={request.id}><div><span className={`verification-status ${request.status}`}>{t[request.status]}</span><strong>{t[request.requested_badge]}</strong></div><p>{request.evidence}</p><time>{t.submittedAt}: {new Date(request.created_at).toLocaleString()}</time>{request.review_note && <blockquote><b>{t.reason}:</b> {request.review_note}</blockquote>}{request.status === "rejected" && <small>{t.reapply}</small>}</article>)}</div>}
-        </div>
-      </section>
+        </section>
+      </div>
+      {message ? <p className="profile-settings-message" role="status">{message}</p> : null}
     </main>
   );
 }
-
-const card = {
-  background: "white",
-  color: "#0f172a",
-  padding: "28px",
-  borderRadius: "20px",
-  border: "1px solid #e2e8f0",
-};
-
-const label = {
-  display: "grid",
-  gap: "8px",
-  marginBottom: "18px",
-  fontWeight: 700,
-};
-
-const input = {
-  width: "100%",
-  padding: "14px",
-  borderRadius: "12px",
-  border: "1px solid #cbd5e1",
-  fontSize: "16px",
-};
-
-const button = {
-  background: "var(--brand-primary)",
-  color: "white",
-  padding: "14px 18px",
-  borderRadius: "12px",
-  border: "none",
-  fontWeight: 700,
-  cursor: "pointer",
-};

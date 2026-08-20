@@ -1,0 +1,2 @@
+-- Historical placeholder for a migration previously applied from the Supabase dashboard/CLI.
+-- The remote database already records this version; no schema action is required locally.

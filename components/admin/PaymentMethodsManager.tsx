@@ -11,7 +11,8 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
     locale === "zh"
       ? {
           title: "收款方式",
-          name: "方式名称，例如 KBZ Pay",
+          name: "选择付款方式",
+          custom: "其他方式",
           account: "收款人姓名",
           number: "账号/手机号",
           instructions: "付款说明",
@@ -24,7 +25,8 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
       : locale === "my"
         ? {
             title: "ငွေလက်ခံ နည်းလမ်း",
-            name: "KBZ Pay စသည့် အမည်",
+            name: "ငွေပေးချေမှုရွေးရန်",
+            custom: "အခြားနည်းလမ်း",
             account: "လက်ခံသူအမည်",
             number: "အကောင့်/ဖုန်းနံပါတ်",
             instructions: "ငွေပေးချေမှု လမ်းညွှန်",
@@ -36,7 +38,8 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
           }
         : {
             title: "Payment methods",
-            name: "Method name, e.g. KBZ Pay",
+            name: "Choose payment method",
+            custom: "Other method",
             account: "Account holder",
             number: "Account or phone number",
             instructions: "Payment instructions",
@@ -47,7 +50,8 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
             remove: "Delete",
           };
   const [items, setItems] = useState<AdminMethod[]>([]);
-  const [name, setName] = useState("");
+  const [name, setName] = useState("KBZ Pay");
+  const [customName, setCustomName] = useState("");
   const [account, setAccount] = useState("");
   const [number, setNumber] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -72,7 +76,7 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
     const { error } = await supabase
       .from("knowledge_payment_methods")
       .insert({
-        name: name.trim(),
+        name: (name === "Other" ? customName : name).trim(),
         account_name: account.trim(),
         account_number: number.trim(),
         [`instructions_${suffix}`]: instructions.trim() || null,
@@ -80,7 +84,8 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
       });
     if (error) setMessage(error.message);
     else {
-      setName("");
+      setName("KBZ Pay");
+      setCustomName("");
       setAccount("");
       setNumber("");
       setInstructions("");
@@ -111,12 +116,15 @@ export default function PaymentMethodsManager({ locale }: { locale: string }) {
         {copy.title}
       </h2>
       <form onSubmit={submit}>
-        <input
-          required
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder={copy.name}
-        />
+        <select required value={name} onChange={(event) => setName(event.target.value)} aria-label={copy.name}>
+          <option value="KBZ Pay">KBZ Pay</option>
+          <option value="Wave Pay">Wave Pay</option>
+          <option value="Bank transfer">Bank transfer</option>
+          <option value="AYA Pay">AYA Pay</option>
+          <option value="CB Pay">CB Pay</option>
+          <option value="Other">{copy.custom}</option>
+        </select>
+        {name === "Other" ? <input required value={customName} onChange={(event) => setCustomName(event.target.value)} placeholder={copy.custom}/> : null}
         <input
           required
           value={account}
