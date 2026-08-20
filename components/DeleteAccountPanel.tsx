@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function DeleteAccountPanel({ locale, email }: { locale: string; email: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+  const [confirmation, setConfirmation] = useState("");
   const copy = locale === "zh" ? {
     title: "删除账号", body: "永久删除账号、个人资料及相关个人数据。此操作无法撤销。", button: "永久删除账号",
-    prompt: `请输入以下文字确认：\nDELETE ${email}`, confirm: "最后确认：永久删除此账号？", mismatch: "确认文字不匹配，账号没有被删除。", failed: "删除失败，请稍后重试或联系管理员。",
+    prompt: `请输入 DELETE ${email} 以确认`, confirm: "此操作无法撤销。", mismatch: "确认文字不匹配，账号没有被删除。", failed: "删除失败，请稍后重试或联系管理员。",
   } : locale === "my" ? {
     title: "အကောင့်ဖျက်ရန်", body: "အကောင့်နှင့် ဆက်စပ်ကိုယ်ရေးဒေတာကို အပြီးဖျက်မည်။ ပြန်ယူ၍မရပါ။", button: "အကောင့်ကို အပြီးဖျက်မည်",
     prompt: `အတည်ပြုရန် ဤစာကို ရိုက်ပါ:\nDELETE ${email}`, confirm: "နောက်ဆုံးအတည်ပြုချက် — အကောင့်ကို အပြီးဖျက်မည်လား?", mismatch: "အတည်ပြုစာ မကိုက်ညီပါ။", failed: "ဖျက်၍မရပါ။ နောက်မှ ထပ်စမ်းပါ။",
@@ -20,10 +23,8 @@ export default function DeleteAccountPanel({ locale, email }: { locale: string; 
 
   async function removeAccount() {
     const expected = `DELETE ${email}`;
-    const typed = window.prompt(copy.prompt);
-    if (typed === null) return;
+    const typed = confirmation;
     if (typed !== expected) { setError(copy.mismatch); return; }
-    if (!window.confirm(copy.confirm)) return;
     setBusy(true); setError("");
     const { data } = await supabase.auth.getSession();
     const response = await fetch("/api/account", {
@@ -37,8 +38,10 @@ export default function DeleteAccountPanel({ locale, email }: { locale: string; 
   }
 
   return <section className="account-danger-zone"><div><h2>{copy.title}</h2><p>{copy.body}</p></div>
-    <button type="button" onClick={removeAccount} disabled={busy}><Trash2 size={17} />{busy ? "…" : copy.button}</button>
-    {error ? <p className="auth-error" role="alert">{error}</p> : null}
+    <button type="button" onClick={() => { setError(""); setOpen(true); }} disabled={busy}><Trash2 size={17} />{copy.button}</button>
+    <Dialog open={open} onOpenChange={setOpen}><DialogContent className="account-dialog danger-dialog"><DialogHeader><DialogTitle>{copy.title}</DialogTitle><DialogDescription>{copy.body} {copy.confirm}</DialogDescription></DialogHeader>
+      <label className="confirmation-field"><span>{copy.prompt}</span><input value={confirmation} onChange={(event) => setConfirmation(event.target.value)} autoComplete="off" /></label>
+      {error ? <p className="auth-error" role="alert">{error}</p> : null}<button className="danger-confirm" type="button" onClick={removeAccount} disabled={busy || confirmation !== `DELETE ${email}`}><Trash2 size={17} />{busy ? "…" : copy.button}</button>
+    </DialogContent></Dialog>
   </section>;
 }
-
