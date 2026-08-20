@@ -191,7 +191,7 @@ export default function HomePage() {
         <p>{t.heroSub}</p>
 
         <div className="home-hero-actions">
-          <Link href={`/${locale}/learn`} className="home-secondary-button">
+          <Link href={`/${locale}/knowledge`} className="home-secondary-button">
             <Crown size={16} />
             {t.member}
           </Link>

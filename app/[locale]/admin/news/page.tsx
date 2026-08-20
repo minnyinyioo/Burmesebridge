@@ -221,6 +221,11 @@ function NewsContent() {
     if (!titleMy.trim() && !titleZh.trim() && !titleEn.trim()) return;
     if (!contentMy.trim() && !contentZh.trim() && !contentEn.trim()) return;
     if(category==="jobs"&&(!employerName.trim()||!jobLocation.trim()||!applicationContact.trim()||!recruitmentSafetyConfirmed)){alert(t.jobRequired);return}
+    const pendingVideoId = videoUrl.trim() ? getYouTubeId(videoUrl) : null;
+    if (videoUrl.trim() && !pendingVideoId) { alert(t.video); return; }
+    const blocksToPublish = pendingVideoId
+      ? [...mediaBlocks, { type: "video" as const, url: `https://www.youtube.com/watch?v=${pendingVideoId}`, caption: mediaCaption.trim() }]
+      : mediaBlocks;
 
     const {
       data: { user },
@@ -249,7 +254,7 @@ function NewsContent() {
       content_my: contentMy || fallbackContent,
       content_zh: contentZh || fallbackContent,
       content_en: contentEn || fallbackContent,
-      media_blocks: mediaBlocks,
+      media_blocks: blocksToPublish,
       employer_name:category==="jobs"?employerName.trim():null,
       employer_registration:category==="jobs"?employerRegistration.trim()||null:null,
       job_location:category==="jobs"?jobLocation.trim():null,
@@ -276,6 +281,7 @@ function NewsContent() {
     setContentZh("");
     setContentEn("");
     setMediaBlocks([]);
+    setVideoUrl("");setMediaCaption("");
     setEmployerName("");setEmployerRegistration("");setJobLocation("");setSalaryDetails("");setApplicationContact("");setRecruitmentVerification("unverified");setRecruitmentSafetyConfirmed(false);
 
     await loadItems();

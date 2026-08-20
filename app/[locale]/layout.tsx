@@ -11,7 +11,6 @@ import PasswordChangeGuard from "@/components/PasswordChangeGuard";
 import MfaGuard from "@/components/MfaGuard";
 import {
   BriefcaseBusiness,
-  GraduationCap,
   Home,
   LibraryBig,
   MessageCircle,
@@ -74,10 +73,6 @@ export default async function LocaleLayout({
             <Home size={16} />
             {t.home}
           </Link>
-          <Link href={`/${locale}/learn`}>
-            <GraduationCap size={16} />
-            {t.learn}
-          </Link>
           <Link href={`/${locale}/jobs`}>
             <BriefcaseBusiness size={16} />
             {t.jobs}
@@ -92,7 +87,7 @@ export default async function LocaleLayout({
           </Link>
           <Link href={`/${locale}/videos`}>
             <PlaySquare size={16} />
-            {locale === "zh" ? "视频" : locale === "my" ? "ဗီဒီယို" : "Videos"}
+            {locale === "zh" ? "学习视频" : locale === "my" ? "လေ့လာရေးဗီဒီယို" : "Learn & videos"}
           </Link>
           <Link href={`/${locale}/knowledge`}>
             <LibraryBig size={16} />
@@ -124,7 +119,7 @@ export default async function LocaleLayout({
             </div>
             <nav className="site-footer-column" aria-label="Platform">
               <strong>{locale === "zh" ? "平台" : locale === "my" ? "Platform" : "Platform"}</strong>
-              <Link href={`/${locale}/learn`}>{locale === "zh" ? "学习" : locale === "my" ? "လေ့လာရန်" : "Learn"}</Link>
+              <Link href={`/${locale}/videos`}>{locale === "zh" ? "学习视频" : locale === "my" ? "လေ့လာရေးဗီဒီယို" : "Learn & videos"}</Link>
               <Link href={`/${locale}/news`}>{locale === "zh" ? "新闻" : locale === "my" ? "သတင်း" : "News"}</Link>
               <Link href={`/${locale}/forum`}>{locale === "zh" ? "社区" : locale === "my" ? "Community" : "Community"}</Link>
               <Link href={`/${locale}/knowledge`}>{locale === "zh" ? "知识内容" : locale === "my" ? "သင်တန်း" : "Knowledge"}</Link>
