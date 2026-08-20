@@ -266,6 +266,10 @@ svg { display: block; flex: 0 0 auto; }
 .social-auth-divider::before, .social-auth-divider::after { content: ""; height: 1px; flex: 1; background: #e2ddd2; }
 .social-auth-divider span { white-space: nowrap; }
 .social-auth-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+.google-identity-slot { position: relative; min-width: 0; min-height: 46px; overflow: hidden; border-radius: 11px; }
+.google-identity-button { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; width: 100%; min-height: 46px; }
+.google-identity-button > div, .google-identity-button iframe { width: 100% !important; min-width: 0 !important; }
+.google-identity-slot .social-auth-button { width: 100%; }
 .social-auth-button { min-width: 0; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 10px; border: 1px solid #d9d3c6; border-radius: 11px; color: #263f39; background: #fff; font-size: 13px; font-weight: 750; cursor: pointer; transition: .18s ease; }
 .social-auth-button:hover { border-color: #b7c5c0; background: #f8faf9; transform: translateY(-1px); }
 .social-auth-button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
