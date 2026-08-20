@@ -12,7 +12,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "8. 求职者安全与举报", paragraphs: ["不要仅凭平台帖子转账、旅行或交付证件。应在安全地点面试，将行程和雇主信息告知可信联系人，并保留职位、聊天、合同和付款记录。若面临即时危险，请优先离开现场并联系当地紧急服务、警方或反人口贩卖机构，同时通过平台举报功能报告。"] },
     { title: "9. 责任边界", paragraphs: ["平台会采取合理的内容审核和安全措施，但无法预先核实每项第三方招聘信息，也不是雇佣合同当事方。在适用法律允许范围内，因用户或第三方的虚假陈述、线下交易、雇佣决定或违法行为产生的责任由相应行为人承担。本条款不排除平台依法不得排除的责任，也不限制受害者依法举报和求偿的权利。"] },
     { title: "10. 第三方链接", paragraphs: ["平台可能包含第三方网站、职位、视频或社交平台链接。第三方内容和服务由其提供者负责，访问前请自行核实。"] },
-    { title: "11. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 minnyinyioo6161@gmail.com。"] },
+    { title: "11. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 admin@burmesebridge.eu.cc。"] },
   ] },
   my: { title: "ဝန်ဆောင်မှု စည်းမျဉ်းများ", summary: "BurmeseBridge ကို အသုံးပြုခြင်းဖြင့် ဤစည်းမျဉ်းများနှင့် သက်ဆိုင်ရာဥပဒေများကို လိုက်နာရန် သဘောတူပါသည်။", updated: "၂၀၂၆ ဩဂုတ် ၁၄", sections: [
     { title: "၁။ ဝန်ဆောင်မှု", paragraphs: ["BurmeseBridge တွင် သင်ယူမှု၊ သတင်း၊ အလုပ်အကိုင်၊ community၊ ဗီဒီယိုနှင့် paid knowledge content များ ပါဝင်သည်။ လုပ်ဆောင်ချက်များကို အချိန်နှင့်အမျှ ပြောင်းလဲနိုင်သည်။"] },
@@ -25,7 +25,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "၈။ အလုပ်ရှာဖွေသူ လုံခြုံရေး", paragraphs: ["Post တစ်ခုတည်းကို ယုံ၍ ငွေလွှဲခြင်း၊ ခရီးသွားခြင်း သို့မဟုတ် စာရွက်စာတမ်းပေးခြင်း မပြုပါနှင့်။ Interview ကို လုံခြုံသောနေရာတွင်လုပ်ပြီး အလုပ်ရှင်နှင့် ခရီးစဉ်အချက်အလက်ကို ယုံကြည်ရသူအား မျှဝေပါ။ အရေးပေါ်အန္တရာယ်ရှိပါက ဒေသဆိုင်ရာ ရဲတပ်ဖွဲ့/အရေးပေါ်ဝန်ဆောင်မှုကို ဆက်သွယ်ပြီး platform တွင် report လုပ်ပါ။"] },
     { title: "၉။ တာဝန်ကန့်သတ်ချက်", paragraphs: ["Platform သည် သင့်လျော်သောစိစစ်မှု ပြုလုပ်သော်လည်း third-party အလုပ်တိုင်းကို ကြိုတင်အတည်ပြုနိုင်မည်မဟုတ်ဘဲ အလုပ်စာချုပ်၏ အဖွဲ့ဝင်မဟုတ်ပါ။ အသုံးပြုသူ သို့မဟုတ် third party ၏ လိမ်လည်ဖော်ပြမှု၊ offline transaction၊ အလုပ်ခန့်ဆုံးဖြတ်ချက်နှင့် တရားမဝင်လုပ်ရပ်အတွက် သက်ဆိုင်ရာလုပ်ဆောင်သူက တာဝန်ယူရမည်။ ဤစည်းမျဉ်းသည် ဥပဒေအရ မဖယ်ရှားနိုင်သောတာဝန် သို့မဟုတ် နစ်နာသူ၏ တိုင်ကြား/လျော်ကြေးတောင်းခွင့်ကို မကန့်သတ်ပါ။"] },
     { title: "၁၀။ ပြင်ပလင့်ခ်", paragraphs: ["ပြင်ပဝဘ်ဆိုက်၊ အလုပ်၊ ဗီဒီယို သို့မဟုတ် social link များ ပါနိုင်သည်။ အသုံးမပြုမီ ကိုယ်တိုင်စစ်ဆေးပါ။"] },
-    { title: "၁၁။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသောပြောင်းလဲမှုကို ဝဘ်ဆိုက်တွင် အသိပေးပါမည်။ မေးခွန်းများကို minnyinyioo6161@gmail.com သို့ ပို့ပါ။"] },
+    { title: "၁၁။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသော ပြောင်းလဲမှုများကို ဝဘ်ဆိုက်တွင် အသိပေးကြေညာပါမည်။ မေးမြန်းလိုသည်များကို admin@burmesebridge.eu.cc သို့ ပေးပို့နိုင်ပါသည်။"] },
   ] },
   en: { title: "Terms of Service", summary: "By using BurmeseBridge, you agree to these terms and applicable laws.", updated: "August 14, 2026", sections: [
     { title: "1. The service", paragraphs: ["BurmeseBridge provides learning, news, job information, community discussions, videos, and knowledge content. Features may change as the product develops."] },
@@ -38,7 +38,7 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "8. Jobseeker safety and reporting", paragraphs: ["Do not transfer money, travel, or hand over documents based only on a platform post. Verify independently, interview in a safe place, tell a trusted contact about the employer and journey, and preserve listings, messages, contracts, and payment records. If in immediate danger, leave when safe and contact local emergency services, police, or anti-trafficking authorities, then report the listing to the platform."] },
     { title: "9. Allocation of responsibility", paragraphs: ["We take reasonable moderation and security measures but cannot pre-verify every third-party listing and are not a party to employment contracts. To the extent permitted by law, the relevant actor remains responsible for false statements, offline transactions, employment decisions, and unlawful conduct. Nothing here excludes liability that cannot legally be excluded or limits a victim's right to report or seek a remedy."] },
     { title: "10. Third-party links", paragraphs: ["The service may link to third-party websites, jobs, videos, or social platforms. Those providers are responsible for their services; verify them before relying on them."] },
-    { title: "11. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact minnyinyioo6161@gmail.com with questions."] },
+    { title: "11. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact admin@burmesebridge.eu.cc with questions."] },
   ] },
 };
 
