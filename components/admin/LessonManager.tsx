@@ -5,6 +5,7 @@ import {
   ArrowUp,
   Eye,
   EyeOff,
+  GripVertical,
   ListVideo,
   Trash2,
 } from "lucide-react";
@@ -98,6 +99,7 @@ export default function LessonManager({
   const [sections, setSections] = useState<CourseSection[]>([]);
   const [sectionId, setSectionId] = useState("");
   const [message, setMessage] = useState("");
+  const [draggedId, setDraggedId] = useState<number | null>(null);
   const load = useCallback(async () => {
     if (!selected) {
       setLessons([]);
@@ -203,6 +205,13 @@ export default function LessonManager({
     if (error) setMessage(error.message);
     else await load();
   }
+  async function dropOn(targetId:number){
+    if(!draggedId||draggedId===targetId)return;
+    const from=lessons.findIndex(item=>item.id===draggedId);const to=lessons.findIndex(item=>item.id===targetId);if(from<0||to<0)return;
+    const reordered=[...lessons];const [moved]=reordered.splice(from,1);reordered.splice(to,0,moved);setLessons(reordered);setDraggedId(null);
+    const results=await Promise.all(reordered.map((item,index)=>supabase.from("knowledge_lessons").update({position:index,updated_at:new Date().toISOString()}).eq("id",item.id)));
+    const error=results.find(result=>result.error)?.error;if(error){setMessage(error.message);await load();}
+  }
   return (
     <section className="lesson-admin">
       <h2>
@@ -260,8 +269,9 @@ export default function LessonManager({
           {message && <p className="verification-message">{message}</p>}
           <div>
             {lessons.map((lesson, index) => (
-              <article key={lesson.id}>
+              <article key={lesson.id} draggable onDragStart={()=>setDraggedId(lesson.id)} onDragEnd={()=>setDraggedId(null)} onDragOver={event=>event.preventDefault()} onDrop={()=>void dropOn(lesson.id)} className={draggedId===lesson.id?"is-dragging":""}>
                 <span>
+                  <GripVertical size={15}/>
                   {index + 1}.{" "}
                   {lesson.title_zh || lesson.title_my || lesson.title_en}
                   {lesson.free_preview ? " · Preview" : ""}

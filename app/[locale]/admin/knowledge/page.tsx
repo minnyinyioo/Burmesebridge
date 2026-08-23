@@ -11,6 +11,7 @@ import CourseCoverUploader from "@/components/admin/CourseCoverUploader";
 import PaymentMethodsManager from "@/components/admin/PaymentMethodsManager";
 import LessonManager from "@/components/admin/LessonManager";
 import MembershipManager from "@/components/admin/MembershipManager";
+import ResourceLicenseManager from "@/components/admin/ResourceLicenseManager";
 
 type RequestItem = {
   id: number;
@@ -355,6 +356,7 @@ function KnowledgeAdmin() {
               `#${product.id}`,
           }))}
         />
+        <ResourceLicenseManager locale={locale} products={products.map((product)=>({id:product.id,title:product.title_zh||product.title_my||product.title_en||`#${product.id}`}))}/>
         <PaymentMethodsManager locale={locale} />
         <MembershipManager locale={locale} />
         <h2 className="knowledge-request-title">{c.requests}</h2>
