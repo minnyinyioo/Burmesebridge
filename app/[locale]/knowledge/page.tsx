@@ -61,7 +61,7 @@ export default function KnowledgePage() {
         const unlocked = Number(product.price) === 0 || access.includes(product.id) || hasMembership;
         return <article className="knowledge-card" key={product.id}>
           <Link href={`/${locale}/knowledge/${product.id}`} className="knowledge-card-media" aria-label={localized(product,"title")}>
-            {product.cover_url ? <span style={{backgroundImage:`url(${product.cover_url})`}}/> : <span className="knowledge-cover-fallback"><PlayCircle size={42}/></span>}
+            {product.cover_url ? <span className={product.cover_url.includes("brand-icon") ? "is-brand-cover" : ""} style={{backgroundImage:`url(${product.cover_url})`}}/> : <span className="knowledge-cover-fallback"><BookOpen size={38}/></span>}
             <i><PlayCircle size={18}/></i>
           </Link>
           <div className="knowledge-card-body">
