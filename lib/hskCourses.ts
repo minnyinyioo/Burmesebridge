@@ -6,6 +6,16 @@ export type HskCourse = {
   skill: HskSkill;
   lessons: number;
   focus: { zh: string; my: string; en: string };
+  youtubeId: string;
+};
+
+const levelVideos: Record<number, string> = {
+  1: "Hd9SadB3_zE",
+  2: "cYVYMEpATKE",
+  3: "M1zSfhQNQeE",
+  4: "Kl0CkuYV4ag",
+  5: "seeZFmyIMEM",
+  6: "_G6jWN0PzDI",
 };
 
 const focuses: Record<HskSkill, { zh: string; my: string; en: string }> = {
@@ -21,4 +31,5 @@ export const hskCourses: HskCourse[] = Array.from({ length: 6 }, (_, index) => i
     skill,
     lessons: level < 3 ? 12 : level < 5 ? 16 : 20,
     focus: focuses[skill],
+    youtubeId: levelVideos[level],
   })));
