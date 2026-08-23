@@ -1,19 +1,294 @@
 "use client";
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { CheckCircle2, FileCheck2, FileUp, GraduationCap } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
-type Assignment={id:number;title_my:string|null;title_zh:string|null;title_en:string|null;instructions_my:string|null;instructions_zh:string|null;instructions_en:string|null;max_score:number};
-type Submission={id:number;assignment_id:number;answer_text:string|null;object_path:string|null;status:string;score:number|null;feedback:string|null};
-export default function AssignmentPanel({locale,lessonId,userId}:{locale:string;lessonId:number;userId:string|null}){
- const copy=locale==="zh"?{title:"本课作业",empty:"本课没有作业",login:"登录后提交作业",answer:"填写答案或说明",file:"上传 PDF 答案",submit:"提交作业",submitted:"已提交",graded:"已批改",score:"成绩",feedback:"教师评语",invalid:"只支持 5MB 以内的有效 PDF 文件。",failed:"提交失败，请重试。"}:locale==="my"?{title:"ဤသင်ခန်းစာအိမ်စာ",empty:"အိမ်စာမရှိပါ",login:"ဝင်ရောက်ပြီး အိမ်စာတင်ပါ",answer:"အဖြေ သို့မဟုတ် ရှင်းလင်းချက်",file:"PDF အဖြေတင်ရန်",submit:"အိမ်စာတင်ရန်",submitted:"တင်ပြီး",graded:"စစ်ဆေးပြီး",score:"ရမှတ်",feedback:"ဆရာ၏မှတ်ချက်",invalid:"5MB အောက် မှန်ကန်သော PDF ဖိုင်သာ တင်နိုင်သည်။",failed:"တင်မရပါ။ ထပ်မံကြိုးစားပါ။"}:{title:"Lesson assignment",empty:"No assignment for this lesson",login:"Sign in to submit",answer:"Write your answer or notes",file:"Upload PDF answer",submit:"Submit assignment",submitted:"Submitted",graded:"Graded",score:"Score",feedback:"Teacher feedback",invalid:"Upload a valid PDF no larger than 5MB.",failed:"Submission failed. Please retry."};
- const[items,setItems]=useState<Assignment[]>([]);const[submissions,setSubmissions]=useState<Submission[]>([]);const[answers,setAnswers]=useState<Record<number,string>>({});const[files,setFiles]=useState<Record<number,File>>({});const[busy,setBusy]=useState<number|null>(null);const[message,setMessage]=useState("");
- const load=useCallback(async()=>{const assignmentQuery=supabase.from("knowledge_assignments").select("id,title_my,title_zh,title_en,instructions_my,instructions_zh,instructions_en,max_score").eq("lesson_id",lessonId).eq("status","published").order("id");if(!userId){const{data}=await assignmentQuery;setItems((data||[]) as Assignment[]);setSubmissions([]);return}const[assignmentResult,submissionResult]=await Promise.all([assignmentQuery,supabase.from("knowledge_assignment_submissions").select("id,assignment_id,answer_text,object_path,status,score,feedback").eq("user_id",userId)]);setItems((assignmentResult.data||[]) as Assignment[]);setSubmissions((submissionResult.data||[]) as Submission[])},[lessonId,userId]);
- useEffect(()=>{// eslint-disable-next-line react-hooks/set-state-in-effect
- void load()},[load]);
- const localized=(item:Assignment,field:"title"|"instructions")=>{const row=item as unknown as Record<string,string|null>;const order=locale==="zh"?["zh","my","en"]:locale==="en"?["en","my","zh"]:["my","zh","en"];return order.map(s=>row[`${field}_${s}`]).find(Boolean)||""};
- function choose(assignmentId:number,event:ChangeEvent<HTMLInputElement>){const file=event.target.files?.[0];if(file)setFiles(current=>({...current,[assignmentId]:file}))}
- async function submit(assignment:Assignment,event:FormEvent){event.preventDefault();if(!userId)return;const answer=(answers[assignment.id]||"").trim();const file=files[assignment.id];if(!answer&&!file)return;setBusy(assignment.id);setMessage("");let objectPath: string|null=submissions.find(s=>s.assignment_id===assignment.id)?.object_path||null;if(file){if(!(await validateUpload(file,["application/pdf"]))){setMessage(copy.invalid);setBusy(null);return}objectPath=`${userId}/${assignment.id}/${crypto.randomUUID()}.${safeFileExtension(file)}`;const upload=await supabase.storage.from("assignment-submissions").upload(objectPath,file,{contentType:file.type});if(upload.error){setMessage(copy.failed);setBusy(null);return}}
- const result=await supabase.from("knowledge_assignment_submissions").upsert({assignment_id:assignment.id,user_id:userId,answer_text:answer||null,object_path:objectPath,status:"submitted",submitted_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:"assignment_id,user_id"});if(result.error)setMessage(copy.failed);else{setAnswers(current=>({...current,[assignment.id]:""}));setFiles(current=>{const next={...current};delete next[assignment.id];return next});await load()}setBusy(null)}
- return <section className="assignment-panel"><h2><GraduationCap size={19}/>{copy.title}</h2>{!items.length?<p>{copy.empty}</p>:items.map(item=>{const submission=submissions.find(s=>s.assignment_id===item.id);return <article key={item.id}><header><div><strong>{localized(item,"title")}</strong><p>{localized(item,"instructions")}</p></div>{submission?<span className={`assignment-status is-${submission.status}`}><CheckCircle2 size={14}/>{submission.status==="graded"?copy.graded:copy.submitted}</span>:null}</header>{submission?.status==="graded"?<div className="assignment-grade"><b>{copy.score}: {submission.score}/{item.max_score}</b>{submission.feedback?<p>{copy.feedback}: {submission.feedback}</p>:null}</div>:userId?<form onSubmit={event=>submit(item,event)}><textarea value={answers[item.id]||submission?.answer_text||""} onChange={event=>setAnswers(current=>({...current,[item.id]:event.target.value}))} placeholder={copy.answer}/><label><FileUp size={15}/>{files[item.id]?.name||copy.file}<input type="file" accept="application/pdf" onChange={event=>choose(item.id,event)}/></label><button disabled={busy===item.id}><FileCheck2 size={15}/>{busy===item.id?"…":copy.submit}</button></form>:<p>{copy.login}</p>}</article>})}{message?<p className="verification-message">{message}</p>:null}</section>;
+type Assignment = {
+  id: number;
+  title_my: string | null;
+  title_zh: string | null;
+  title_en: string | null;
+  instructions_my: string | null;
+  instructions_zh: string | null;
+  instructions_en: string | null;
+  max_score: number;
+};
+type Submission = {
+  id: number;
+  assignment_id: number;
+  answer_text: string | null;
+  object_path: string | null;
+  object_mime: string | null;
+  object_size: number | null;
+  status: string;
+  score: number | null;
+  feedback: string | null;
+};
+export default function AssignmentPanel({
+  locale,
+  lessonId,
+  userId,
+}: {
+  locale: string;
+  lessonId: number;
+  userId: string | null;
+}) {
+  const copy =
+    locale === "zh"
+      ? {
+          title: "本课作业",
+          empty: "本课没有作业",
+          login: "登录后提交作业",
+          answer: "填写答案或说明",
+          file: "上传 PDF、图片或录音",
+          submit: "提交作业",
+          submitted: "已提交",
+          graded: "已批改",
+          score: "成绩",
+          feedback: "教师评语",
+          invalid:
+            "仅支持 15MB 以内的 PDF、JPG、PNG、WebP、MP3、M4A、WebM 或 OGG 文件。",
+          failed: "提交失败，请重试。",
+        }
+      : locale === "my"
+        ? {
+            title: "ဤသင်ခန်းစာအိမ်စာ",
+            empty: "အိမ်စာမရှိပါ",
+            login: "ဝင်ရောက်ပြီး အိမ်စာတင်ပါ",
+            answer: "အဖြေ သို့မဟုတ် ရှင်းလင်းချက်",
+            file: "PDF၊ ပုံ သို့မဟုတ် အသံဖိုင် တင်ရန်",
+            submit: "အိမ်စာတင်ရန်",
+            submitted: "တင်ပြီး",
+            graded: "စစ်ဆေးပြီး",
+            score: "ရမှတ်",
+            feedback: "ဆရာ၏မှတ်ချက်",
+            invalid:
+              "15MB အောက် PDF၊ JPG၊ PNG၊ WebP၊ MP3၊ M4A၊ WebM သို့မဟုတ် OGG ဖိုင်သာ တင်နိုင်သည်။",
+            failed: "တင်မရပါ။ ထပ်မံကြိုးစားပါ။",
+          }
+        : {
+            title: "Lesson assignment",
+            empty: "No assignment for this lesson",
+            login: "Sign in to submit",
+            answer: "Write your answer or notes",
+            file: "Upload PDF, image or recording",
+            submit: "Submit assignment",
+            submitted: "Submitted",
+            graded: "Graded",
+            score: "Score",
+            feedback: "Teacher feedback",
+            invalid:
+              "Use a PDF, JPG, PNG, WebP, MP3, M4A, WebM or OGG file no larger than 15MB.",
+            failed: "Submission failed. Please retry.",
+          };
+  const [items, setItems] = useState<Assignment[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [files, setFiles] = useState<Record<number, File>>({});
+  const [busy, setBusy] = useState<number | null>(null);
+  const [message, setMessage] = useState("");
+  const load = useCallback(async () => {
+    const assignmentQuery = supabase
+      .from("knowledge_assignments")
+      .select(
+        "id,title_my,title_zh,title_en,instructions_my,instructions_zh,instructions_en,max_score",
+      )
+      .eq("lesson_id", lessonId)
+      .eq("status", "published")
+      .order("id");
+    if (!userId) {
+      const { data } = await assignmentQuery;
+      setItems((data || []) as Assignment[]);
+      setSubmissions([]);
+      return;
+    }
+    const [assignmentResult, submissionResult] = await Promise.all([
+      assignmentQuery,
+      supabase
+        .from("knowledge_assignment_submissions")
+        .select(
+          "id,assignment_id,answer_text,object_path,object_mime,object_size,status,score,feedback",
+        )
+        .eq("user_id", userId),
+    ]);
+    setItems((assignmentResult.data || []) as Assignment[]);
+    setSubmissions((submissionResult.data || []) as Submission[]);
+  }, [lessonId, userId]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load();
+  }, [load]);
+  const localized = (item: Assignment, field: "title" | "instructions") => {
+    const row = item as unknown as Record<string, string | null>;
+    const order =
+      locale === "zh"
+        ? ["zh", "my", "en"]
+        : locale === "en"
+          ? ["en", "my", "zh"]
+          : ["my", "zh", "en"];
+    return order.map((s) => row[`${field}_${s}`]).find(Boolean) || "";
+  };
+  function choose(assignmentId: number, event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) setFiles((current) => ({ ...current, [assignmentId]: file }));
+  }
+  async function submit(assignment: Assignment, event: FormEvent) {
+    event.preventDefault();
+    if (!userId) return;
+    const answer = (answers[assignment.id] || "").trim();
+    const file = files[assignment.id];
+    if (!answer && !file) return;
+    setBusy(assignment.id);
+    setMessage("");
+    const previous = submissions.find((s) => s.assignment_id === assignment.id);
+    let objectPath: string | null = previous?.object_path || null;
+    let objectMime: string | null = previous?.object_mime || null;
+    let objectSize: number | null = previous?.object_size || null;
+    if (file) {
+      const allowed = [
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "audio/mpeg",
+        "audio/webm",
+        "audio/ogg",
+        "audio/mp4",
+      ] as const;
+      if (!(await validateUpload(file, allowed, 15 * 1024 * 1024))) {
+        setMessage(copy.invalid);
+        setBusy(null);
+        return;
+      }
+      objectPath = `${userId}/${assignment.id}/${crypto.randomUUID()}.${safeFileExtension(file)}`;
+      objectMime = file.type;
+      objectSize = file.size;
+      const upload = await supabase.storage
+        .from("assignment-submissions")
+        .upload(objectPath, file, { contentType: file.type, upsert: false });
+      if (upload.error) {
+        setMessage(copy.failed);
+        setBusy(null);
+        return;
+      }
+    }
+    const result = await supabase
+      .from("knowledge_assignment_submissions")
+      .upsert(
+        {
+          assignment_id: assignment.id,
+          user_id: userId,
+          answer_text: answer || null,
+          object_path: objectPath,
+          object_mime: objectMime,
+          object_size: objectSize,
+          status: "submitted",
+          submitted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "assignment_id,user_id" },
+      );
+    if (result.error) {
+      if (file && objectPath)
+        await supabase.storage
+          .from("assignment-submissions")
+          .remove([objectPath]);
+      setMessage(copy.failed);
+    } else {
+      if (file && previous?.object_path && previous.object_path !== objectPath)
+        await supabase.storage
+          .from("assignment-submissions")
+          .remove([previous.object_path]);
+      setAnswers((current) => ({ ...current, [assignment.id]: "" }));
+      setFiles((current) => {
+        const next = { ...current };
+        delete next[assignment.id];
+        return next;
+      });
+      await load();
+    }
+    setBusy(null);
+  }
+  return (
+    <section className="assignment-panel">
+      <h2>
+        <GraduationCap size={19} />
+        {copy.title}
+      </h2>
+      {!items.length ? (
+        <p>{copy.empty}</p>
+      ) : (
+        items.map((item) => {
+          const submission = submissions.find(
+            (s) => s.assignment_id === item.id,
+          );
+          return (
+            <article key={item.id}>
+              <header>
+                <div>
+                  <strong>{localized(item, "title")}</strong>
+                  <p>{localized(item, "instructions")}</p>
+                </div>
+                {submission ? (
+                  <span className={`assignment-status is-${submission.status}`}>
+                    <CheckCircle2 size={14} />
+                    {submission.status === "graded"
+                      ? copy.graded
+                      : copy.submitted}
+                  </span>
+                ) : null}
+              </header>
+              {submission?.status === "graded" ? (
+                <div className="assignment-grade">
+                  <b>
+                    {copy.score}: {submission.score}/{item.max_score}
+                  </b>
+                  {submission.feedback ? (
+                    <p>
+                      {copy.feedback}: {submission.feedback}
+                    </p>
+                  ) : null}
+                </div>
+              ) : userId ? (
+                <form onSubmit={(event) => submit(item, event)}>
+                  <textarea
+                    value={answers[item.id] || submission?.answer_text || ""}
+                    onChange={(event) =>
+                      setAnswers((current) => ({
+                        ...current,
+                        [item.id]: event.target.value,
+                      }))
+                    }
+                    placeholder={copy.answer}
+                  />
+                  <label>
+                    <FileUp size={15} />
+                    {files[item.id]?.name || copy.file}
+                    <input
+                      type="file"
+                      accept="application/pdf,image/jpeg,image/png,image/webp,audio/mpeg,audio/mp4,audio/webm,audio/ogg"
+                      onChange={(event) => choose(item.id, event)}
+                    />
+                  </label>
+                  <button disabled={busy === item.id}>
+                    <FileCheck2 size={15} />
+                    {busy === item.id ? "…" : copy.submit}
+                  </button>
+                </form>
+              ) : (
+                <p>{copy.login}</p>
+              )}
+            </article>
+          );
+        })
+      )}
+      {message ? <p className="verification-message">{message}</p> : null}
+    </section>
+  );
 }
