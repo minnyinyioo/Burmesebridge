@@ -39,7 +39,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
     if(!resultRef.current)return;
     setPdfState("working");
     try{
-      const [{default:html2canvas},{jsPDF}]=await Promise.all([import("html2canvas"),import("jspdf")]);
+      const [{default:html2canvas},{jsPDF}]=await Promise.all([import("html2canvas-pro"),import("jspdf")]);
       const canvas=await html2canvas(resultRef.current,{scale:1.6,backgroundColor:"#f5faf8",useCORS:true,logging:false});
       const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
       const pageWidth=210,pageHeight=297,margin=8,drawWidth=pageWidth-margin*2;
