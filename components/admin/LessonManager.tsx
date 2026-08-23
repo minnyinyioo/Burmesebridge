@@ -11,6 +11,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { getYouTubeId } from "@/lib/youtube";
 import LessonAttachmentUploader from "@/components/admin/LessonAttachmentUploader";
+import CourseSectionManager, { type CourseSection } from "@/components/admin/CourseSectionManager";
 type Product = { id: number; title: string };
 type Lesson = {
   id: number;
@@ -21,6 +22,7 @@ type Lesson = {
   position: number;
   free_preview: boolean;
   status: "draft" | "published";
+  section_id: number | null;
 };
 type Attachment = { id:number; lesson_id:number; title:string };
 export default function LessonManager({
@@ -47,6 +49,7 @@ export default function LessonManager({
           offline: "发布",
           previewOn: "关闭试看",
           previewOff: "设为试看",
+          section: "所属章节",
         }
       : locale === "my"
         ? {
@@ -64,6 +67,7 @@ export default function LessonManager({
             offline: "ထုတ်ဝေမည်",
             previewOn: "အစမ်းပိတ်မည်",
             previewOff: "အစမ်းဖွင့်မည်",
+            section: "သက်ဆိုင်ရာအခန်း",
           }
         : {
             heading: "Lesson management",
@@ -80,6 +84,7 @@ export default function LessonManager({
             offline: "Publish",
             previewOn: "Disable preview",
             previewOff: "Make preview",
+            section: "Section",
           };
   const [selected, setSelected] = useState("");
   const [title, setTitle] = useState("");
@@ -88,6 +93,8 @@ export default function LessonManager({
   const [preview, setPreview] = useState(false);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [sections, setSections] = useState<CourseSection[]>([]);
+  const [sectionId, setSectionId] = useState("");
   const [message, setMessage] = useState("");
   const load = useCallback(async () => {
     if (!selected) {
@@ -97,7 +104,7 @@ export default function LessonManager({
     const [{ data, error }, { data: attachmentData }] = await Promise.all([supabase
       .from("knowledge_lessons")
       .select(
-        "id,product_id,title_my,title_zh,title_en,position,free_preview,status",
+        "id,product_id,title_my,title_zh,title_en,position,free_preview,status,section_id",
       )
       .eq("product_id", Number(selected))
       .order("position")
@@ -131,6 +138,7 @@ export default function LessonManager({
         position: lessons.length,
         free_preview: preview,
         status: "published",
+        section_id: sectionId ? Number(sectionId) : null,
       })
       .select("id")
       .single();
@@ -151,6 +159,7 @@ export default function LessonManager({
       setBody("");
       setVideo("");
       setPreview(false);
+      setSectionId("");
       setMessage("");
       await load();
     }
@@ -213,7 +222,12 @@ export default function LessonManager({
               </option>
             ))}
           </select>
+          {selected ? <CourseSectionManager locale={locale} productId={Number(selected)} onChange={setSections}/> : null}
           <form onSubmit={submit}>
+            <select value={sectionId} onChange={(event)=>setSectionId(event.target.value)}>
+              <option value="">{copy.section}</option>
+              {sections.map((section)=><option value={section.id} key={section.id}>{section.title_zh||section.title_my||section.title_en}</option>)}
+            </select>
             <input
               required
               value={title}
@@ -249,6 +263,7 @@ export default function LessonManager({
                   {index + 1}.{" "}
                   {lesson.title_zh || lesson.title_my || lesson.title_en}
                   {lesson.free_preview ? " · Preview" : ""}
+                  {lesson.section_id ? ` · ${sections.find((section)=>section.id===lesson.section_id)?.title_zh||sections.find((section)=>section.id===lesson.section_id)?.title_my||sections.find((section)=>section.id===lesson.section_id)?.title_en||copy.section}` : ""}
                 </span>
                 <div className="lesson-admin-actions">
                   <LessonAttachmentUploader locale={locale} lessonId={lesson.id} onUploaded={load}/>
