@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Padauk } from "next/font/google";
 import "./globals.css";
+import "./home-v2.css";
 import ThemeProvider from "@/components/ThemeProvider";
 
 const appFont = Padauk({

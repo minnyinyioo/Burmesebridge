@@ -1,0 +1,113 @@
+/* Separate asset: prevents stale immutable global CSS from breaking the homepage product panel. */
+.home-hero-panel {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid rgba(18, 75, 63, 0.15);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 24px 65px rgba(17, 65, 55, 0.13);
+  backdrop-filter: blur(16px);
+}
+.home-hero-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 9px 14px;
+}
+.home-hero-panel header > span {
+  color: #173e35;
+  font-size: 13px;
+  font-weight: 850;
+}
+.home-hero-panel header > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.home-hero-panel header i {
+  padding: 3px 6px;
+  border-radius: 6px;
+  color: #517068;
+  background: #edf3f0;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.home-hero-panel > a {
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 13px 11px;
+  border-radius: 13px;
+  color: #173e35;
+  text-decoration: none;
+  transition: 0.18s ease;
+}
+.home-hero-panel > a + a {
+  margin-top: 3px;
+}
+.home-hero-panel > a:hover {
+  background: #edf5f1;
+  transform: translateX(2px);
+}
+.home-hero-panel > a > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--green-700);
+  background: #e3efea;
+}
+.home-hero-panel > a > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.home-hero-panel > a b {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.home-hero-panel > a small {
+  color: #71837d;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.home-hero-panel > a > svg {
+  color: #93a39e;
+}
+.dark .home-hero-panel {
+  border-color: #29453d;
+  background: rgba(16, 37, 31, 0.92);
+}
+.dark .home-hero-panel header > span,
+.dark .home-hero-panel > a {
+  color: #e6eee9;
+}
+.dark .home-hero-panel header i,
+.dark .home-hero-panel > a > span {
+  background: #173a30;
+}
+.dark .home-hero-panel > a:hover {
+  background: #17362e;
+}
+.dark .home-hero-panel > a small {
+  color: #aebeb8;
+}
+@media (max-width: 640px) {
+  .home-hero-panel {
+    border-radius: 16px;
+  }
+  .home-hero-panel > a {
+    grid-template-columns: 40px minmax(0, 1fr) 16px;
+    padding: 12px 9px;
+  }
+}
