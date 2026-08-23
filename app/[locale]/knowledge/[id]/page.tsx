@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Check, CheckCircle2, Circle, ListVideo, LockKeyhole, PlayCircle } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle2, Circle, Download, ListVideo, LockKeyhole, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import ContentInteractions from "@/components/ContentInteractions";
 import CourseCheckout from "@/components/knowledge/CourseCheckout";
@@ -11,6 +11,7 @@ import CourseCheckout from "@/components/knowledge/CourseCheckout";
 type Product = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; description_my:string|null; description_zh:string|null; description_en:string|null; preview_youtube_id:string|null; price:number; currency:string };
 type Lesson = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number; free_preview:boolean };
 type LessonContent = { lesson_id:number; body_my:string|null; body_zh:string|null; body_en:string|null; youtube_id:string|null };
+type LessonAttachment = { id:number; lesson_id:number; title:string; object_path:string };
 
 export default function CoursePage() {
   const params = useParams();
@@ -24,6 +25,7 @@ export default function CoursePage() {
   const [product,setProduct] = useState<Product|null>(null);
   const [lessons,setLessons] = useState<Lesson[]>([]);
   const [contents,setContents] = useState<LessonContent[]>([]);
+  const [attachments,setAttachments] = useState<LessonAttachment[]>([]);
   const [selectedId,setSelectedId] = useState<number|null>(null);
   const [loaded,setLoaded] = useState(false);
   const [userId,setUserId] = useState<string|null>(null);
@@ -33,15 +35,16 @@ export default function CoursePage() {
 
   const load = useCallback(async () => {
     if (!Number.isSafeInteger(id) || id < 1) { setLoaded(true); return; }
-    const [{data:p},{data:l},{data:c},{data:auth}] = await Promise.all([
+    const [{data:p},{data:l},{data:c},{data:a},{data:auth}] = await Promise.all([
       supabase.from("knowledge_products").select("id,title_my,title_zh,title_en,description_my,description_zh,description_en,preview_youtube_id,price,currency").eq("id",id).eq("status","published").maybeSingle(),
       supabase.from("knowledge_lessons").select("id,title_my,title_zh,title_en,position,free_preview").eq("product_id",id).eq("status","published").order("position").order("id"),
       supabase.from("knowledge_lesson_content").select("lesson_id,body_my,body_zh,body_en,youtube_id"),
+      supabase.from("knowledge_lesson_attachments").select("id,lesson_id,title,object_path"),
       supabase.auth.getUser(),
     ]);
     const nextLessons = (l || []) as Lesson[];
     const nextContents = (c || []) as LessonContent[];
-    setProduct(p as Product|null); setLessons(nextLessons); setContents(nextContents); setUserId(auth.user?.id || null);
+    setProduct(p as Product|null); setLessons(nextLessons); setContents(nextContents); setAttachments((a || []) as LessonAttachment[]); setUserId(auth.user?.id || null);
     setSelectedId((current) => current || nextLessons.find((lesson) => nextContents.some((content) => content.lesson_id === lesson.id))?.id || nextLessons[0]?.id || null);
     if (auth.user) {
       const [{data:access},{data:membership},{data:request},{data:progress}] = await Promise.all([
@@ -79,6 +82,7 @@ export default function CoursePage() {
       : await supabase.from("knowledge_lesson_progress").upsert({lesson_id:lessonId,user_id:userId,completed:true,completed_at:new Date().toISOString(),updated_at:new Date().toISOString()});
     if (!error) setCompleted((current) => done ? current.filter((item) => item !== lessonId) : [...current,lessonId]);
   }
+  async function openAttachment(path:string){const {data}=await supabase.storage.from("course-attachments").createSignedUrl(path,120);if(data?.signedUrl)window.open(data.signedUrl,"_blank","noopener,noreferrer");}
   if (!loaded) return <main className="course-detail"><div className="feedCard">…</div></main>;
   if (!product) return <main className="course-detail"><Link href={`/${locale}/knowledge`} className="course-back"><ArrowLeft size={17}/>{copy.back}</Link><div className="feedCard">{copy.missing}</div></main>;
 
@@ -93,6 +97,7 @@ export default function CoursePage() {
         <article className="course-current-lesson">
           <div><span>{selectedLesson?.free_preview ? copy.preview : copy.intro}</span><h2>{selectedLesson ? localize(selectedLesson,"title") : localize(product,"title")}</h2></div>
           {selectedContent ? <p>{localize(selectedContent,"body")}</p> : selectedLesson ? <div className="lesson-lock"><LockKeyhole size={18}/>{copy.locked}</div> : <p>{localize(product,"description")}</p>}
+          {selectedLesson && attachments.some((file) => file.lesson_id === selectedLesson.id) ? <div className="lesson-attachments">{attachments.filter((file) => file.lesson_id === selectedLesson.id).map((file) => <button type="button" onClick={()=>void openAttachment(file.object_path)} key={file.id}><Download size={16}/>{file.title}</button>)}</div> : null}
           {selectedLesson && selectedContent && userId ? <button type="button" className={`lesson-complete ${completed.includes(selectedLesson.id) ? "active" : ""}`} onClick={() => toggleComplete(selectedLesson.id)}>{completed.includes(selectedLesson.id) ? <Check size={16}/> : <Circle size={16}/>} {completed.includes(selectedLesson.id) ? copy.completed : copy.complete}</button> : null}
         </article>
       </div>

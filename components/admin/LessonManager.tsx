@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { getYouTubeId } from "@/lib/youtube";
+import LessonAttachmentUploader from "@/components/admin/LessonAttachmentUploader";
 type Product = { id: number; title: string };
 type Lesson = {
   id: number;
@@ -21,6 +22,7 @@ type Lesson = {
   free_preview: boolean;
   status: "draft" | "published";
 };
+type Attachment = { id:number; lesson_id:number; title:string };
 export default function LessonManager({
   locale,
   products,
@@ -85,22 +87,23 @@ export default function LessonManager({
   const [video, setVideo] = useState("");
   const [preview, setPreview] = useState(false);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [message, setMessage] = useState("");
   const load = useCallback(async () => {
     if (!selected) {
       setLessons([]);
       return;
     }
-    const { data, error } = await supabase
+    const [{ data, error }, { data: attachmentData }] = await Promise.all([supabase
       .from("knowledge_lessons")
       .select(
         "id,product_id,title_my,title_zh,title_en,position,free_preview,status",
       )
       .eq("product_id", Number(selected))
       .order("position")
-      .order("id");
+      .order("id"), supabase.from("knowledge_lesson_attachments").select("id,lesson_id,title")]);
     if (error) setMessage(error.message);
-    else setLessons((data || []) as Lesson[]);
+    else { setLessons((data || []) as Lesson[]); setAttachments((attachmentData || []) as Attachment[]); }
   }, [selected]);
   useEffect(() => {
     let active = true;
@@ -248,6 +251,7 @@ export default function LessonManager({
                   {lesson.free_preview ? " · Preview" : ""}
                 </span>
                 <div className="lesson-admin-actions">
+                  <LessonAttachmentUploader locale={locale} lessonId={lesson.id} onUploaded={load}/>
                   <button
                     type="button"
                     aria-label="Move up"
@@ -297,6 +301,7 @@ export default function LessonManager({
                     {copy.remove}
                   </button>
                 </div>
+                {attachments.filter((file) => file.lesson_id === lesson.id).map((file) => <small className="lesson-admin-file" key={file.id}>PDF · {file.title}</small>)}
               </article>
             ))}
           </div>
