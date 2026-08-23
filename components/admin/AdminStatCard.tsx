@@ -2,23 +2,19 @@
 统计卡片
  */
 
-type Props={
-
-title:string
-value:number
-
-}
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
+type Props={title:string;value:number;href?:string;icon?:LucideIcon}
 
 export default function AdminStatCard({
 
 title,
-value
+value,href,icon:Icon
 
 }:Props){
 
-return(
-
-<div className="adminCard">
+const card=<div className="adminCard admin-stat-card">
+{Icon&&<span className="admin-stat-icon"><Icon size={19}/></span>}
 
 <div className="adminTitle">
 
@@ -32,8 +28,7 @@ return(
 
 </div>
 
-</div>
-
-)
+</div>;
+return href?<Link href={href} className="admin-stat-link">{card}</Link>:card;
 
 }

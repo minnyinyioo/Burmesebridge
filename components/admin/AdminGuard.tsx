@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { canAccessAdmin } from "@/lib/permissions";
@@ -18,6 +18,7 @@ export default function AdminGuard({
 }) {
   const params = useParams();
   const locale = String(params.locale || "my");
+  const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [allowed, setAllowed] = useState(false);
@@ -29,7 +30,7 @@ export default function AdminGuard({
     } = await supabase.auth.getUser();
 
     if (!user) {
-      window.location.href = `/${locale}/login`;
+      router.replace(`/${locale}/login`);
       return;
     }
 
@@ -47,7 +48,7 @@ export default function AdminGuard({
 
     setAllowed(true);
     setLoading(false);
-  }, [locale]);
+  }, [locale, router]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
