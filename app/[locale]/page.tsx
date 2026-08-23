@@ -98,6 +98,13 @@ export default function HomePage() {
       safeText:
         "အလုပ်ရှာဖွေသူများအတွက် လုံခြုံရေးသတိပေးချက်၊ report စနစ်နှင့် ရှင်းလင်းသော platform စည်းမျဉ်းများ။",
       safety: "လုံခြုံရေးစင်တာ",
+      startHere: "ဤနေရာမှ စတင်ပါ",
+      assessTitle: "တရုတ်ဘာသာအဆင့် စစ်ဆေးရန်",
+      assessMeta: "25–35 မိနစ် · HSK 1–6",
+      courseTitle: "HSK 4Skill သင်တန်း",
+      courseMeta: "နားထောင် · ပြော · ဖတ် · ရေး",
+      jobTitle: "လုံခြုံစွာ အလုပ်ရှာရန်",
+      jobMeta: "အလုပ်အကိုင်နှင့် လုံခြုံရေးလမ်းညွှန်",
     },
     zh: {
       heroBadge: "泰国 · 缅甸同胞专属平台",
@@ -137,6 +144,13 @@ export default function HomePage() {
       safeText:
         "提供求职安全提醒、举报机制和清晰的平台规则，帮助用户识别风险。",
       safety: "进入安全中心",
+      startHere: "从这里开始",
+      assessTitle: "测试你的中文水平",
+      assessMeta: "约 25–35 分钟 · HSK 1–6",
+      courseTitle: "HSK 四技能课程",
+      courseMeta: "听力 · 口语 · 阅读 · 书写",
+      jobTitle: "安全寻找工作",
+      jobMeta: "工作信息与求职安全指引",
     },
     en: {
       heroBadge: "For Myanmar nationals in Thailand",
@@ -178,6 +192,13 @@ export default function HomePage() {
       safeText:
         "Jobseeker guidance, reporting tools and clear platform rules help users recognize risk.",
       safety: "Safety center",
+      startHere: "Start here",
+      assessTitle: "Assess your Chinese level",
+      assessMeta: "25–35 min · HSK 1–6",
+      courseTitle: "HSK four-skill courses",
+      courseMeta: "Listening · Speaking · Reading · Writing",
+      jobTitle: "Find work safely",
+      jobMeta: "Job listings and safety guidance",
     },
   };
 
@@ -304,13 +325,45 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="home-hero-art" aria-hidden="true">
-          <span>မြန်မာ</span>
-          <span>中文</span>
-          <span>TH</span>
-          <div>
-            <Globe size={46} />
-          </div>
+        <div className="home-hero-panel">
+          <header>
+            <span>{t.startHere}</span>
+            <div>
+              <i>မြန်မာ</i>
+              <i>中文</i>
+              <i>EN</i>
+            </div>
+          </header>
+          <Link href={`/${locale}/hsk-test`}>
+            <span>
+              <ClipboardCheck size={20} />
+            </span>
+            <div>
+              <b>{t.assessTitle}</b>
+              <small>{t.assessMeta}</small>
+            </div>
+            <ChevronRight size={18} />
+          </Link>
+          <Link href={`/${locale}/knowledge`}>
+            <span>
+              <GraduationCap size={20} />
+            </span>
+            <div>
+              <b>{t.courseTitle}</b>
+              <small>{t.courseMeta}</small>
+            </div>
+            <ChevronRight size={18} />
+          </Link>
+          <Link href={`/${locale}/jobs`}>
+            <span>
+              <BriefcaseBusiness size={20} />
+            </span>
+            <div>
+              <b>{t.jobTitle}</b>
+              <small>{t.jobMeta}</small>
+            </div>
+            <ChevronRight size={18} />
+          </Link>
         </div>
       </section>
       <HomeAds />
