@@ -2209,6 +2209,29 @@ svg {
   color: var(--muted-foreground);
   line-height: 1.5;
 }
+.assignment-admin-preview {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--muted-surface);
+}
+.assignment-admin-preview audio {
+  width: min(100%, 560px);
+}
+.assignment-admin-preview img {
+  display: block;
+  width: min(100%, 560px);
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+}
+.assignment-admin-preview button {
+  width: fit-content;
+}
 .course-current-lesson {
   padding: 22px;
 }
