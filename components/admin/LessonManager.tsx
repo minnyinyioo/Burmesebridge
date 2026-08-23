@@ -15,6 +15,7 @@ import LessonAttachmentUploader from "@/components/admin/LessonAttachmentUploade
 import CourseSectionManager, { type CourseSection } from "@/components/admin/CourseSectionManager";
 import AssignmentManager from "@/components/admin/AssignmentManager";
 import QuizManager from "@/components/admin/QuizManager";
+import LessonContentEditor from "@/components/admin/LessonContentEditor";
 type Product = { id: number; title: string };
 type Lesson = {
   id: number;
@@ -53,6 +54,7 @@ export default function LessonManager({
           previewOn: "关闭试看",
           previewOff: "设为试看",
           section: "所属章节",
+          captions:"字幕（每行一条）", vocabulary:"重点词汇（每行一项）", handout:"课程讲义",
         }
       : locale === "my"
         ? {
@@ -71,6 +73,7 @@ export default function LessonManager({
             previewOn: "အစမ်းပိတ်မည်",
             previewOff: "အစမ်းဖွင့်မည်",
             section: "သက်ဆိုင်ရာအခန်း",
+            captions:"စာတန်းထိုး (တစ်ကြောင်းတစ်ခု)", vocabulary:"အဓိကဝေါဟာရ (တစ်ကြောင်းတစ်ခု)", handout:"သင်ခန်းစာမှတ်စု",
           }
         : {
             heading: "Lesson management",
@@ -88,12 +91,14 @@ export default function LessonManager({
             previewOn: "Disable preview",
             previewOff: "Make preview",
             section: "Section",
+            captions:"Captions (one per line)", vocabulary:"Key vocabulary (one per line)", handout:"Lesson handout",
           };
   const [selected, setSelected] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [video, setVideo] = useState("");
   const [preview, setPreview] = useState(false);
+  const [captions,setCaptions]=useState("");const [vocabulary,setVocabulary]=useState("");const [handout,setHandout]=useState("");
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [sections, setSections] = useState<CourseSection[]>([]);
@@ -156,6 +161,7 @@ export default function LessonManager({
         lesson_id: lesson.id,
         [`body_${suffix}`]: body.trim(),
         youtube_id: youtubeId || null,
+        captions:captions.split("\n").map(item=>item.trim()).filter(Boolean),vocabulary:vocabulary.split("\n").map(item=>item.trim()).filter(Boolean),[`handout_${suffix}`]:handout.trim()||null,
       });
     if (contentError) setMessage(contentError.message);
     else {
@@ -164,6 +170,7 @@ export default function LessonManager({
       setVideo("");
       setPreview(false);
       setSectionId("");
+      setCaptions("");setVocabulary("");setHandout("");
       setMessage("");
       await load();
     }
@@ -256,6 +263,9 @@ export default function LessonManager({
               onChange={(event) => setVideo(event.target.value)}
               placeholder={copy.video}
             />
+            <textarea value={captions} onChange={event=>setCaptions(event.target.value)} placeholder={copy.captions}/>
+            <textarea value={vocabulary} onChange={event=>setVocabulary(event.target.value)} placeholder={copy.vocabulary}/>
+            <textarea value={handout} onChange={event=>setHandout(event.target.value)} placeholder={copy.handout}/>
             <label>
               <input
                 type="checkbox"
@@ -332,6 +342,7 @@ export default function LessonManager({
               </article>
             ))}
           </div>
+          <LessonContentEditor locale={locale} lessons={lessons.map((lesson)=>({id:lesson.id,title:lesson.title_zh||lesson.title_my||lesson.title_en||`#${lesson.id}`}))}/>
           <AssignmentManager locale={locale} lessons={lessons.map((lesson)=>({id:lesson.id,title:lesson.title_zh||lesson.title_my||lesson.title_en||`#${lesson.id}`}))}/>
           <QuizManager locale={locale} lessons={lessons.map((lesson)=>({id:lesson.id,title:lesson.title_zh||lesson.title_my||lesson.title_en||`#${lesson.id}`}))}/>
         </>

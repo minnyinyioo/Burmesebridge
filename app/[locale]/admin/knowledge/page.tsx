@@ -12,6 +12,7 @@ import PaymentMethodsManager from "@/components/admin/PaymentMethodsManager";
 import LessonManager from "@/components/admin/LessonManager";
 import MembershipManager from "@/components/admin/MembershipManager";
 import ResourceLicenseManager from "@/components/admin/ResourceLicenseManager";
+import CourseMetadataEditor from "@/components/admin/CourseMetadataEditor";
 
 type RequestItem = {
   id: number;
@@ -56,6 +57,7 @@ function KnowledgeAdmin() {
           currency: "币种",
           cover: "封面图片地址（可选）",
           video: "试看 YouTube 链接（可选）",
+          level: "课程等级（如 HSK 1）", skill: "技能（听、说、读、写）", teacher: "授课教师", teacherBio: "教师简介", objectives: "学习目标（每行一项）", audience: "适用对象（每行一项）", minutes: "预计学习分钟数",
           publish: "发布课程",
           requests: "待审核开通申请",
           approve: "确认并开通",
@@ -74,6 +76,7 @@ function KnowledgeAdmin() {
             currency: "ငွေကြေး",
             cover: "မျက်နှာဖုံးပုံ URL",
             video: "အစမ်း YouTube လင့်ခ်",
+            level: "သင်တန်းအဆင့် (ဥပမာ HSK 1)", skill: "ကျွမ်းကျင်မှု", teacher: "သင်ကြားသူ", teacherBio: "သင်ကြားသူအကြောင်း", objectives: "သင်ယူမှုရည်မှန်းချက် (တစ်ကြောင်းတစ်ခု)", audience: "သင့်တော်သူများ (တစ်ကြောင်းတစ်ခု)", minutes: "ခန့်မှန်းမိနစ်",
             publish: "ထုတ်ဝေမည်",
             requests: "ဖွင့်ရန်တောင်းဆိုမှု",
             approve: "အတည်ပြုမည်",
@@ -91,6 +94,7 @@ function KnowledgeAdmin() {
             currency: "Currency",
             cover: "Cover image URL (optional)",
             video: "Preview YouTube URL (optional)",
+            level: "Course level (for example HSK 1)", skill: "Skill", teacher: "Instructor", teacherBio: "Instructor bio", objectives: "Learning objectives (one per line)", audience: "Target audience (one per line)", minutes: "Estimated minutes",
             publish: "Publish course",
             requests: "Access requests",
             approve: "Approve and unlock",
@@ -134,6 +138,7 @@ function KnowledgeAdmin() {
   const [currency, setCurrency] = useState("MMK");
   const [cover, setCover] = useState("");
   const [video, setVideo] = useState("");
+  const [level,setLevel]=useState("");const [skill,setSkill]=useState("");const [teacher,setTeacher]=useState("");const [teacherBio,setTeacherBio]=useState("");const [objectives,setObjectives]=useState("");const [audience,setAudience]=useState("");const [minutes,setMinutes]=useState("");
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [msg, setMsg] = useState("");
@@ -182,6 +187,8 @@ function KnowledgeAdmin() {
       preview_youtube_id: getYouTubeId(video) || null,
       status: "published",
       author_id: user?.id || null,
+      level:level.trim()||null,skill:skill.trim()||null,teacher_name:teacher.trim()||null,teacher_bio:teacherBio.trim()||null,
+      learning_objectives:objectives.split("\n").map(item=>item.trim()).filter(Boolean),target_audience:audience.split("\n").map(item=>item.trim()).filter(Boolean),estimated_minutes:minutes?Number(minutes):null,
     };
     const { data: product, error } = await supabase
       .from("knowledge_products")
@@ -206,6 +213,7 @@ function KnowledgeAdmin() {
       setPrice("0");
       setCover("");
       setVideo("");
+      setLevel("");setSkill("");setTeacher("");setTeacherBio("");setObjectives("");setAudience("");setMinutes("");
       setMsg("");
       await load();
     }
@@ -272,6 +280,11 @@ function KnowledgeAdmin() {
             onChange={(e) => setContent(e.target.value)}
             placeholder={c.content}
           />
+          <div><input value={level} onChange={e=>setLevel(e.target.value)} placeholder={c.level}/><input value={skill} onChange={e=>setSkill(e.target.value)} placeholder={c.skill}/></div>
+          <div><input value={teacher} onChange={e=>setTeacher(e.target.value)} placeholder={c.teacher}/><input type="number" min="1" value={minutes} onChange={e=>setMinutes(e.target.value)} placeholder={c.minutes}/></div>
+          <textarea value={teacherBio} onChange={e=>setTeacherBio(e.target.value)} placeholder={c.teacherBio}/>
+          <textarea value={objectives} onChange={e=>setObjectives(e.target.value)} placeholder={c.objectives}/>
+          <textarea value={audience} onChange={e=>setAudience(e.target.value)} placeholder={c.audience}/>
           <div>
             <input
               required
@@ -345,6 +358,7 @@ function KnowledgeAdmin() {
             </article>
           ))}
         </div>
+        <CourseMetadataEditor locale={locale} products={products.map((product)=>({id:product.id,title:product.title_zh||product.title_my||product.title_en||`#${product.id}`}))}/>
         <LessonManager
           locale={locale}
           products={products.map((product) => ({
