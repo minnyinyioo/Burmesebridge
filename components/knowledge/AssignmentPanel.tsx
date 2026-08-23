@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { CheckCircle2, FileCheck2, FileUp, GraduationCap } from "lucide-react";
+import { CheckCircle2, Clock3, FileCheck2, FileUp, GraduationCap } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 import AudioRecorder from "@/components/knowledge/AudioRecorder";
@@ -30,6 +30,15 @@ type Submission = {
   status: string;
   score: number | null;
   feedback: string | null;
+};
+type Revision = {
+  id: number;
+  submission_id: number;
+  revision_no: number;
+  action: string;
+  score: number | null;
+  feedback: string | null;
+  recorded_at: string;
 };
 export default function AssignmentPanel({
   locale,
@@ -57,6 +66,8 @@ export default function AssignmentPanel({
           invalid:
             "仅支持 15MB 以内的 PDF、JPG、PNG、WebP、MP3、M4A、WebM 或 OGG 文件。",
           failed: "提交失败，请重试。",
+          history: "提交记录",
+          revision: "第 {number} 版",
         }
       : locale === "my"
         ? {
@@ -74,6 +85,8 @@ export default function AssignmentPanel({
             invalid:
               "15MB အောက် PDF၊ JPG၊ PNG၊ WebP၊ MP3၊ M4A၊ WebM သို့မဟုတ် OGG ဖိုင်သာ တင်နိုင်သည်။",
             failed: "တင်မရပါ။ ထပ်မံကြိုးစားပါ။",
+            history: "တင်သွင်းမှုမှတ်တမ်း",
+            revision: "မူကွဲ {number}",
           }
         : {
             title: "Lesson assignment",
@@ -90,9 +103,12 @@ export default function AssignmentPanel({
             invalid:
               "Use a PDF, JPG, PNG, WebP, MP3, M4A, WebM or OGG file no larger than 15MB.",
             failed: "Submission failed. Please retry.",
+            history: "Submission history",
+            revision: "Revision {number}",
           };
   const [items, setItems] = useState<Assignment[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [revisions, setRevisions] = useState<Revision[]>([]);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [files, setFiles] = useState<Record<number, File>>({});
   const [busy, setBusy] = useState<number | null>(null);
@@ -122,7 +138,16 @@ export default function AssignmentPanel({
         .eq("user_id", userId),
     ]);
     setItems((assignmentResult.data || []) as Assignment[]);
-    setSubmissions((submissionResult.data || []) as Submission[]);
+    const nextSubmissions = (submissionResult.data || []) as Submission[];
+    setSubmissions(nextSubmissions);
+    if (nextSubmissions.length) {
+      const { data } = await supabase
+        .from("knowledge_assignment_submission_revisions")
+        .select("id,submission_id,revision_no,action,score,feedback,recorded_at")
+        .in("submission_id", nextSubmissions.map((item) => item.id))
+        .order("revision_no", { ascending: false });
+      setRevisions((data || []) as Revision[]);
+    } else setRevisions([]);
   }, [lessonId, userId]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -205,10 +230,7 @@ export default function AssignmentPanel({
           .remove([objectPath]);
       setMessage(copy.failed);
     } else {
-      if (file && previous?.object_path && previous.object_path !== objectPath)
-        await supabase.storage
-          .from("assignment-submissions")
-          .remove([previous.object_path]);
+      // Previous attachments are retained because revision history must remain auditable.
       setAnswers((current) => ({ ...current, [assignment.id]: "" }));
       setFiles((current) => {
         const next = { ...current };
@@ -303,6 +325,21 @@ export default function AssignmentPanel({
               ) : (
                 <p>{copy.login}</p>
               )}
+              {submission ? (
+                <details className="assignment-history">
+                  <summary><Clock3 size={15} />{copy.history}</summary>
+                  <ol>
+                    {revisions.filter((row) => row.submission_id === submission.id).map((row) => (
+                      <li key={row.id}>
+                        <div><b>{copy.revision.replace("{number}", String(row.revision_no))}</b><span className={`assignment-status is-${row.action}`}>{row.action}</span></div>
+                        <time>{new Date(row.recorded_at).toLocaleString(locale)}</time>
+                        {row.score !== null ? <p>{copy.score}: {row.score}/{item.max_score}</p> : null}
+                        {row.feedback ? <p>{copy.feedback}: {row.feedback}</p> : null}
+                      </li>
+                    ))}
+                  </ol>
+                </details>
+              ) : null}
             </article>
           );
         })

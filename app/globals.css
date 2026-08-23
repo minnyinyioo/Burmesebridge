@@ -2248,6 +2248,25 @@ svg {
   margin: 6px 0 0;
   white-space: pre-wrap;
 }
+.assignment-history {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: .85rem;
+}
+.assignment-history summary {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--brand-700);
+  font-weight: 700;
+  cursor: pointer;
+}
+.assignment-history ol { margin: .75rem 0 0; padding-left: 1.3rem; }
+.assignment-history li { padding: .45rem 0; color: var(--text-muted); }
+.assignment-history li + li { border-top: 1px dashed var(--line); }
+.assignment-history li > div { display: flex; align-items: center; gap: .55rem; }
+.assignment-history time { display: block; margin-top: .2rem; font-size: .82rem; }
+.assignment-history p { margin: .3rem 0 0; }
 .course-current-lesson {
   padding: 22px;
 }
