@@ -56,10 +56,10 @@ export default function HskCourseLibrary() {
       ? "HSK ၁–၆ ဘာသာစကားစွမ်းရည် လေးမျိုး"
       : "HSK 1–6 four-skill courses";
   const intro = zh
-    ? "按等级系统学习听、说、读、写。每门课包含视频课、分级练习、作业附件和进度记录。"
+    ? "按等级系统学习听、说、读、写。课程按已授权资源提供视频或互动音频，并包含分级练习、作业和进度记录。"
     : my
-      ? "အဆင့်အလိုက် နားထောင်၊ ပြော၊ ဖတ်၊ ရေး စနစ်တကျ လေ့လာပါ။ သင်တန်းတိုင်းတွင် ဗီဒီယို၊ လေ့ကျင့်ခန်း၊ အိမ်စာဖိုင်နှင့် တိုးတက်မှုမှတ်တမ်း ပါဝင်သည်။"
-      : "Structured listening, speaking, reading and writing with video lessons, graded practice, homework files and progress tracking.";
+      ? "အဆင့်အလိုက် နားထောင်၊ ပြော၊ ဖတ်၊ ရေး စနစ်တကျ လေ့လာပါ။ ခွင့်ပြုချက်ရရင်းမြစ်အလိုက် ဗီဒီယို သို့မဟုတ် အပြန်အလှန်အသံ၊ လေ့ကျင့်ခန်း၊ အိမ်စာနှင့် တိုးတက်မှုမှတ်တမ်း ပါဝင်သည်။"
+      : "Structured listening, speaking, reading and writing with licensed video or interactive audio, graded practice, assignments and progress tracking.";
   const [publishedMap, setPublishedMap] = useState<
     Map<string | null, PublishedCourse>
   >(new Map());

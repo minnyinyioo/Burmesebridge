@@ -2150,6 +2150,42 @@ svg {
   gap: 10px;
   color: #aac0b7;
 }
+.course-video-stage .course-audio-stage {
+  box-sizing: border-box;
+  padding: clamp(24px, 5vw, 64px);
+  text-align: center;
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(57, 181, 143, 0.2),
+      transparent 42%
+    ),
+    linear-gradient(145deg, #071713, #0c2a22);
+}
+.course-audio-stage strong {
+  color: #f5fbf8;
+  font-size: clamp(20px, 2.4vw, 30px);
+}
+.course-audio-stage > p {
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.course-audio-actions {
+  display: flex !important;
+  width: min(680px, 100%);
+  height: auto !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px !important;
+}
+.course-audio-actions .mandarin-speech-button {
+  min-width: 62px;
+  justify-content: center;
+  color: #effaf6;
+  border-color: rgba(225, 245, 237, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+}
 .course-current-lesson {
   padding: 22px;
 }

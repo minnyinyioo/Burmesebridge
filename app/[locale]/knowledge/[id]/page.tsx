@@ -11,6 +11,7 @@ import {
   Download,
   FileText,
   Flame,
+  Headphones,
   ListVideo,
   LockKeyhole,
   PlayCircle,
@@ -106,6 +107,9 @@ export default function CoursePage() {
           progress: "学习进度",
           loginProgress: "登录后可保存进度",
           select: "从右侧课程表选择课时",
+          audioLesson: "互动音频课",
+          noVideo:
+            "本课暂未配置经授权的视频，先使用逐词普通话朗读、讲义和练习学习。",
           intro: "课程介绍",
           unlocked: "课程已解锁",
           teacher: "授课教师",
@@ -128,6 +132,9 @@ export default function CoursePage() {
             progress: "သင်ယူမှု",
             loginProgress: "ဝင်ပြီး တိုးတက်မှုသိမ်းပါ",
             select: "စာရင်းမှ သင်ခန်းစာရွေးပါ",
+            audioLesson: "အပြန်အလှန် အသံသင်ခန်းစာ",
+            noVideo:
+              "ဤသင်ခန်းစာအတွက် ခွင့်ပြုချက်ရ ဗီဒီယို မထည့်ရသေးပါ။ Mandarin စကားလုံးအသံထွက်၊ မှတ်စုနှင့် လေ့ကျင့်ခန်းဖြင့် ဦးစွာလေ့လာနိုင်သည်။",
             intro: "သင်တန်းအကြောင်း",
             unlocked: "သင်တန်းဖွင့်ပြီး",
             teacher: "သင်ကြားသူ",
@@ -149,6 +156,9 @@ export default function CoursePage() {
             progress: "Progress",
             loginProgress: "Sign in to save progress",
             select: "Choose a lesson from the syllabus",
+            audioLesson: "Interactive audio lesson",
+            noVideo:
+              "No licensed video has been assigned to this lesson yet. Use the Mandarin word playback, handout and exercises for now.",
             intro: "About this course",
             unlocked: "Course unlocked",
             teacher: "Instructor",
@@ -371,15 +381,13 @@ export default function CoursePage() {
           .delete()
           .eq("lesson_id", lessonId)
           .eq("user_id", userId)
-      : await supabase
-          .from("knowledge_lesson_progress")
-          .upsert({
-            lesson_id: lessonId,
-            user_id: userId,
-            completed: true,
-            completed_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          });
+      : await supabase.from("knowledge_lesson_progress").upsert({
+          lesson_id: lessonId,
+          user_id: userId,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
     if (!error)
       setCompleted((current) =>
         done
@@ -497,6 +505,28 @@ export default function CoursePage() {
                     ?.last_position_seconds || 0
                 }
               />
+            ) : selectedLesson && selectedContent ? (
+              <div className="course-audio-stage">
+                <Headphones size={48} />
+                <strong>{copy.audioLesson}</strong>
+                <p>{copy.noVideo}</p>
+                {normalizeList(selectedContent.vocabulary).length ? (
+                  <div className="course-audio-actions">
+                    {normalizeList(selectedContent.vocabulary)
+                      .slice(0, 8)
+                      .map((item) => {
+                        const word = item.split("·")[0].trim();
+                        return (
+                          <MandarinSpeechButton
+                            key={item}
+                            text={word}
+                            label={word}
+                          />
+                        );
+                      })}
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <div>
                 <PlayCircle size={48} />
