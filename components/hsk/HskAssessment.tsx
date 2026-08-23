@@ -42,7 +42,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
     setPdfState("working");
     try{
       const [{default:html2canvas},{jsPDF}]=await Promise.all([import("html2canvas-pro"),import("jspdf")]);
-      const canvas=await html2canvas(resultRef.current,{scale:1.6,backgroundColor:"#f5faf8",useCORS:true,logging:false});
+      const canvas=await html2canvas(resultRef.current,{scale:1.1,backgroundColor:"#f5faf8",useCORS:true,logging:false,imageTimeout:5000});
       const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
       const pageWidth=210,pageHeight=297,margin=8,drawWidth=pageWidth-margin*2;
       const drawHeight=canvas.height*drawWidth/canvas.width;
@@ -50,7 +50,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
       let offset=0,page=0;
       while(offset<drawHeight){
         if(page>0)pdf.addPage();
-        pdf.addImage(canvas.toDataURL("image/jpeg",.9),"JPEG",margin,margin-offset,drawWidth,drawHeight,undefined,"FAST");
+        pdf.addImage(canvas.toDataURL("image/jpeg",.84),"JPEG",margin,margin-offset,drawWidth,drawHeight,undefined,"FAST");
         offset+=pageContentHeight;page++;
       }
       pdf.save(`BurmeseBridge-HSK-result-${new Date().toISOString().slice(0,10)}.pdf`);
