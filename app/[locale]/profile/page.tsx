@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { BadgeCheck, Save, UserRound } from "lucide-react";
+import { BadgeCheck, Save, Settings2, UserRound } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { PageContainer, PageIntro } from "@/components/ui/page-container";
+import { DirectoryState } from "@/components/ui/content-directory";
 
 type VerificationRequest = {
   id: number;
@@ -29,6 +31,8 @@ export default function ProfilePage() {
       save: "ပြောင်းလဲမှုများကို သိမ်းဆည်းရန်",
       saved: "ပြောင်းလဲမှုများကို သိမ်းဆည်းပြီးပါပြီ။",
       loading: "အချက်အလက်များ တင်နေပါသည်…",
+      eyebrow: "အကောင့်ဆက်တင်များ",
+      subtitle: "အများမြင် ကိုယ်ရေးအချက်အလက်နှင့် Professional Verification ကို စီမံပါ။",
       verifyTitle: "အသက်မွေးဝမ်းကျောင်းဆိုင်ရာ အထောက်အထား စိစစ်ခြင်း", verifyCopy: "ဆရာ၊ ကုမ္ပဏီ သို့မဟုတ် စာရေးသူအဖြစ် အထောက်အထား စိစစ်ပေးရန် လျှောက်ထားနိုင်ပါသည်။", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", evidence: "လုပ်ငန်းအတွေ့အကြုံ၊ သက်ဆိုင်ရာအဖွဲ့အစည်း သို့မဟုတ် အထောက်အထားလင့်ခ်များ", submit: "စိစစ်ရန် လျှောက်ထားမည်", pending: "သင့်လျှောက်ထားချက်ကို စိစစ်နေပါသည်။", submitted: "လျှောက်ထားချက်ကို တင်သွင်းပြီးပါပြီ။", history: "လျှောက်ထားမှုမှတ်တမ်း", approved: "အတည်ပြုပြီး", rejected: "အတည်မပြုပါ", reason: "စိစစ်ရေးမှတ်ချက်", verified: "သင့်အသက်မွေးဝမ်းကျောင်းဆိုင်ရာ အထောက်အထားကို အတည်ပြုပြီးပါပြီ။", reapply: "အထောက်အထားများကို ပြင်ဆင်ပြီး ထပ်မံလျှောက်ထားနိုင်ပါသည်။", submittedAt: "တင်သွင်းသည့်အချိန်",
     },
     zh: {
@@ -39,6 +43,8 @@ export default function ProfilePage() {
       save: "保存",
       saved: "保存成功",
       loading: "加载中...",
+      eyebrow: "账户设置",
+      subtitle: "管理公开个人资料和专业身份认证申请。",
       verifyTitle: "专业身份认证", verifyCopy: "申请教师、企业或作者认证，审核通过后将展示认证徽章。", teacher: "教师", company: "企业", author: "作者", evidence: "请填写经历、所属机构或证明链接", submit: "提交申请", pending: "你的申请正在审核中", submitted: "申请已提交", history: "申请记录", approved: "已通过", rejected: "已拒绝", reason: "审核备注", verified: "你的专业身份已经通过认证。", reapply: "可以更新证明材料后重新申请。", submittedAt: "提交时间",
     },
     en: {
@@ -49,6 +55,8 @@ export default function ProfilePage() {
       save: "Save",
       saved: "Saved successfully",
       loading: "Loading...",
+      eyebrow: "Account settings",
+      subtitle: "Manage your public profile and professional verification.",
       verifyTitle: "Professional verification", verifyCopy: "Apply as a teacher, company, or author. Approved profiles receive a public badge.", teacher: "Teacher", company: "Company", author: "Author", evidence: "Describe your experience, organization, or supporting links", submit: "Submit application", pending: "Your application is under review", submitted: "Application submitted", history: "Application history", approved: "Approved", rejected: "Rejected", reason: "Review note", verified: "Your professional identity is verified.", reapply: "You may update the evidence and apply again.", submittedAt: "Submitted",
     },
   };
@@ -141,12 +149,12 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <main className="profile-settings"><p className="account-loading">{t.loading}</p></main>;
+    return <PageContainer className="profile-settings"><DirectoryState kind="loading" title={t.loading}/></PageContainer>;
   }
 
   return (
-    <main className="profile-settings">
-      <header className="profile-settings-head"><span><UserRound size={18}/>{t.title}</span><h1>{t.title}</h1></header>
+    <PageContainer className="profile-settings">
+      <PageIntro eyebrow={<><Settings2 size={18}/>{t.eyebrow}</>} title={t.title} description={t.subtitle}/>
       <div className="profile-settings-grid">
         <section className="profile-settings-card profile-basic-card">
           <div className="settings-card-head"><UserRound size={20}/><div><h2>{t.title}</h2><p>{email}</p></div></div>
@@ -173,6 +181,6 @@ export default function ProfilePage() {
         </section>
       </div>
       {message ? <p className="profile-settings-message" role="status">{message}</p> : null}
-    </main>
+    </PageContainer>
   );
 }
