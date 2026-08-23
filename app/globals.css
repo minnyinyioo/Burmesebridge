@@ -2186,6 +2186,29 @@ svg {
   border-color: rgba(225, 245, 237, 0.32);
   background: rgba(255, 255, 255, 0.08);
 }
+.assignment-audio-recorder {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--muted-surface);
+}
+.assignment-audio-recorder button {
+  width: fit-content;
+}
+.assignment-audio-recorder button.is-recording {
+  color: #fff;
+  background: #b83232;
+  border-color: #b83232;
+}
+.assignment-audio-recorder audio {
+  width: min(100%, 520px);
+}
+.assignment-audio-recorder small {
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
 .course-current-lesson {
   padding: 22px;
 }

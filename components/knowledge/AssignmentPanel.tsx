@@ -9,6 +9,7 @@ import {
 import { CheckCircle2, FileCheck2, FileUp, GraduationCap } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
+import AudioRecorder from "@/components/knowledge/AudioRecorder";
 type Assignment = {
   id: number;
   title_my: string | null;
@@ -266,6 +267,13 @@ export default function AssignmentPanel({
                       }))
                     }
                     placeholder={copy.answer}
+                  />
+                  <AudioRecorder
+                    locale={locale}
+                    disabled={busy === item.id}
+                    onRecorded={(file) =>
+                      setFiles((current) => ({ ...current, [item.id]: file }))
+                    }
                   />
                   <label>
                     <FileUp size={15} />
