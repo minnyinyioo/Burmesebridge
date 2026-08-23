@@ -14,6 +14,7 @@ import MembershipManager from "@/components/admin/MembershipManager";
 import ResourceLicenseManager from "@/components/admin/ResourceLicenseManager";
 import CourseMetadataEditor from "@/components/admin/CourseMetadataEditor";
 import HskCatalogInitializer from "@/components/admin/HskCatalogInitializer";
+import HskReadinessPanel from "@/components/admin/HskReadinessPanel";
 
 type RequestItem = {
   id: number;
@@ -360,6 +361,7 @@ function KnowledgeAdmin() {
           ))}
         </div>
         <HskCatalogInitializer locale={locale} onDone={load}/>
+        <HskReadinessPanel locale={locale}/>
         <CourseMetadataEditor locale={locale} products={products.map((product)=>({id:product.id,title:product.title_zh||product.title_my||product.title_en||`#${product.id}`}))}/>
         <LessonManager
           locale={locale}
