@@ -205,6 +205,7 @@ export default function HomePage() {
   const t = text[locale as keyof typeof text] || text.en;
   const [items, setItems] = useState<HomeItem[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
 
   async function loadItems() {
     const { data, error } = await supabase
@@ -259,7 +260,13 @@ export default function HomePage() {
       .eq("status", "published")
       .order("created_at", { ascending: false })
       .limit(3)
-      .then(({ data }) => setCourses((data || []) as Course[]));
+      .then(
+        ({ data }) => {
+          setCourses((data || []) as Course[]);
+          setCoursesLoading(false);
+        },
+        () => setCoursesLoading(false),
+      );
   }, []);
 
   function getTitle(item: HomeItem) {
@@ -448,7 +455,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {courses.length ? (
+      {coursesLoading ? (
+        <ContentSection title={t.courses} icon={<PlayCircle size={20} />}>
+          {[1, 2, 3].map((item) => (
+            <div className="home-course-skeleton" aria-hidden="true" key={item}>
+              <span />
+              <div>
+                <i />
+                <b />
+                <p />
+                <p />
+              </div>
+            </div>
+          ))}
+        </ContentSection>
+      ) : courses.length ? (
         <ContentSection
           title={t.courses}
           icon={<PlayCircle size={20} />}
