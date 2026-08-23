@@ -13,6 +13,7 @@ import { getYouTubeId } from "@/lib/youtube";
 import LessonAttachmentUploader from "@/components/admin/LessonAttachmentUploader";
 import CourseSectionManager, { type CourseSection } from "@/components/admin/CourseSectionManager";
 import AssignmentManager from "@/components/admin/AssignmentManager";
+import QuizManager from "@/components/admin/QuizManager";
 type Product = { id: number; title: string };
 type Lesson = {
   id: number;
@@ -322,6 +323,7 @@ export default function LessonManager({
             ))}
           </div>
           <AssignmentManager locale={locale} lessons={lessons.map((lesson)=>({id:lesson.id,title:lesson.title_zh||lesson.title_my||lesson.title_en||`#${lesson.id}`}))}/>
+          <QuizManager locale={locale} lessons={lessons.map((lesson)=>({id:lesson.id,title:lesson.title_zh||lesson.title_my||lesson.title_en||`#${lesson.id}`}))}/>
         </>
       )}
     </section>
