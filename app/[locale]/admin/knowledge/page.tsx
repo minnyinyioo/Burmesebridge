@@ -13,6 +13,7 @@ import LessonManager from "@/components/admin/LessonManager";
 import MembershipManager from "@/components/admin/MembershipManager";
 import ResourceLicenseManager from "@/components/admin/ResourceLicenseManager";
 import CourseMetadataEditor from "@/components/admin/CourseMetadataEditor";
+import HskCatalogInitializer from "@/components/admin/HskCatalogInitializer";
 
 type RequestItem = {
   id: number;
@@ -358,6 +359,7 @@ function KnowledgeAdmin() {
             </article>
           ))}
         </div>
+        <HskCatalogInitializer locale={locale} onDone={load}/>
         <CourseMetadataEditor locale={locale} products={products.map((product)=>({id:product.id,title:product.title_zh||product.title_my||product.title_en||`#${product.id}`}))}/>
         <LessonManager
           locale={locale}

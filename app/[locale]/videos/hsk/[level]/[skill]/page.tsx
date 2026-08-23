@@ -1,16 +1,212 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft, BookOpenCheck, CheckCircle2, Download, Headphones, Mic2, PenLine, BookOpenText, Captions, FileText, ListChecks, Languages, PlayCircle } from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  CheckCircle2,
+  Download,
+  Headphones,
+  Mic2,
+  PenLine,
+  BookOpenText,
+  Captions,
+  FileText,
+  ListChecks,
+  Languages,
+  PlayCircle,
+} from "lucide-react";
 import { hskCourses, hskSkills, type HskSkill } from "@/lib/hskCourses";
 
-const icons = { listening: Headphones, speaking: Mic2, reading: BookOpenText, writing: PenLine };
-export default async function HskCoursePage({params}:{params:Promise<{locale:string;level:string;skill:string}>}){
-  const {locale,level:rawLevel,skill:rawSkill}=await params; const level=Number(rawLevel); const skill=rawSkill as HskSkill;
-  if(!Number.isInteger(level)||level<1||level>6||!hskSkills.includes(skill)) notFound();
-  const course=hskCourses.find(item=>item.level===level&&item.skill===skill)!; const Icon=icons[skill]; const zh=locale==="zh"; const my=locale==="my";
-  const names:Record<HskSkill,string>=zh?{listening:"听力",speaking:"口语",reading:"阅读",writing:"书写"}:my?{listening:"နားထောင်ခြင်း",speaking:"ပြောဆိုခြင်း",reading:"ဖတ်ရှုခြင်း",writing:"ရေးသားခြင်း"}:{listening:"Listening",speaking:"Speaking",reading:"Reading",writing:"Writing"};
-  const modules=zh?["诊断与学习目标","核心词汇和语言点","标准发音与示范","情景训练与即时练习","综合任务与作业"]:my?["အဆင့်စစ်ဆေးခြင်းနှင့် ရည်မှန်းချက်","အဓိကဝေါဟာရနှင့် ဘာသာစကားအချက်များ","စံအသံထွက်နှင့် နမူနာ","အခြေအနေအလိုက် လေ့ကျင့်ခန်း","ပေါင်းစပ်တာဝန်နှင့် အိမ်စာ"]:["Diagnostic and goals","Core vocabulary and language points","Standard pronunciation and model","Scenario practice and checks","Integrated task and homework"];
-  const tools=zh?[["字幕","中文 / 拼音 / 缅文"],["词汇","重点词与例句"],["讲义","本课 PDF 笔记"],["练习","随堂检查与作业"]]:my?[["စာတန်းထိုး","中文 / Pinyin / မြန်မာ"],["ဝေါဟာရ","အဓိကစကားလုံးနှင့် ဥပမာ"],["သင်ခန်းစာမှတ်စု","PDF မှတ်စု"],["လေ့ကျင့်ခန်း","သင်ခန်းစာစစ်ဆေးမှုနှင့် အိမ်စာ"]]:[["Captions","Chinese / Pinyin / Burmese"],["Vocabulary","Key words and examples"],["Handout","Lesson PDF notes"],["Practice","Checks and homework"]];
-  const toolIcons=[Captions,Languages,FileText,ListChecks];
-  return <main className="hsk-course"><Link href={`/${locale}/videos/hsk`}><ArrowLeft size={16}/>{zh?"返回课程体系":my?"သင်တန်းစာရင်းသို့":"Back to curriculum"}</Link><header><Icon size={30}/><div><span>HSK {level} · 4Skill</span><h1>{names[skill]}</h1><p>{course.focus[zh?"zh":my?"my":"en"]}</p></div><div className="hsk-course-summary"><b>{course.lessons}</b><small>{zh?"课时":my?"သင်ခန်းစာ":"lessons"}</small><b>{course.completionRate}%</b><small>{zh?"完成率":my?"ပြီးမြောက်မှု":"completion"}</small></div></header><div className="hsk-classroom"><section className="hsk-player"><div className="hsk-course-video"><iframe src={`https://www.youtube-nocookie.com/embed/${course.youtubeId}?rel=0`} title={`HSK ${level} ${names[skill]}`} loading="eager" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/></div><p className="hsk-video-credit">{zh?"公开视频由原发布者提供，版权归原作者；BurmeseBridge 仅通过 YouTube 官方播放器嵌入。":my?"Public video ကို မူရင်းထုတ်ဝေသူက ပံ့ပိုးထားပြီး BurmeseBridge သည် YouTube Official Player ဖြင့်သာ Embed လုပ်ထားသည်။":"Public lesson by the original publisher. BurmeseBridge embeds it through the official YouTube player."}</p><div className="hsk-lesson-tools">{tools.map(([name,detail],index)=>{const ToolIcon=toolIcons[index];return <button key={name}><ToolIcon size={18}/><span><b>{name}</b><small>{detail}</small></span></button>})}</div><article><h2>{zh?"本课学习内容":my?"ဤသင်ခန်းစာအကြောင်းအရာ":"Lesson content"}</h2><p>{course.focus[zh?"zh":my?"my":"en"]}</p></article></section><aside className="hsk-syllabus"><div><h2><BookOpenCheck size={19}/>{zh?"课程目录":my?"သင်တန်းမာတိကာ":"Course syllabus"}</h2><span>{course.lessons}</span></div>{modules.map((item,index)=><button className={index===0?"active":""} key={item}><span>{index===0?<PlayCircle size={17}/>:<CheckCircle2 size={17}/>}</span><span><small>{zh?`第 ${index+1} 章`:my?`အခန်း ${index+1}`:`Section ${index+1}`}</small><b>{item}</b></span></button>)}<button className="hsk-homework" disabled><Download size={16}/>{zh?"作业随课时发布":my?"အိမ်စာကို သင်ခန်းစာနှင့်အတူ ထုတ်ဝေမည်":"Homework is attached per lesson"}</button></aside></div></main>;
+const icons = {
+  listening: Headphones,
+  speaking: Mic2,
+  reading: BookOpenText,
+  writing: PenLine,
+};
+export default async function HskCoursePage({
+  params,
+}: {
+  params: Promise<{ locale: string; level: string; skill: string }>;
+}) {
+  const { locale, level: rawLevel, skill: rawSkill } = await params;
+  const level = Number(rawLevel);
+  const skill = rawSkill as HskSkill;
+  if (
+    !Number.isInteger(level) ||
+    level < 1 ||
+    level > 6 ||
+    !hskSkills.includes(skill)
+  )
+    notFound();
+  redirect(`/${locale}/videos/hsk`);
+  const course = hskCourses.find(
+    (item) => item.level === level && item.skill === skill,
+  )!;
+  const Icon = icons[skill];
+  const zh = locale === "zh";
+  const my = locale === "my";
+  const names: Record<HskSkill, string> = zh
+    ? { listening: "听力", speaking: "口语", reading: "阅读", writing: "书写" }
+    : my
+      ? {
+          listening: "နားထောင်ခြင်း",
+          speaking: "ပြောဆိုခြင်း",
+          reading: "ဖတ်ရှုခြင်း",
+          writing: "ရေးသားခြင်း",
+        }
+      : {
+          listening: "Listening",
+          speaking: "Speaking",
+          reading: "Reading",
+          writing: "Writing",
+        };
+  const modules = zh
+    ? [
+        "诊断与学习目标",
+        "核心词汇和语言点",
+        "标准发音与示范",
+        "情景训练与即时练习",
+        "综合任务与作业",
+      ]
+    : my
+      ? [
+          "အဆင့်စစ်ဆေးခြင်းနှင့် ရည်မှန်းချက်",
+          "အဓိကဝေါဟာရနှင့် ဘာသာစကားအချက်များ",
+          "စံအသံထွက်နှင့် နမူနာ",
+          "အခြေအနေအလိုက် လေ့ကျင့်ခန်း",
+          "ပေါင်းစပ်တာဝန်နှင့် အိမ်စာ",
+        ]
+      : [
+          "Diagnostic and goals",
+          "Core vocabulary and language points",
+          "Standard pronunciation and model",
+          "Scenario practice and checks",
+          "Integrated task and homework",
+        ];
+  const tools = zh
+    ? [
+        ["字幕", "中文 / 拼音 / 缅文"],
+        ["词汇", "重点词与例句"],
+        ["讲义", "本课 PDF 笔记"],
+        ["练习", "随堂检查与作业"],
+      ]
+    : my
+      ? [
+          ["စာတန်းထိုး", "中文 / Pinyin / မြန်မာ"],
+          ["ဝေါဟာရ", "အဓိကစကားလုံးနှင့် ဥပမာ"],
+          ["သင်ခန်းစာမှတ်စု", "PDF မှတ်စု"],
+          ["လေ့ကျင့်ခန်း", "သင်ခန်းစာစစ်ဆေးမှုနှင့် အိမ်စာ"],
+        ]
+      : [
+          ["Captions", "Chinese / Pinyin / Burmese"],
+          ["Vocabulary", "Key words and examples"],
+          ["Handout", "Lesson PDF notes"],
+          ["Practice", "Checks and homework"],
+        ];
+  const toolIcons = [Captions, Languages, FileText, ListChecks];
+  return (
+    <main className="hsk-course">
+      <Link href={`/${locale}/videos/hsk`}>
+        <ArrowLeft size={16} />
+        {zh ? "返回课程体系" : my ? "သင်တန်းစာရင်းသို့" : "Back to curriculum"}
+      </Link>
+      <header>
+        <Icon size={30} />
+        <div>
+          <span>HSK {level} · 4Skill</span>
+          <h1>{names[skill]}</h1>
+          <p>{course.focus[zh ? "zh" : my ? "my" : "en"]}</p>
+        </div>
+        <div className="hsk-course-summary">
+          <b>{course.lessons}</b>
+          <small>{zh ? "课时" : my ? "သင်ခန်းစာ" : "lessons"}</small>
+          <b>{course.completionRate}%</b>
+          <small>{zh ? "完成率" : my ? "ပြီးမြောက်မှု" : "completion"}</small>
+        </div>
+      </header>
+      <div className="hsk-classroom">
+        <section className="hsk-player">
+          <div className="hsk-course-video">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${course.youtubeId}?rel=0`}
+              title={`HSK ${level} ${names[skill]}`}
+              loading="eager"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+          <p className="hsk-video-credit">
+            {zh
+              ? "公开视频由原发布者提供，版权归原作者；BurmeseBridge 仅通过 YouTube 官方播放器嵌入。"
+              : my
+                ? "Public video ကို မူရင်းထုတ်ဝေသူက ပံ့ပိုးထားပြီး BurmeseBridge သည် YouTube Official Player ဖြင့်သာ Embed လုပ်ထားသည်။"
+                : "Public lesson by the original publisher. BurmeseBridge embeds it through the official YouTube player."}
+          </p>
+          <div className="hsk-lesson-tools">
+            {tools.map(([name, detail], index) => {
+              const ToolIcon = toolIcons[index];
+              return (
+                <button key={name}>
+                  <ToolIcon size={18} />
+                  <span>
+                    <b>{name}</b>
+                    <small>{detail}</small>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <article>
+            <h2>
+              {zh
+                ? "本课学习内容"
+                : my
+                  ? "ဤသင်ခန်းစာအကြောင်းအရာ"
+                  : "Lesson content"}
+            </h2>
+            <p>{course.focus[zh ? "zh" : my ? "my" : "en"]}</p>
+          </article>
+        </section>
+        <aside className="hsk-syllabus">
+          <div>
+            <h2>
+              <BookOpenCheck size={19} />
+              {zh ? "课程目录" : my ? "သင်တန်းမာတိကာ" : "Course syllabus"}
+            </h2>
+            <span>{course.lessons}</span>
+          </div>
+          {modules.map((item, index) => (
+            <button className={index === 0 ? "active" : ""} key={item}>
+              <span>
+                {index === 0 ? (
+                  <PlayCircle size={17} />
+                ) : (
+                  <CheckCircle2 size={17} />
+                )}
+              </span>
+              <span>
+                <small>
+                  {zh
+                    ? `第 ${index + 1} 章`
+                    : my
+                      ? `အခန်း ${index + 1}`
+                      : `Section ${index + 1}`}
+                </small>
+                <b>{item}</b>
+              </span>
+            </button>
+          ))}
+          <button className="hsk-homework" disabled>
+            <Download size={16} />
+            {zh
+              ? "作业随课时发布"
+              : my
+                ? "အိမ်စာကို သင်ခန်းစာနှင့်အတူ ထုတ်ဝေမည်"
+                : "Homework is attached per lesson"}
+          </button>
+        </aside>
+      </div>
+    </main>
+  );
 }
