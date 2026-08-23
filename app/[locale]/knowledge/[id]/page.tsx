@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import ContentInteractions from "@/components/ContentInteractions";
 import CourseCheckout from "@/components/knowledge/CourseCheckout";
 import TrackedYouTubePlayer from "@/components/knowledge/TrackedYouTubePlayer";
+import AssignmentPanel from "@/components/knowledge/AssignmentPanel";
 
 type Product = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; description_my:string|null; description_zh:string|null; description_en:string|null; preview_youtube_id:string|null; price:number; currency:string };
 type Lesson = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number; free_preview:boolean; section_id:number|null };
@@ -108,6 +109,7 @@ export default function CoursePage() {
           {selectedLesson && attachments.some((file) => file.lesson_id === selectedLesson.id) ? <div className="lesson-attachments">{attachments.filter((file) => file.lesson_id === selectedLesson.id).map((file) => <button type="button" onClick={()=>void openAttachment(file.object_path)} key={file.id}><Download size={16}/>{file.title}</button>)}</div> : null}
           {selectedLesson && selectedContent && userId ? <button type="button" className={`lesson-complete ${completed.includes(selectedLesson.id) ? "active" : ""}`} onClick={() => toggleComplete(selectedLesson.id)}>{completed.includes(selectedLesson.id) ? <Check size={16}/> : <Circle size={16}/>} {completed.includes(selectedLesson.id) ? copy.completed : copy.complete}</button> : null}
         </article>
+        {selectedLesson&&selectedContent?<AssignmentPanel locale={locale} lessonId={selectedLesson.id} userId={userId}/>:null}
       </div>
       <aside className="course-syllabus">
         <div className="course-syllabus-head"><div><ListVideo size={19}/><strong>{copy.syllabus}</strong></div><span>{lessons.length}</span></div>
