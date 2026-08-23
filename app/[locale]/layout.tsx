@@ -120,6 +120,7 @@ export default async function LocaleLayout({
             <nav className="site-footer-column" aria-label="Platform">
               <strong>{locale === "zh" ? "平台" : locale === "my" ? "ပလက်ဖောင်း" : "Platform"}</strong>
               <Link href={`/${locale}/videos`}>{locale === "zh" ? "学习视频" : locale === "my" ? "လေ့လာရေးဗီဒီယို" : "Learn & videos"}</Link>
+              <Link href={`/${locale}/hsk-test`}>{locale === "zh" ? "HSK 中文水平测试" : locale === "my" ? "HSK တရုတ်ဘာသာအဆင့် စစ်ဆေးမှု" : "HSK placement test"}</Link>
               <Link href={`/${locale}/news`}>{locale === "zh" ? "新闻" : locale === "my" ? "သတင်း" : "News"}</Link>
               <Link href={`/${locale}/forum`}>{locale === "zh" ? "社区" : locale === "my" ? "ဆွေးနွေးခန်း" : "Community"}</Link>
               <Link href={`/${locale}/knowledge`}>{locale === "zh" ? "知识内容" : locale === "my" ? "အသိပညာဆိုင်ရာ သင်တန်းများ" : "Knowledge"}</Link>
