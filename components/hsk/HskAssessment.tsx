@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, RotateCcw, Target } from "lucide-react";
-import { hskQuestions, scoreHsk } from "@/lib/hskAssessment";
+import { hskQuestions, localizeHskQuestion, scoreHsk } from "@/lib/hskAssessment";
 import { supabase } from "@/lib/supabase";
 
 type Phase = "intro" | "test" | "result";
@@ -13,7 +13,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
   const [index,setIndex] = useState(0);
   const [answers,setAnswers] = useState<Record<string,number>>({});
   const [saved,setSaved] = useState<"idle"|"saved"|"guest"|"error">("idle");
-  const question = hskQuestions[index];
+  const question = localizeHskQuestion(hskQuestions[index],locale);
   const result = useMemo(() => scoreHsk(answers),[answers]);
   const copy = locale === "zh" ? {
     eyebrow:"中文水平诊断",title:"HSK 1–6 分级测试",intro:"用 24 道词汇、语法和阅读题，快速了解你目前的中文水平。约需 12–18 分钟。",start:"开始测试",notice:"本测试用于学习诊断，不是官方 HSK 考试或证书。",progress:"测试进度",previous:"上一题",next:"下一题",submit:"查看结果",unanswered:"请先选择一个答案",result:"你的诊断结果",level:"建议学习级别",score:"总正确率",correct:"答对",analysis:"分级表现",review:"错题解析",restart:"重新测试",learn:"去学习视频",saved:"成绩已保存到你的账号",guest:"登录后可保存每次测试记录",saveError:"成绩暂时无法保存，但不影响查看结果",pre:"HSK 1 入门准备",advice:"建议先从拼音、基础汉字和日常表达开始。",levelAdvice:"建议重点学习 HSK {level} 内容，并定期复测。"
@@ -42,6 +42,6 @@ export default function HskAssessment({ locale }: { locale: string }) {
     return <main className="hsk-page"><section className="hsk-test-card"><header><div><span>{copy.progress}</span><strong>{index+1} / {hskQuestions.length}</strong></div><div className="hsk-progress"><i style={{width:`${(index+1)/hskQuestions.length*100}%`}}/></div></header><div className="hsk-question-meta"><span>HSK {question.level}</span><span>{question.skill}</span></div><h1>{question.prompt}</h1><div className="hsk-options">{question.options.map((option,optionIndex)=><button className={selected===optionIndex?"selected":""} key={option} onClick={()=>setAnswers({...answers,[question.id]:optionIndex})}><b>{String.fromCharCode(65+optionIndex)}</b><span>{option}</span></button>)}</div>{selected===undefined&&index>0?<p className="hsk-hint">{copy.unanswered}</p>:null}<footer><button className="hsk-secondary" disabled={index===0} onClick={()=>setIndex(index-1)}><ArrowLeft size={18}/>{copy.previous}</button><button className="hsk-primary" disabled={selected===undefined} onClick={advance}>{index===hskQuestions.length-1?copy.submit:copy.next}<ArrowRight size={18}/></button></footer></section></main>;
   }
 
-  const wrong = hskQuestions.filter((item)=>answers[item.id]!==item.answer);
+  const wrong = hskQuestions.filter((item)=>answers[item.id]!==item.answer).map((item)=>localizeHskQuestion(item,locale));
   return <main className="hsk-page"><section className="hsk-result-head"><CheckCircle2 size={34}/><span>{copy.result}</span><h1>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : copy.pre}</h1><p>{result.estimatedLevel ? copy.levelAdvice.replace("{level}",String(result.estimatedLevel)) : copy.advice}</p><small>{copy.notice}</small></section><div className="hsk-result-grid"><article><span>{copy.level}</span><strong>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : "Pre-HSK"}</strong><small>CEFR-style: {result.cefr}</small></article><article><span>{copy.score}</span><strong>{result.score}%</strong><small>{copy.correct}: {result.correct}/{result.total}</small></article></div><section className="hsk-breakdown"><h2>{copy.analysis}</h2>{result.byLevel.map(item=><div key={item.level}><span>HSK {item.level}</span><div><i style={{width:`${item.rate*100}%`}}/></div><strong>{item.correct}/{item.total}</strong></div>)}</section>{wrong.length?<section className="hsk-review"><h2>{copy.review}</h2>{wrong.map(item=><details key={item.id}><summary><span>HSK {item.level}</span>{item.prompt}</summary><p><b>✓ {item.options[item.answer]}</b></p><p>{item.explanation}</p></details>)}</section>:null}<p className={`hsk-save-state ${saved}`}>{saved==="saved"?copy.saved:saved==="guest"?copy.guest:saved==="error"?copy.saveError:""}</p><div className="hsk-result-actions"><button className="hsk-secondary" onClick={start}><RotateCcw size={18}/>{copy.restart}</button><Link className="hsk-primary" href={`/${locale}/videos`}>{copy.learn}<ArrowRight size={18}/></Link></div></main>;
 }
