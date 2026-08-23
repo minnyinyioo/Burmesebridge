@@ -9,6 +9,15 @@ import { supabase } from "@/lib/supabase";
 
 type Phase = "intro" | "test" | "result";
 
+function formatReportDate(date:Date,locale:string){
+  if(locale==="my"){
+    const months=["ဇန်နဝါရီ","ဖေဖော်ဝါရီ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူလိုင်","ဩဂုတ်","စက်တင်ဘာ","အောက်တိုဘာ","နိုဝင်ဘာ","ဒီဇင်ဘာ"];
+    const myDigits=(value:number)=>String(value).replace(/[0-9]/g,digit=>"၀၁၂၃၄၅၆၇၈၉"[Number(digit)]);
+    return `${myDigits(date.getFullYear())} ခုနှစ် ${months[date.getMonth()]}လ ${myDigits(date.getDate())} ရက်`;
+  }
+  return new Intl.DateTimeFormat(locale==="zh"?"zh-CN":"en-US",{year:"numeric",month:"long",day:"numeric"}).format(date);
+}
+
 export default function HskAssessment({ locale }: { locale: string }) {
   const [phase,setPhase] = useState<Phase>("intro");
   const [index,setIndex] = useState(0);
@@ -60,7 +69,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
   async function finish(){
     if (answers[question.id] === undefined) return;
     const now=new Date();
-    setReportMeta({id:`BB-HSK-${now.getTime().toString(36).toUpperCase()}`,date:new Intl.DateTimeFormat(locale==="my"?"my-MM":locale==="zh"?"zh-CN":"en-US",{year:"numeric",month:"long",day:"numeric"}).format(now)});
+    setReportMeta({id:`BB-HSK-${now.getTime().toString(36).toUpperCase()}`,date:formatReportDate(now,locale)});
     setPhase("result");
     const scored = scoreHsk(answers);
     const {data:{user}} = await supabase.auth.getUser();
