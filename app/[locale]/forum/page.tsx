@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { MessageCircleMore } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PostComposer from "@/components/forum/PostComposer";
 import PostCard from "@/components/forum/PostCard";
 import type { CommentItem } from "@/components/forum/CommentList";
+import { PageContainer, PageIntro } from "@/components/ui/page-container";
+import { DirectoryState } from "@/components/ui/content-directory";
 
 type Profile = {
   id?: string;
@@ -45,6 +48,11 @@ export default function ForumPage() {
       commentPlaceholder: "မှတ်ချက်ရေးရန်...",
       send: "ပို့မည်",
       copied: "လင့်ခ်ကို ကူးပြီးပါပြီ",
+      eyebrow: "အများပြည်သူ ဆွေးနွေးခန်း",
+      subtitle: "အသိပညာ၊ အတွေ့အကြုံနှင့် မေးခွန်းများကို လေးစားစွာ မျှဝေပါ။",
+      loading: "ဆွေးနွေးချက်များ ရယူနေသည်",
+      empty: "ပထမဆုံး ဆွေးနွေးချက်ကို မျှဝေပါ",
+      loadError: "ဆွေးနွေးချက်များကို ရယူ၍ မရပါ",
     },
     zh: {
       title: "社区论坛",
@@ -61,6 +69,11 @@ export default function ForumPage() {
       commentPlaceholder: "写评论...",
       send: "发送",
       copied: "链接已复制",
+      eyebrow: "公共讨论区",
+      subtitle: "分享知识、经验与问题，并保持尊重和友善。",
+      loading: "正在加载讨论",
+      empty: "还没有帖子，来发布第一条讨论吧",
+      loadError: "讨论内容加载失败，请稍后重试",
     },
     en: {
       title: "Forum",
@@ -77,6 +90,11 @@ export default function ForumPage() {
       commentPlaceholder: "Write a comment...",
       send: "Send",
       copied: "Link copied",
+      eyebrow: "Public discussion",
+      subtitle: "Share knowledge, experiences, and questions with respect.",
+      loading: "Loading discussions",
+      empty: "No posts yet. Start the first discussion.",
+      loadError: "Discussions could not be loaded. Please try again.",
     },
   };
 
@@ -89,6 +107,8 @@ export default function ForumPage() {
   const [myLikes, setMyLikes] = useState<Record<number, boolean>>({});
   const [comments, setComments] = useState<Record<number, CommentItem[]>>({});
   const [commentText, setCommentText] = useState<Record<number, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     loadUserAndPosts();
@@ -136,7 +156,8 @@ export default function ForumPage() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      alert(error.message);
+      setLoadError(error.message);
+      setLoading(false);
       return;
     }
 
@@ -158,7 +179,8 @@ export default function ForumPage() {
       .in("id", postUserIds);
 
     if (profileError) {
-      alert(profileError.message);
+      setLoadError(profileError.message);
+      setLoading(false);
       return;
     }
 
@@ -172,6 +194,7 @@ export default function ForumPage() {
     })) as Post[];
 
     setPosts(postList);
+    setLoadError("");
 
     const postIds = postList.map((post) => post.id);
 
@@ -179,6 +202,7 @@ export default function ForumPage() {
       setLikes({});
       setMyLikes({});
       setComments({});
+      setLoading(false);
       return;
     }
 
@@ -231,7 +255,8 @@ export default function ForumPage() {
       .in("id", commentUserIds);
 
     if (commentProfileError) {
-      alert(commentProfileError.message);
+      setLoadError(commentProfileError.message);
+      setLoading(false);
       return;
     }
 
@@ -253,6 +278,7 @@ export default function ForumPage() {
     });
 
     setComments(groupedComments);
+    setLoading(false);
   }
 
   /**
@@ -371,8 +397,8 @@ export default function ForumPage() {
   }
 
   return (
-  <main className="feedShell">
-    <h1 className="feedTitle">{t.title}</h1>
+  <PageContainer className="forum-page">
+    <PageIntro eyebrow={<><MessageCircleMore size={18}/>{t.eyebrow}</>} title={t.title} description={t.subtitle}/>
 
     <div className="forum-composer-wrap">
       <PostComposer
@@ -384,7 +410,7 @@ export default function ForumPage() {
       />
     </div>
 
-    <div className="forum-feed-list">
+    {loading ? <DirectoryState kind="loading" title={t.loading}/> : loadError ? <DirectoryState kind="error" title={t.loadError} description={loadError}/> : posts.length === 0 ? <DirectoryState title={t.empty}/> : <div className="forum-feed-list">
       {posts.map((post) => (
         <PostCard
           key={post.id}
@@ -418,8 +444,8 @@ export default function ForumPage() {
           onSubmitComment={createComment}
         />
       ))}
-    </div>
+    </div>}
 
-  </main>
+  </PageContainer>
 );
 }
