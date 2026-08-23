@@ -10,6 +10,7 @@ import CourseCheckout from "@/components/knowledge/CourseCheckout";
 import TrackedYouTubePlayer from "@/components/knowledge/TrackedYouTubePlayer";
 import AssignmentPanel from "@/components/knowledge/AssignmentPanel";
 import QuizPanel from "@/components/knowledge/QuizPanel";
+import CourseCertificate from "@/components/knowledge/CourseCertificate";
 
 type Product = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; description_my:string|null; description_zh:string|null; description_en:string|null; preview_youtube_id:string|null; price:number; currency:string };
 type Lesson = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number; free_preview:boolean; section_id:number|null };
@@ -129,6 +130,7 @@ export default function CoursePage() {
         {!accessible ? <CourseCheckout locale={locale} productId={product.id} userId={userId} price={Number(product.price)} currency={product.currency} requestStatus={requestStatus} onSubmitted={load}/> : null}
       </aside>
     </section>
+    <CourseCertificate locale={locale} productId={product.id} userId={userId} progress={progressValue}/>
     <ContentInteractions type="knowledge" contentId={product.id} locale={locale} title={localize(product,"title")}/>
   </main>;
 }
