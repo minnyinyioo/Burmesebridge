@@ -7,11 +7,14 @@ import { ArrowLeft, Check, CheckCircle2, Circle, Download, ListVideo, LockKeyhol
 import { supabase } from "@/lib/supabase";
 import ContentInteractions from "@/components/ContentInteractions";
 import CourseCheckout from "@/components/knowledge/CourseCheckout";
+import TrackedYouTubePlayer from "@/components/knowledge/TrackedYouTubePlayer";
 
 type Product = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; description_my:string|null; description_zh:string|null; description_en:string|null; preview_youtube_id:string|null; price:number; currency:string };
-type Lesson = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number; free_preview:boolean };
+type Lesson = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number; free_preview:boolean; section_id:number|null };
 type LessonContent = { lesson_id:number; body_my:string|null; body_zh:string|null; body_en:string|null; youtube_id:string|null };
 type LessonAttachment = { id:number; lesson_id:number; title:string; object_path:string };
+type CourseSection = { id:number; title_my:string|null; title_zh:string|null; title_en:string|null; position:number };
+type LessonProgress = { lesson_id:number; completed:boolean; last_position_seconds:number; updated_at:string };
 
 export default function CoursePage() {
   const params = useParams();
@@ -26,6 +29,8 @@ export default function CoursePage() {
   const [lessons,setLessons] = useState<Lesson[]>([]);
   const [contents,setContents] = useState<LessonContent[]>([]);
   const [attachments,setAttachments] = useState<LessonAttachment[]>([]);
+  const [sections,setSections] = useState<CourseSection[]>([]);
+  const [progress,setProgress] = useState<LessonProgress[]>([]);
   const [selectedId,setSelectedId] = useState<number|null>(null);
   const [loaded,setLoaded] = useState(false);
   const [userId,setUserId] = useState<string|null>(null);
@@ -35,26 +40,28 @@ export default function CoursePage() {
 
   const load = useCallback(async () => {
     if (!Number.isSafeInteger(id) || id < 1) { setLoaded(true); return; }
-    const [{data:p},{data:l},{data:c},{data:a},{data:auth}] = await Promise.all([
+    const [{data:p},{data:l},{data:c},{data:a},{data:s},{data:auth}] = await Promise.all([
       supabase.from("knowledge_products").select("id,title_my,title_zh,title_en,description_my,description_zh,description_en,preview_youtube_id,price,currency").eq("id",id).eq("status","published").maybeSingle(),
-      supabase.from("knowledge_lessons").select("id,title_my,title_zh,title_en,position,free_preview").eq("product_id",id).eq("status","published").order("position").order("id"),
+      supabase.from("knowledge_lessons").select("id,title_my,title_zh,title_en,position,free_preview,section_id").eq("product_id",id).eq("status","published").order("position").order("id"),
       supabase.from("knowledge_lesson_content").select("lesson_id,body_my,body_zh,body_en,youtube_id"),
       supabase.from("knowledge_lesson_attachments").select("id,lesson_id,title,object_path"),
+      supabase.from("knowledge_course_sections").select("id,title_my,title_zh,title_en,position").eq("product_id",id).eq("status","published").order("position").order("id"),
       supabase.auth.getUser(),
     ]);
     const nextLessons = (l || []) as Lesson[];
     const nextContents = (c || []) as LessonContent[];
-    setProduct(p as Product|null); setLessons(nextLessons); setContents(nextContents); setAttachments((a || []) as LessonAttachment[]); setUserId(auth.user?.id || null);
+    setProduct(p as Product|null); setLessons(nextLessons); setContents(nextContents); setAttachments((a || []) as LessonAttachment[]); setSections((s||[]) as CourseSection[]); setUserId(auth.user?.id || null);
     setSelectedId((current) => current || nextLessons.find((lesson) => nextContents.some((content) => content.lesson_id === lesson.id))?.id || nextLessons[0]?.id || null);
     if (auth.user) {
       const [{data:access},{data:membership},{data:request},{data:progress}] = await Promise.all([
         supabase.from("knowledge_access").select("product_id").eq("product_id",id).eq("user_id",auth.user.id).maybeSingle(),
         supabase.from("knowledge_memberships").select("expires_at").eq("user_id",auth.user.id).maybeSingle(),
         supabase.from("knowledge_purchase_requests").select("status").eq("product_id",id).eq("user_id",auth.user.id).maybeSingle(),
-        supabase.from("knowledge_lesson_progress").select("lesson_id").eq("user_id",auth.user.id).eq("completed",true),
+        supabase.from("knowledge_lesson_progress").select("lesson_id,completed,last_position_seconds,updated_at").eq("user_id",auth.user.id).order("updated_at",{ascending:false}),
       ]);
       const membershipActive = Boolean(membership && (!membership.expires_at || new Date(membership.expires_at).getTime() > Date.now()));
-      setHasAccess(Boolean(access) || membershipActive); setRequestStatus(request?.status || null); setCompleted((progress || []).map((item) => item.lesson_id));
+      const progressRows=(progress||[]) as LessonProgress[];const courseProgress=progressRows.filter((item)=>nextLessons.some((lesson)=>lesson.id===item.lesson_id));
+      setHasAccess(Boolean(access) || membershipActive);setRequestStatus(request?.status||null);setProgress(courseProgress);setCompleted(courseProgress.filter((item)=>item.completed).map((item)=>item.lesson_id));setSelectedId((current)=>courseProgress[0]?.lesson_id||current);
     }
     setLoaded(true);
   },[id]);
@@ -63,7 +70,7 @@ export default function CoursePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   },[load]);
-  const localize = (item:Product|Lesson|LessonContent,field:"title"|"description"|"body") => {
+  const localize = (item:Product|Lesson|LessonContent|CourseSection,field:"title"|"description"|"body") => {
     const row = item as unknown as Record<string,string|null>;
     const order = locale === "zh" ? ["zh","my","en"] : locale === "en" ? ["en","my","zh"] : ["my","zh","en"];
     return order.map((suffix) => row[`${field}_${suffix}`]).find(Boolean) || "";
@@ -73,6 +80,7 @@ export default function CoursePage() {
   const accessible = Number(product?.price || 0) === 0 || hasAccess;
   const progressValue = lessons.length ? Math.round((completed.filter((item) => lessons.some((lesson) => lesson.id === item)).length / lessons.length) * 100) : 0;
   const previewVideo = useMemo(() => selectedContent?.youtube_id || product?.preview_youtube_id || null,[product?.preview_youtube_id,selectedContent?.youtube_id]);
+  const groupedSections=useMemo(()=>[...sections.map((section)=>({section,lessons:lessons.filter((lesson)=>lesson.section_id===section.id)})),{section:null,lessons:lessons.filter((lesson)=>!lesson.section_id)}].filter((group)=>group.lessons.length),[lessons,sections]);
 
   async function toggleComplete(lessonId:number) {
     if (!userId) return;
@@ -92,7 +100,7 @@ export default function CoursePage() {
     <section className="course-workspace">
       <div className="course-player-column">
         <div className="course-video-stage">
-          {previewVideo ? <iframe src={`https://www.youtube-nocookie.com/embed/${previewVideo}?rel=0`} title={selectedLesson ? localize(selectedLesson,"title") : localize(product,"title")} allowFullScreen/> : <div><PlayCircle size={48}/><p>{copy.select}</p></div>}
+          {previewVideo ? <TrackedYouTubePlayer youtubeId={previewVideo} title={selectedLesson ? localize(selectedLesson,"title") : localize(product,"title")} lessonId={selectedLesson?.id||null} userId={userId} initialPosition={progress.find((item)=>item.lesson_id===selectedLesson?.id)?.last_position_seconds||0}/> : <div><PlayCircle size={48}/><p>{copy.select}</p></div>}
         </div>
         <article className="course-current-lesson">
           <div><span>{selectedLesson?.free_preview ? copy.preview : copy.intro}</span><h2>{selectedLesson ? localize(selectedLesson,"title") : localize(product,"title")}</h2></div>
@@ -106,13 +114,13 @@ export default function CoursePage() {
         <div className="course-progress"><div><strong>{copy.progress}</strong><span>{progressValue}%</span></div><div><i style={{width:`${progressValue}%`}}/></div>{!userId ? <small>{copy.loginProgress}</small> : null}</div>
         <div className="course-lesson-nav">
           {lessons.length === 0 ? <p>{copy.empty}</p> : null}
-          {lessons.map((lesson,index) => {
+          {groupedSections.map((group)=><section className="course-nav-section" key={group.section?.id||"ungrouped"}>{group.section?<h3>{localize(group.section,"title")}</h3>:null}{group.lessons.map((lesson) => {
             const available = contents.some((content) => content.lesson_id === lesson.id);
             return <button type="button" className={selectedId === lesson.id ? "active" : ""} onClick={() => setSelectedId(lesson.id)} key={lesson.id}>
               <span>{completed.includes(lesson.id) ? <CheckCircle2 size={17}/> : available ? <PlayCircle size={17}/> : <LockKeyhole size={16}/>}</span>
-              <span><small>{index + 1}. {lesson.free_preview ? copy.preview : available ? copy.unlocked : copy.locked}</small><strong>{localize(lesson,"title")}</strong></span>
+              <span><small>{lesson.free_preview ? copy.preview : available ? copy.unlocked : copy.locked}</small><strong>{localize(lesson,"title")}</strong></span>
             </button>;
-          })}
+          })}</section>)}
         </div>
         {!accessible ? <CourseCheckout locale={locale} productId={product.id} userId={userId} price={Number(product.price)} currency={product.currency} requestStatus={requestStatus} onSubmitted={load}/> : null}
       </aside>
