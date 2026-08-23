@@ -7,6 +7,8 @@ type Row = {
   catalog_key: string;
   published_lessons: number;
   content_lessons: number;
+  published_quizzes: number;
+  published_assignments: number;
   verified_resources: number;
   ready: boolean;
 };
@@ -20,6 +22,8 @@ export default function HskReadinessPanel({ locale }: { locale: string }) {
           refresh: "刷新",
           lesson: "已发布课时",
           content: "有内容",
+          quiz: "已发布测验",
+          assignment: "已发布作业",
           license: "已核验资源",
           ready: "可以发布",
           blocked: "尚未达到发布条件",
@@ -32,6 +36,8 @@ export default function HskReadinessPanel({ locale }: { locale: string }) {
             refresh: "ပြန်စစ်ရန်",
             lesson: "ထုတ်ဝေသင်ခန်းစာ",
             content: "အကြောင်းအရာရှိ",
+            quiz: "ထုတ်ဝေစစ်ဆေးမှု",
+            assignment: "ထုတ်ဝေအိမ်စာ",
             license: "စစ်ပြီးရင်းမြစ်",
             ready: "ထုတ်ဝေနိုင်",
             blocked: "လိုအပ်ချက်မပြည့်သေး",
@@ -43,6 +49,8 @@ export default function HskReadinessPanel({ locale }: { locale: string }) {
             refresh: "Refresh",
             lesson: "Published lessons",
             content: "With content",
+            quiz: "Published quizzes",
+            assignment: "Published assignments",
             license: "Verified resources",
             ready: "Ready to publish",
             blocked: "Publication requirements not met",
@@ -87,6 +95,12 @@ export default function HskReadinessPanel({ locale }: { locale: string }) {
             </small>
             <small>
               {c.content}: {row.content_lessons}
+            </small>
+            <small>
+              {c.quiz}: {row.published_quizzes}
+            </small>
+            <small>
+              {c.assignment}: {row.published_assignments}
             </small>
             <small>
               {c.license}: {row.verified_resources}
