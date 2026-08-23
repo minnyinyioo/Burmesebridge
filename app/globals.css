@@ -2232,6 +2232,22 @@ svg {
 .assignment-admin-preview button {
   width: fit-content;
 }
+.assignment-return-button {
+  color: #8a4b12 !important;
+  border-color: #d9a66d !important;
+  background: #fff7ed !important;
+}
+.assignment-return-feedback {
+  padding: 12px 14px;
+  border: 1px solid #e1aa70;
+  border-radius: 12px;
+  color: #713f12;
+  background: #fff7ed;
+}
+.assignment-return-feedback p {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+}
 .course-current-lesson {
   padding: 22px;
 }

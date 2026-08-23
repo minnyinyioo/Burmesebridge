@@ -51,6 +51,7 @@ export default function AssignmentPanel({
           submit: "提交作业",
           submitted: "已提交",
           graded: "已批改",
+          returned: "已退回，请修改后重新提交",
           score: "成绩",
           feedback: "教师评语",
           invalid:
@@ -67,6 +68,7 @@ export default function AssignmentPanel({
             submit: "အိမ်စာတင်ရန်",
             submitted: "တင်ပြီး",
             graded: "စစ်ဆေးပြီး",
+            returned: "ပြန်ပို့ထားသည်။ ပြင်ဆင်ပြီး ပြန်တင်ပါ။",
             score: "ရမှတ်",
             feedback: "ဆရာ၏မှတ်ချက်",
             invalid:
@@ -82,6 +84,7 @@ export default function AssignmentPanel({
             submit: "Submit assignment",
             submitted: "Submitted",
             graded: "Graded",
+            returned: "Returned — revise and submit again",
             score: "Score",
             feedback: "Teacher feedback",
             invalid:
@@ -241,7 +244,9 @@ export default function AssignmentPanel({
                     <CheckCircle2 size={14} />
                     {submission.status === "graded"
                       ? copy.graded
-                      : copy.submitted}
+                      : submission.status === "returned"
+                        ? copy.returned
+                        : copy.submitted}
                   </span>
                 ) : null}
               </header>
@@ -258,6 +263,12 @@ export default function AssignmentPanel({
                 </div>
               ) : userId ? (
                 <form onSubmit={(event) => submit(item, event)}>
+                  {submission?.status === "returned" && submission.feedback ? (
+                    <div className="assignment-return-feedback">
+                      <strong>{copy.returned}</strong>
+                      <p>{submission.feedback}</p>
+                    </div>
+                  ) : null}
                   <textarea
                     value={answers[item.id] || submission?.answer_text || ""}
                     onChange={(event) =>

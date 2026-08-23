@@ -1,6 +1,6 @@
 "use client";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { CheckCircle2, ClipboardCheck } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, RotateCcw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 type LessonOption = { id: number; title: string };
 type Submission = {
@@ -43,6 +43,8 @@ export default function AssignmentManager({
           feedback: "评语",
           save: "完成批改",
           saved: "批改已保存",
+          returnWork: "退回重交",
+          feedbackRequired: "请先填写退回原因。",
         }
       : locale === "my"
         ? {
@@ -63,6 +65,8 @@ export default function AssignmentManager({
             feedback: "မှတ်ချက်",
             save: "စစ်ဆေးပြီး",
             saved: "သိမ်းပြီးပါပြီ",
+            returnWork: "ပြန်လည်တင်ရန် ပြန်ပို့မည်",
+            feedbackRequired: "ပြန်ပို့ရသည့်အကြောင်းရင်းကို ရေးပါ။",
           }
         : {
             heading: "Assignments & grading",
@@ -82,6 +86,8 @@ export default function AssignmentManager({
             feedback: "Feedback",
             save: "Save grade",
             saved: "Grade saved",
+            returnWork: "Return for resubmission",
+            feedbackRequired: "Enter feedback before returning the work.",
           };
   const [lessonId, setLessonId] = useState("");
   const [title, setTitle] = useState("");
@@ -98,7 +104,7 @@ export default function AssignmentManager({
       .select(
         "id,assignment_id,user_id,answer_text,object_path,object_mime,status,score,feedback,submitted_at,assignment:knowledge_assignments!assignment_id(max_score)",
       )
-      .in("status", ["submitted", "returned"])
+      .eq("status", "submitted")
       .order("submitted_at", { ascending: true });
     if (error) setMessage(error.message);
     else {
@@ -167,6 +173,22 @@ export default function AssignmentManager({
         updated_at: new Date().toISOString(),
       })
       .eq("id", item.id);
+    if (error) setMessage(error.message);
+    else {
+      setMessage(copy.saved);
+      await load();
+    }
+  }
+  async function returnWork(item: Submission) {
+    const note = feedback[item.id]?.trim();
+    if (!note) {
+      setMessage(copy.feedbackRequired);
+      return;
+    }
+    const { error } = await supabase.rpc("return_assignment_submission", {
+      p_submission_id: item.id,
+      p_feedback: note,
+    });
     if (error) setMessage(error.message);
     else {
       setMessage(copy.saved);
@@ -290,6 +312,14 @@ export default function AssignmentManager({
                 <button type="button" onClick={() => grade(item)}>
                   <CheckCircle2 size={15} />
                   {copy.save}
+                </button>
+                <button
+                  type="button"
+                  className="assignment-return-button"
+                  onClick={() => returnWork(item)}
+                >
+                  <RotateCcw size={15} />
+                  {copy.returnWork}
                 </button>
               </div>
             </article>
