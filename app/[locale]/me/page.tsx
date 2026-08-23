@@ -17,13 +17,16 @@ import {
 import { supabase } from "@/lib/supabase";
 import DeleteAccountPanel from "@/components/DeleteAccountPanel";
 import AccountSecurityPanel from "@/components/AccountSecurityPanel";
+import AccountProfilePanel from "@/components/AccountProfilePanel";
 
 type Profile = {
+  id: string;
   display_name: string | null;
   avatar_url: string | null;
   verified: boolean | null;
   badge: string | null;
   points: number | null;
+  display_name_updated_at: string | null;
 };
 
 export default function MePage() {
@@ -104,7 +107,7 @@ export default function MePage() {
       const [profileResult, checkinResult, postResult] = await Promise.all([
         supabase
           .from("profiles")
-          .select("display_name, avatar_url, verified, badge, points")
+          .select("id, display_name, avatar_url, verified, badge, points, display_name_updated_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase
@@ -203,7 +206,7 @@ export default function MePage() {
             </div>
             <p>{email}</p>
           </div>
-          <a href={`/${locale}/profile`} className="account-edit">
+          <a href="#profile-settings" className="account-edit">
             {copy.profile}
           </a>
         </div>
@@ -246,6 +249,7 @@ export default function MePage() {
             {copy.logout}
           </button>
         </div>
+        <AccountProfilePanel locale={locale} userId={profile?.id || ""} email={email} initialName={profile?.display_name || ""} nameUpdatedAt={profile?.display_name_updated_at || null} verified={Boolean(profile?.verified)} />
         <AccountSecurityPanel locale={locale} />
         {email ? <DeleteAccountPanel locale={locale} email={email} /> : null}
       </section>

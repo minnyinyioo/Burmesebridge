@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { CalendarCheck, ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut, UserRound } from "lucide-react";
+import { CalendarCheck, ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut } from "lucide-react";
 
 export default function AuthMenu({
   locale,
@@ -12,6 +13,7 @@ export default function AuthMenu({
 }) {
   const [email, setEmail] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +92,7 @@ export default function AuthMenu({
   async function handleLogout() {
     await supabase.auth.signOut();
 
-    window.location.href = `/${locale}/login`;
+    router.replace(`/${locale}/login`);
   }
 
   if (!email) {
@@ -121,12 +123,6 @@ export default function AuthMenu({
             href={`/${locale}/dashboard`}
             label={t.dashboard}
             icon={<LayoutDashboard size={17} />}
-          />
-
-          <MenuLink
-            href={`/${locale}/profile`}
-            label={t.profile}
-            icon={<UserRound size={17} />}
           />
 
           <MenuLink
