@@ -26,7 +26,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
   const [pdfState,setPdfState] = useState<"idle"|"working"|"error">("idle");
   const [reportMeta,setReportMeta] = useState({id:"",date:"",verificationUrl:""});
   const [qrCode,setQrCode] = useState("");
-  const resultRef=useRef<HTMLDivElement>(null);
+  const pdfRef=useRef<HTMLDivElement>(null);
   const question = localizeHskQuestion(hskQuestions[index],locale);
   const result = useMemo(() => scoreHsk(answers),[answers]);
   const copy = locale === "zh" ? {
@@ -50,21 +50,13 @@ export default function HskAssessment({ locale }: { locale: string }) {
     window.speechSynthesis.speak(utterance);
   }
   async function downloadPdf(){
-    if(!resultRef.current)return;
+    if(!pdfRef.current)return;
     setPdfState("working");
     try{
       const [{default:html2canvas},{jsPDF}]=await Promise.all([import("html2canvas-pro"),import("jspdf")]);
-      const canvas=await html2canvas(resultRef.current,{scale:1.1,backgroundColor:"#f5faf8",useCORS:true,logging:false,imageTimeout:5000});
-      const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
-      const pageWidth=210,pageHeight=297,margin=8,drawWidth=pageWidth-margin*2;
-      const drawHeight=canvas.height*drawWidth/canvas.width;
-      const pageContentHeight=pageHeight-margin*2;
-      let offset=0,page=0;
-      while(offset<drawHeight){
-        if(page>0)pdf.addPage();
-        pdf.addImage(canvas.toDataURL("image/jpeg",.84),"JPEG",margin,margin-offset,drawWidth,drawHeight,undefined,"FAST");
-        offset+=pageContentHeight;page++;
-      }
+      const canvas=await html2canvas(pdfRef.current,{scale:2,backgroundColor:"#fffdf8",useCORS:true,logging:false,imageTimeout:5000});
+      const pdf=new jsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
+      pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,297,210,undefined,"FAST");
       pdf.setProperties({title:`BurmeseBridge HSK report ${reportMeta.id}`,subject:`Verified HSK learning diagnostic ${reportMeta.id}`,author:"BurmeseBridge",keywords:`HSK, assessment, ${reportMeta.id}`});
       pdf.save(`BurmeseBridge-HSK-result-${new Date().toISOString().slice(0,10)}.pdf`);
       setPdfState("idle");
@@ -95,7 +87,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
 
   const wrong = hskQuestions.filter((item)=>!isHskAnswerCorrect(item,answers[item.id])).map((item)=>localizeHskQuestion(item,locale));
   return <main className="hsk-page">
-    <div ref={resultRef} className="hsk-report">
+    <div className="hsk-report">
       <header className="hsk-report-brand"><span className="hsk-report-lockup"><Image src="/brand-icon-1024.png" width={42} height={42} alt=""/><strong>Burmese<span>Bridge</span></strong></span><div><strong>{copy.result}</strong><span>burmesebridge.eu.cc</span></div></header>
       <section className="hsk-report-meta"><span><b>{copy.reportNo}</b>{reportMeta.id||"—"}</span><span><b>{copy.generated}</b>{reportMeta.date}</span><span><b>{copy.contact}</b>admin@burmesebridge.eu.cc</span></section>
       <section className="hsk-result-head"><CheckCircle2 size={34}/><span>{copy.result}</span><h1>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : copy.pre}</h1><p>{result.estimatedLevel ? copy.levelAdvice.replace("{level}",String(result.estimatedLevel)) : copy.advice}</p><small>{copy.notice}</small></section>
@@ -105,6 +97,16 @@ export default function HskAssessment({ locale }: { locale: string }) {
       {reportMeta.verificationUrl?<section className="hsk-report-verification"><div>{qrCode?<Image src={qrCode} width={116} height={116} unoptimized alt={copy.verify}/>:null}</div><p><ShieldCheck size={20}/><strong>{copy.verify}</strong><span>{reportMeta.id}</span><a href={reportMeta.verificationUrl} target="_blank" rel="noreferrer">{copy.openReport}<ExternalLink size={13}/></a></p></section>:<p className="hsk-unverified">{copy.unverified}</p>}
       {wrong.length?<section className="hsk-review" data-html2canvas-ignore="true"><h2>{copy.review}</h2>{wrong.map(item=><details open key={item.id}><summary><span>HSK {item.level}</span>{item.prompt}</summary><p><b>✓ {typeof item.answer==="number"?item.options?.[item.answer]:item.answer}</b></p><p>{item.explanation}</p></details>)}</section>:null}
     </div>
+    <div className="hsk-pdf-stage" aria-hidden="true"><div ref={pdfRef} className="hsk-pdf-sheet"><div className="hsk-pdf-frame">
+      <div className="certificate-brand"><img src="/brand-icon-1024.png" alt="" width="48" height="48"/><strong>Burmese<span>Bridge</span></strong></div>
+      <span className="certificate-label">VERIFIED HSK ASSESSMENT REPORT</span>
+      <h1>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : copy.pre}</h1>
+      <p className="hsk-pdf-subtitle">{copy.result} · CEFR-style {result.cefr}</p>
+      <div className="hsk-pdf-score"><strong>{result.score}%</strong><span>{copy.score}<b>{result.correct}/{result.total} {copy.correct}</b></span></div>
+      <div className="hsk-pdf-breakdowns"><section><h2>{copy.analysis}</h2>{result.byLevel.map(item=><div key={item.level}><span>HSK {item.level}</span><i><b style={{width:`${item.rate*100}%`}}/></i><strong>{item.correct}/{item.total}</strong></div>)}</section><section><h2>{copy.skillAnalysis}</h2>{result.bySkill.map(item=><div key={item.skill}><span>{item.skill}</span><i><b style={{width:`${item.rate*100}%`}}/></i><strong>{item.correct}/{item.total}</strong></div>)}</section></div>
+      <div className="hsk-pdf-auth"><div><span>{copy.generated}<b>{reportMeta.date}</b></span><span><ShieldCheck size={18}/>{copy.reportNo}<b>{reportMeta.id}</b></span></div><div className="certificate-qr">{qrCode?<img src={qrCode} alt={copy.verify}/>:null}<span>{copy.verify}</span></div></div>
+      <footer>burmesebridge.eu.cc · admin@burmesebridge.eu.cc · {copy.notice}</footer>
+    </div></div></div>
     <p className={`hsk-save-state ${saved}`}>{saved==="saved"?copy.saved:saved==="guest"?copy.guest:saved==="error"?copy.saveError:""}</p>{pdfState==="error"?<p className="hsk-hint hsk-pdf-error">{copy.pdfError}</p>:null}<div className="hsk-result-actions"><button className="hsk-secondary" onClick={start}><RotateCcw size={18}/>{copy.restart}</button><button className="hsk-secondary" disabled={pdfState==="working"||saved!=="saved"||!qrCode} onClick={()=>void downloadPdf()}><Download size={18}/>{pdfState==="working"?copy.downloading:copy.download}</button><Link className="hsk-primary" href={`/${locale}/videos`}>{copy.learn}<ArrowRight size={18}/></Link></div>
   </main>;
 }
