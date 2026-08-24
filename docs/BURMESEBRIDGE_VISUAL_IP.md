@@ -2,7 +2,9 @@
 
 ## Master character
 
-The BurmeseBridge Guide is the fixed learning character for original vocabulary illustrations. The master sheet is stored at `public/images/brand/burmesebridge-guide-master.png`.
+The BurmeseBridge Guide is the fixed learning character for original vocabulary illustrations. The current master sheet is stored at `public/images/brand/burmesebridge-guide-master-v2.png`.
+
+The guide must use the official BurmeseBridge rounded-square B mark from `public/brand-icon-1024.png`. It appears only as a small chest pin or bag badge so that the character remains educational rather than promotional. New illustrations must reference the v2 master; earlier illustrations can be migrated in batches without breaking their existing URLs.
 
 Locked identifiers:
 
