@@ -9263,7 +9263,16 @@ svg {
 .instructor-assignment>div{display:grid;grid-template-columns:1fr 1fr auto;gap:9px}
 .instructor-assignment select,.instructor-assignment input{min-height:42px}
 .instructor-assignment button{padding:0 16px;border:0;border-radius:9px;color:#fff;background:var(--brand);font-weight:800}
+.instructor-assignment button:disabled{cursor:not-allowed;opacity:.55}
+.instructor-assignment h3{margin:22px 0 10px}
+.instructor-assignment-list{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin-top:0}
+.instructor-assignment-list>p{margin:0;color:var(--muted)}
+.instructor-assignment-list article{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft)}
+.instructor-assignment-list article div{display:grid;gap:2px}
+.instructor-assignment-list article small{color:var(--muted)}
+.instructor-assignment-list article button{display:inline-flex;align-items:center;gap:6px;min-height:38px;color:#fff;background:#a92d32}
 @media(max-width:700px){.instructor-assignment>div{grid-template-columns:1fr}}
+@media(max-width:700px){.instructor-assignment-list article{display:grid}.instructor-assignment-list article button{width:100%;justify-content:center}}
 .teacher-workspace-secondary{margin-top:-58px}
 .teacher-assignment-review{padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
 .teacher-assignment-review>h2{display:flex;align-items:center;gap:8px}.teacher-assignment-review>h2 span{padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);font-size:12px}
