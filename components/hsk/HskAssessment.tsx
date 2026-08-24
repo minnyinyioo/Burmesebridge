@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, Download, RotateCcw, Target, Volume2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, Download, ExternalLink, RotateCcw, ShieldCheck, Target, Volume2 } from "lucide-react";
 import { HskAnswer, hskQuestions, isHskAnswerCorrect, localizeHskQuestion, scoreHsk } from "@/lib/hskAssessment";
 import { supabase } from "@/lib/supabase";
 
@@ -24,19 +24,22 @@ export default function HskAssessment({ locale }: { locale: string }) {
   const [answers,setAnswers] = useState<Record<string,HskAnswer>>({});
   const [saved,setSaved] = useState<"idle"|"saved"|"guest"|"error">("idle");
   const [pdfState,setPdfState] = useState<"idle"|"working"|"error">("idle");
-  const [reportMeta,setReportMeta] = useState({id:"",date:""});
+  const [reportMeta,setReportMeta] = useState({id:"",date:"",verificationUrl:""});
+  const [qrCode,setQrCode] = useState("");
   const resultRef=useRef<HTMLDivElement>(null);
   const question = localizeHskQuestion(hskQuestions[index],locale);
   const result = useMemo(() => scoreHsk(answers),[answers]);
   const copy = locale === "zh" ? {
-    eyebrow:"中文水平诊断",title:"HSK 1–6 综合能力测试",intro:"用 42 道听力、阅读、书写、词汇和语法题，全面了解你目前的中文水平。约需 25–35 分钟。",start:"开始测试",notice:"本报告仅用于学习诊断，不是官方 HSK 考试成绩、证书或语言能力证明。",progress:"测试进度",previous:"上一题",next:"下一题",submit:"查看结果",unanswered:"请先填写或选择答案",result:"中文能力诊断报告",level:"建议学习级别",score:"总正确率",correct:"答对",analysis:"分级表现",skillAnalysis:"专项能力",review:"错题解析",restart:"重新测试",learn:"去学习视频",saved:"成绩已保存到你的账号",guest:"登录后可保存每次测试记录",saveError:"成绩暂时无法保存，但不影响查看结果",pre:"HSK 1 入门准备",advice:"建议先从拼音、基础汉字和日常表达开始。",levelAdvice:"建议重点学习 HSK {level} 内容，并定期复测。",play:"播放中文录音",writePlaceholder:"请输入中文答案",download:"下载 PDF 成绩单",downloading:"正在生成 PDF…",pdfError:"PDF 生成失败，请重试",reportNo:"报告编号",generated:"生成日期",contact:"联系邮箱"
+    eyebrow:"中文水平诊断",title:"HSK 1–6 综合能力测试",intro:"用 42 道听力、阅读、书写、词汇和语法题，全面了解你目前的中文水平。约需 25–35 分钟。",start:"开始测试",notice:"本报告仅用于学习诊断，不是官方 HSK 考试成绩、证书或语言能力证明。",progress:"测试进度",previous:"上一题",next:"下一题",submit:"查看结果",unanswered:"请先填写或选择答案",result:"中文能力诊断报告",level:"建议学习级别",score:"总正确率",correct:"答对",analysis:"分级表现",skillAnalysis:"专项能力",review:"错题解析",restart:"重新测试",learn:"去学习视频",saved:"真实成绩已保存，可通过二维码核验",guest:"登录后可生成带二维码的可核验报告",saveError:"成绩暂时无法保存，但不影响查看结果",pre:"HSK 1 入门准备",advice:"建议先从拼音、基础汉字和日常表达开始。",levelAdvice:"建议重点学习 HSK {level} 内容，并定期复测。",play:"播放中文录音",writePlaceholder:"请输入中文答案",download:"下载 PDF 成绩单",downloading:"正在生成 PDF…",pdfError:"PDF 生成失败，请重试",reportNo:"报告编号",generated:"生成日期",contact:"联系邮箱",verify:"扫码查看真实结果",openReport:"在线核验报告",unverified:"此即时结果尚未写入数据库；登录后完成测试可生成带二维码的可核验报告。"
   } : locale === "my" ? {
-    eyebrow:"တရုတ်ဘာသာအဆင့် စစ်ဆေးမှု",title:"HSK အဆင့် ၁–၆ ဘက်စုံစွမ်းရည် စစ်ဆေးမှု",intro:"နားထောင်မှု၊ ဖတ်ရှုမှု၊ ရေးသားမှု၊ ဝေါဟာရနှင့် သဒ္ဒါ မေးခွန်း ၄၂ ခုဖြင့် တရုတ်ဘာသာစွမ်းရည်ကို စစ်ဆေးပါ။ ၂၅–၃၅ မိနစ်ခန့် ကြာပါမည်။",start:"စစ်ဆေးမှု စတင်ရန်",notice:"ဤအစီရင်ခံစာသည် လေ့လာရေးဆိုင်ရာ အဆင့်သတ်မှတ်မှုအတွက်သာဖြစ်ပြီး တရားဝင် HSK ရလဒ်၊ လက်မှတ် သို့မဟုတ် ဘာသာစကားကျွမ်းကျင်မှု အထောက်အထားမဟုတ်ပါ။",progress:"ပြီးစီးမှု",previous:"ရှေ့မေးခွန်း",next:"နောက်မေးခွန်း",submit:"ရလဒ်ကြည့်ရန်",unanswered:"အဖြေကို ဦးစွာရေးပါ သို့မဟုတ် ရွေးပါ",result:"တရုတ်ဘာသာစွမ်းရည် စစ်ဆေးမှုအစီရင်ခံစာ",level:"အကြံပြုလေ့လာမှုအဆင့်",score:"အဖြေမှန် ရာခိုင်နှုန်း",correct:"မှန်ကန်သည့်အဖြေ",analysis:"အဆင့်အလိုက် စွမ်းဆောင်ရည်",skillAnalysis:"စွမ်းရည်အလိုက် ရလဒ်",review:"အမှားများ ရှင်းလင်းချက်",restart:"ပြန်လည်စစ်ဆေးရန်",learn:"ဗီဒီယိုသင်ခန်းစာများ",saved:"ရလဒ်ကို သင့်အကောင့်တွင် သိမ်းဆည်းပြီးပါပြီ",guest:"ဝင်ရောက်ပြီးနောက် စစ်ဆေးမှုမှတ်တမ်းကို သိမ်းဆည်းနိုင်ပါသည်",saveError:"ရလဒ်ကို မသိမ်းဆည်းနိုင်သေးသော်လည်း ရလဒ်ကြည့်ရှုမှုကို မထိခိုက်ပါ",pre:"HSK 1 မတိုင်မီ အခြေခံအဆင့်",advice:"Pinyin၊ အခြေခံတရုတ်စာလုံးများနှင့် နေ့စဉ်သုံးစကားများမှ စတင်လေ့လာရန် အကြံပြုပါသည်။",levelAdvice:"HSK အဆင့် {level} အကြောင်းအရာကို အဓိကလေ့လာပြီး ပုံမှန်ပြန်လည်စစ်ဆေးပါ။",play:"တရုတ်အသံဖိုင် ဖွင့်ရန်",writePlaceholder:"တရုတ်စာဖြင့် အဖြေရေးပါ",download:"PDF ရလဒ်စာတမ်း ဒေါင်းလုဒ်ရန်",downloading:"PDF ဖန်တီးနေသည်…",pdfError:"PDF ဖန်တီးမရပါ။ ပြန်လည်ကြိုးစားပါ",reportNo:"အစီရင်ခံစာအမှတ်",generated:"ထုတ်ပေးသည့်ရက်",contact:"ဆက်သွယ်ရန် Email"
+    eyebrow:"တရုတ်ဘာသာအဆင့် စစ်ဆေးမှု",title:"HSK အဆင့် ၁–၆ ဘက်စုံစွမ်းရည် စစ်ဆေးမှု",intro:"နားထောင်မှု၊ ဖတ်ရှုမှု၊ ရေးသားမှု၊ ဝေါဟာရနှင့် သဒ္ဒါ မေးခွန်း ၄၂ ခုဖြင့် တရုတ်ဘာသာစွမ်းရည်ကို စစ်ဆေးပါ။ ၂၅–၃၅ မိနစ်ခန့် ကြာပါမည်။",start:"စစ်ဆေးမှု စတင်ရန်",notice:"ဤအစီရင်ခံစာသည် လေ့လာရေးဆိုင်ရာ အဆင့်သတ်မှတ်မှုအတွက်သာဖြစ်ပြီး တရားဝင် HSK ရလဒ်၊ လက်မှတ် သို့မဟုတ် ဘာသာစကားကျွမ်းကျင်မှု အထောက်အထားမဟုတ်ပါ။",progress:"ပြီးစီးမှု",previous:"ရှေ့မေးခွန်း",next:"နောက်မေးခွန်း",submit:"ရလဒ်ကြည့်ရန်",unanswered:"အဖြေကို ဦးစွာရေးပါ သို့မဟုတ် ရွေးပါ",result:"တရုတ်ဘာသာစွမ်းရည် စစ်ဆေးမှုအစီရင်ခံစာ",level:"အကြံပြုလေ့လာမှုအဆင့်",score:"အဖြေမှန် ရာခိုင်နှုန်း",correct:"မှန်ကန်သည့်အဖြေ",analysis:"အဆင့်အလိုက် စွမ်းဆောင်ရည်",skillAnalysis:"စွမ်းရည်အလိုက် ရလဒ်",review:"အမှားများ ရှင်းလင်းချက်",restart:"ပြန်လည်စစ်ဆေးရန်",learn:"ဗီဒီယိုသင်ခန်းစာများ",saved:"ရလဒ်အမှန်ကို သိမ်းဆည်းပြီး QR Code ဖြင့် စစ်ဆေးနိုင်ပါပြီ",guest:"ဝင်ရောက်ပြီးပါက QR Code ပါသော Report ရရှိမည်",saveError:"ရလဒ်ကို မသိမ်းဆည်းနိုင်သေးသော်လည်း ရလဒ်ကြည့်ရှုမှုကို မထိခိုက်ပါ",pre:"HSK 1 မတိုင်မီ အခြေခံအဆင့်",advice:"Pinyin၊ အခြေခံတရုတ်စာလုံးများနှင့် နေ့စဉ်သုံးစကားများမှ စတင်လေ့လာရန် အကြံပြုပါသည်။",levelAdvice:"HSK အဆင့် {level} အကြောင်းအရာကို အဓိကလေ့လာပြီး ပုံမှန်ပြန်လည်စစ်ဆေးပါ။",play:"တရုတ်အသံဖိုင် ဖွင့်ရန်",writePlaceholder:"တရုတ်စာဖြင့် အဖြေရေးပါ",download:"PDF ရလဒ်စာတမ်း ဒေါင်းလုဒ်ရန်",downloading:"PDF ဖန်တီးနေသည်…",pdfError:"PDF ဖန်တီးမရပါ။ ပြန်လည်ကြိုးစားပါ",reportNo:"အစီရင်ခံစာအမှတ်",generated:"ထုတ်ပေးသည့်ရက်",contact:"ဆက်သွယ်ရန် Email",verify:"QR Code ဖြင့် ရလဒ်အမှန်ကို စစ်ဆေးရန်",openReport:"အွန်လိုင်းရလဒ် စစ်ဆေးရန်",unverified:"ဤရလဒ်ကို Database တွင် မသိမ်းဆည်းရသေးပါ။ ဝင်ရောက်ပြီး စစ်ဆေးမှသာ QR Code ပါသော Report ရရှိမည်။"
   } : {
-    eyebrow:"Chinese level diagnostic",title:"HSK 1–6 comprehensive assessment",intro:"Assess listening, reading, writing, vocabulary and grammar with 42 questions. Takes about 25–35 minutes.",start:"Start test",notice:"This report is for learning diagnostics only. It is not an official HSK result, certificate or proof of language proficiency.",progress:"Progress",previous:"Previous",next:"Next",submit:"View result",unanswered:"Enter or choose an answer before continuing",result:"Chinese proficiency diagnostic report",level:"Recommended level",score:"Overall accuracy",correct:"Correct answers",analysis:"Level performance",skillAnalysis:"Skill performance",review:"Answer review",restart:"Try again",learn:"Learning videos",saved:"Result saved to your account",guest:"Sign in to save your assessment history",saveError:"The result could not be saved, but you can still view it",pre:"Pre-HSK 1 foundation",advice:"Start with Pinyin, basic characters and everyday expressions.",levelAdvice:"Focus on HSK {level} material and retake this diagnostic regularly.",play:"Play Chinese audio",writePlaceholder:"Type your answer in Chinese",download:"Download PDF report",downloading:"Generating PDF…",pdfError:"PDF generation failed. Please try again",reportNo:"Report ID",generated:"Generated",contact:"Contact"
+    eyebrow:"Chinese level diagnostic",title:"HSK 1–6 comprehensive assessment",intro:"Assess listening, reading, writing, vocabulary and grammar with 42 questions. Takes about 25–35 minutes.",start:"Start test",notice:"This report is for learning diagnostics only. It is not an official HSK result, certificate or proof of language proficiency.",progress:"Progress",previous:"Previous",next:"Next",submit:"View result",unanswered:"Enter or choose an answer before continuing",result:"Chinese proficiency diagnostic report",level:"Recommended level",score:"Overall accuracy",correct:"Correct answers",analysis:"Level performance",skillAnalysis:"Skill performance",review:"Answer review",restart:"Try again",learn:"Learning videos",saved:"Real result saved and QR-verifiable",guest:"Sign in to create a QR-verifiable report",saveError:"The result could not be saved, but you can still view it",pre:"Pre-HSK 1 foundation",advice:"Start with Pinyin, basic characters and everyday expressions.",levelAdvice:"Focus on HSK {level} material and retake this diagnostic regularly.",play:"Play Chinese audio",writePlaceholder:"Type your answer in Chinese",download:"Download PDF report",downloading:"Generating PDF…",pdfError:"PDF generation failed. Please try again",reportNo:"Report ID",generated:"Generated",contact:"Contact",verify:"Scan to view the verified result",openReport:"Verify report online",unverified:"This result is not stored in the database. Sign in and complete the test to create a QR-verifiable report."
   };
 
-  function start(){setAnswers({});setIndex(0);setSaved("idle");setPhase("test");}
+  useEffect(()=>{let active=true;if(!reportMeta.verificationUrl)return;void import("qrcode").then(({default:QRCode})=>QRCode.toDataURL(reportMeta.verificationUrl,{width:220,margin:1,errorCorrectionLevel:"M",color:{dark:"#0e5a49",light:"#fffdf8"}})).then(value=>{if(active)setQrCode(value)});return()=>{active=false}},[reportMeta.verificationUrl]);
+
+  function start(){setAnswers({});setIndex(0);setSaved("idle");setQrCode("");setPhase("test");}
   function playAudio(){
     if(!question.audioText||typeof window==="undefined"||!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -62,6 +65,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
         pdf.addImage(canvas.toDataURL("image/jpeg",.84),"JPEG",margin,margin-offset,drawWidth,drawHeight,undefined,"FAST");
         offset+=pageContentHeight;page++;
       }
+      pdf.setProperties({title:`BurmeseBridge HSK report ${reportMeta.id}`,subject:`Verified HSK learning diagnostic ${reportMeta.id}`,author:"BurmeseBridge",keywords:`HSK, assessment, ${reportMeta.id}`});
       pdf.save(`BurmeseBridge-HSK-result-${new Date().toISOString().slice(0,10)}.pdf`);
       setPdfState("idle");
     }catch{setPdfState("error");}
@@ -69,13 +73,16 @@ export default function HskAssessment({ locale }: { locale: string }) {
   async function finish(){
     if (answers[question.id] === undefined) return;
     const now=new Date();
-    setReportMeta({id:`BB-HSK-${now.getTime().toString(36).toUpperCase()}`,date:formatReportDate(now,locale)});
+    setReportMeta({id:"",date:formatReportDate(now,locale),verificationUrl:""});
     setPhase("result");
     const scored = scoreHsk(answers);
     const {data:{user}} = await supabase.auth.getUser();
     if (!user){setSaved("guest");return;}
-    const {error} = await supabase.from("hsk_assessment_attempts").insert({user_id:user.id,estimated_level:scored.estimatedLevel,cefr_level:scored.cefr,score:scored.score,correct_answers:scored.correct,total_questions:scored.total,answers,level_breakdown:scored.byLevel});
-    setSaved(error ? "error" : "saved");
+    const {data,error} = await supabase.from("hsk_assessment_attempts").insert({user_id:user.id,estimated_level:scored.estimatedLevel,cefr_level:scored.cefr,score:scored.score,correct_answers:scored.correct,total_questions:scored.total,answers,level_breakdown:scored.byLevel,skill_breakdown:scored.bySkill}).select("report_code,created_at").single();
+    if(error||!data){setSaved("error");return;}
+    const code=String(data.report_code),createdAt=new Date(String(data.created_at));
+    setReportMeta({id:code,date:formatReportDate(createdAt,locale),verificationUrl:`https://burmesebridge.eu.cc/${locale}/hsk-result/${encodeURIComponent(code)}`});
+    setSaved("saved");
   }
   function advance(){if(answers[question.id] === undefined)return;if(index === hskQuestions.length-1){void finish();return;}setIndex(index+1);}
 
@@ -90,13 +97,14 @@ export default function HskAssessment({ locale }: { locale: string }) {
   return <main className="hsk-page">
     <div ref={resultRef} className="hsk-report">
       <header className="hsk-report-brand"><span className="hsk-report-lockup"><Image src="/brand-icon-1024.png" width={42} height={42} alt=""/><strong>Burmese<span>Bridge</span></strong></span><div><strong>{copy.result}</strong><span>burmesebridge.eu.cc</span></div></header>
-      <section className="hsk-report-meta"><span><b>{copy.reportNo}</b>{reportMeta.id}</span><span><b>{copy.generated}</b>{reportMeta.date}</span><span><b>{copy.contact}</b>admin@burmesebridge.eu.cc</span></section>
+      <section className="hsk-report-meta"><span><b>{copy.reportNo}</b>{reportMeta.id||"—"}</span><span><b>{copy.generated}</b>{reportMeta.date}</span><span><b>{copy.contact}</b>admin@burmesebridge.eu.cc</span></section>
       <section className="hsk-result-head"><CheckCircle2 size={34}/><span>{copy.result}</span><h1>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : copy.pre}</h1><p>{result.estimatedLevel ? copy.levelAdvice.replace("{level}",String(result.estimatedLevel)) : copy.advice}</p><small>{copy.notice}</small></section>
       <div className="hsk-result-grid"><article><span>{copy.level}</span><strong>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : "Pre-HSK"}</strong><small>CEFR-style: {result.cefr}</small></article><article><span>{copy.score}</span><strong>{result.score}%</strong><small>{copy.correct}: {result.correct}/{result.total}</small></article></div>
       <section className="hsk-breakdown"><h2>{copy.analysis}</h2>{result.byLevel.map(item=><div key={item.level}><span>HSK {item.level}</span><div><i style={{width:`${item.rate*100}%`}}/></div><strong>{item.correct}/{item.total}</strong></div>)}</section>
       <section className="hsk-breakdown"><h2>{copy.skillAnalysis}</h2>{result.bySkill.map(item=><div key={item.skill}><span>{item.skill}</span><div><i style={{width:`${item.rate*100}%`}}/></div><strong>{item.correct}/{item.total}</strong></div>)}</section>
+      {reportMeta.verificationUrl?<section className="hsk-report-verification"><div>{qrCode?<Image src={qrCode} width={116} height={116} unoptimized alt={copy.verify}/>:null}</div><p><ShieldCheck size={20}/><strong>{copy.verify}</strong><span>{reportMeta.id}</span><a href={reportMeta.verificationUrl} target="_blank" rel="noreferrer">{copy.openReport}<ExternalLink size={13}/></a></p></section>:<p className="hsk-unverified">{copy.unverified}</p>}
       {wrong.length?<section className="hsk-review" data-html2canvas-ignore="true"><h2>{copy.review}</h2>{wrong.map(item=><details open key={item.id}><summary><span>HSK {item.level}</span>{item.prompt}</summary><p><b>✓ {typeof item.answer==="number"?item.options?.[item.answer]:item.answer}</b></p><p>{item.explanation}</p></details>)}</section>:null}
     </div>
-    <p className={`hsk-save-state ${saved}`}>{saved==="saved"?copy.saved:saved==="guest"?copy.guest:saved==="error"?copy.saveError:""}</p>{pdfState==="error"?<p className="hsk-hint hsk-pdf-error">{copy.pdfError}</p>:null}<div className="hsk-result-actions"><button className="hsk-secondary" onClick={start}><RotateCcw size={18}/>{copy.restart}</button><button className="hsk-secondary" disabled={pdfState==="working"} onClick={()=>void downloadPdf()}><Download size={18}/>{pdfState==="working"?copy.downloading:copy.download}</button><Link className="hsk-primary" href={`/${locale}/videos`}>{copy.learn}<ArrowRight size={18}/></Link></div>
+    <p className={`hsk-save-state ${saved}`}>{saved==="saved"?copy.saved:saved==="guest"?copy.guest:saved==="error"?copy.saveError:""}</p>{pdfState==="error"?<p className="hsk-hint hsk-pdf-error">{copy.pdfError}</p>:null}<div className="hsk-result-actions"><button className="hsk-secondary" onClick={start}><RotateCcw size={18}/>{copy.restart}</button><button className="hsk-secondary" disabled={pdfState==="working"||saved!=="saved"||!qrCode} onClick={()=>void downloadPdf()}><Download size={18}/>{pdfState==="working"?copy.downloading:copy.download}</button><Link className="hsk-primary" href={`/${locale}/videos`}>{copy.learn}<ArrowRight size={18}/></Link></div>
   </main>;
 }
