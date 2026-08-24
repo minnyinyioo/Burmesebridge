@@ -177,7 +177,6 @@ export default async function HskVocabularyPage({
                       height={600}
                       sizes="(max-width: 600px) 100vw, 25vw"
                     />
-                    <figcaption>{copy.generated}</figcaption>
                   </figure>
                 ) : null}
                 <div>
