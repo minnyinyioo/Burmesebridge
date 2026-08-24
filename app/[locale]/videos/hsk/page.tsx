@@ -118,6 +118,9 @@ export default function HskCourseLibrary() {
             ? "လိုင်စင်ရှင်းလင်းပြီး ရင်းမြစ်စစ်ဆေးနိုင်သော Open Educational Resources များကိုသာ အသုံးပြုသည်။"
             : "Only traceable learning resources with clear reuse terms are used."}
       </aside>
+      <Link className="hsk-vocabulary-entry" href={`/${locale}/videos/hsk/vocabulary`}>
+        <div><BookOpenText size={22}/><span><b>{zh?"学习完整 HSK 词库":my?"HSK ဝေါဟာရအပြည့်အစုံ လေ့လာရန်":"Study the complete HSK vocabulary"}</b><small>{zh?"六级全量词条 · 搜索 · 拼音 · 发音":my?"အဆင့်ခြောက်ဆင့် · ရှာဖွေ · Pinyin · အသံထွက်":"All six levels · search · pinyin · pronunciation"}</small></span></div><ArrowRight size={19}/>
+      </Link>
       {[1, 2, 3, 4, 5, 6].map((level) => (
         <section key={level}>
           <div className="hsk-level-title">
