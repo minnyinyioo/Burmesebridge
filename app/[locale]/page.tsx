@@ -332,46 +332,6 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="home-hero-panel">
-          <header>
-            <span>{t.startHere}</span>
-            <div>
-              <i>မြန်မာ</i>
-              <i>中文</i>
-              <i>EN</i>
-            </div>
-          </header>
-          <Link href={`/${locale}/hsk-test`}>
-            <span>
-              <ClipboardCheck size={20} />
-            </span>
-            <div>
-              <b>{t.assessTitle}</b>
-              <small>{t.assessMeta}</small>
-            </div>
-            <ChevronRight size={18} />
-          </Link>
-          <Link href={`/${locale}/knowledge`}>
-            <span>
-              <GraduationCap size={20} />
-            </span>
-            <div>
-              <b>{t.courseTitle}</b>
-              <small>{t.courseMeta}</small>
-            </div>
-            <ChevronRight size={18} />
-          </Link>
-          <Link href={`/${locale}/jobs`}>
-            <span>
-              <BriefcaseBusiness size={20} />
-            </span>
-            <div>
-              <b>{t.jobTitle}</b>
-              <small>{t.jobMeta}</small>
-            </div>
-            <ChevronRight size={18} />
-          </Link>
-        </div>
       </section>
       <HomeAds />
 
@@ -430,28 +390,6 @@ export default function HomePage() {
             }
             href={`/${locale}/forum`}
           />
-        </div>
-      </section>
-
-      <section className="home-feature-band">
-        <div>
-          <span>
-            <Sparkles size={16} />
-            {t.hskTitle}
-          </span>
-          <h2>{t.hskTitle}</h2>
-          <p>{t.hskText}</p>
-          <Link href={`/${locale}/hsk-test`}>
-            {t.hskAction}
-            <ArrowRight size={17} />
-          </Link>
-        </div>
-        <div className="home-hsk-levels" aria-hidden="true">
-          {[1, 2, 3, 4, 5, 6].map((level) => (
-            <span key={level}>
-              HSK <b>{level}</b>
-            </span>
-          ))}
         </div>
       </section>
 

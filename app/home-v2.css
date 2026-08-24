@@ -1,4 +1,12 @@
 /* Separate asset: prevents stale immutable global CSS from breaking the homepage product panel. */
+.home-hero {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 310px;
+}
+.home-hero-content {
+  width: 100%;
+  max-width: 1040px;
+}
 .home-hero-panel {
   position: relative;
   z-index: 2;
@@ -103,6 +111,29 @@
   color: #aebeb8;
 }
 @media (max-width: 640px) {
+  .home-page {
+    gap: 38px;
+  }
+  .home-hero {
+    min-height: auto;
+    padding: 26px 20px;
+  }
+  .home-hero h1 {
+    font-size: clamp(31px, 10vw, 42px);
+  }
+  .site-shell[lang="my"] .home-hero h1 {
+    font-size: clamp(28px, 8.5vw, 38px);
+    line-height: 1.38;
+  }
+  .home-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .home-primary-button,
+  .home-secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
   .home-hero-panel {
     border-radius: 16px;
   }
