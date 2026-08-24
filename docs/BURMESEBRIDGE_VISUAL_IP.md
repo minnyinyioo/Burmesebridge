@@ -23,3 +23,12 @@ Do not change the character's face, hairstyle, clothing, bag, proportions or cor
 4. The source image remains in the repository so its file hash can be compared during a dispute.
 
 The screenshot watermark is intentionally subtle. It supplements provenance metadata; it is not presented as an unbreakable DRM mechanism.
+
+## Vocabulary image production specification
+
+- Canvas: exactly `1254 × 1254 px` (1:1 square).
+- Safe area: keep essential people, hands, objects and actions inside the central 84% of the canvas, leaving at least 8% clear space on every edge.
+- Do not place text, characters, logos, flags, brands or baked-in labels in the source image.
+- Use one vocabulary concept per image. The action or object must remain understandable at a 280 px display size.
+- Public rendering uses a 1:1 container with `object-fit: contain`; cropping with `cover` is prohibited.
+- Reject any output with cropped heads, hands, feet, learning props or primary objects before binding it to a vocabulary entry.

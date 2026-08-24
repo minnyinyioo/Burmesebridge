@@ -9289,3 +9289,4 @@ svg {
 @media(max-width:900px){.hsk-vocabulary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.hsk-vocabulary-page{width:min(100% - 22px,1180px);padding-top:24px}.hsk-vocabulary-toolbar{align-items:stretch;flex-direction:column}.hsk-vocabulary-toolbar form{min-width:0}.hsk-vocabulary-grid{grid-template-columns:1fr}.hsk-vocabulary-grid article{min-height:132px}}
 .hsk-vocabulary-grid article figure img{display:block;width:100%;height:190px;object-fit:cover}
 .hsk-vocabulary-grid article figure::after{content:attr(data-watermark);position:absolute;inset:auto 12px 11px auto;z-index:1;color:#062f27;font:800 10px/1.2 system-ui,sans-serif;letter-spacing:.08em;opacity:.14;pointer-events:none;mix-blend-mode:multiply;transform:rotate(-2deg)}
+.hsk-vocabulary-grid article figure{width:calc(100% + 34px);height:auto;aspect-ratio:1/1}.hsk-vocabulary-grid article figure img{display:block;width:100%;height:100%;object-fit:contain}
