@@ -15,6 +15,7 @@ import ResourceLicenseManager from "@/components/admin/ResourceLicenseManager";
 import CourseMetadataEditor from "@/components/admin/CourseMetadataEditor";
 import HskCatalogInitializer from "@/components/admin/HskCatalogInitializer";
 import HskReadinessPanel from "@/components/admin/HskReadinessPanel";
+import CertificateReviewManager from "@/components/admin/CertificateReviewManager";
 
 type RequestItem = {
   id: number;
@@ -377,6 +378,7 @@ function KnowledgeAdmin() {
         <ResourceLicenseManager locale={locale} products={products.map((product)=>({id:product.id,title:product.title_zh||product.title_my||product.title_en||`#${product.id}`}))}/>
         <PaymentMethodsManager locale={locale} />
         <MembershipManager locale={locale} />
+        <CertificateReviewManager locale={locale} />
         <h2 className="knowledge-request-title">{c.requests}</h2>
         {msg && <p className="verification-message">{msg}</p>}
         <div className="verification-list">

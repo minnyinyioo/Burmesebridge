@@ -3135,6 +3135,24 @@ svg {
 .certificate-actions > button { border-color: var(--brand); color: #fff; background: var(--brand); }
 .certificate-actions > button:disabled { opacity: 0.45; }
 .certificate-actions > a { color: var(--brand); background: var(--surface); }
+.certificate-request-status { display:flex;align-items:center;gap:10px;margin-top:12px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface-soft); }
+.certificate-request-status small { margin-left:auto;color:var(--muted); }
+.certificate-request-status.rejected { display:block;border-color:#e8b3b3;color:#9e2f2f;background:#fff7f7; }
+.certificate-review-admin { margin-top:24px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface); }
+.certificate-review-admin > header { display:flex;gap:10px;align-items:flex-start; }
+.certificate-review-admin h2,.certificate-review-admin header p { margin:0; }
+.certificate-review-admin > h3 { display:flex;gap:8px;align-items:center;margin:24px 0 12px; }
+.certificate-review-admin > h3 span { padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);font-size:12px; }
+.certificate-review-empty { padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--muted); }
+.certificate-review-list,.certificate-issued-list { display:grid;gap:10px; }
+.certificate-review-list article,.certificate-issued-list article { display:flex;justify-content:space-between;gap:18px;padding:16px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft); }
+.certificate-review-list article > div:last-child { width:min(100%,360px);display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+.certificate-review-list textarea { grid-column:1/-1;min-height:76px; }
+.certificate-review-list details pre { max-width:520px;white-space:pre-wrap;color:var(--muted);font-size:11px; }
+.certificate-review-list button,.certificate-issued-list button { display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 12px;border:0;border-radius:9px;color:#fff;background:var(--brand);font-weight:800; }
+.certificate-review-list button.reject,.certificate-issued-list button { background:#a93535; }
+.certificate-issued-list article { align-items:center; }
+@media(max-width:700px){.certificate-review-list article,.certificate-issued-list article{display:grid}.certificate-review-list article>div:last-child{width:100%}.certificate-request-status{align-items:flex-start;flex-wrap:wrap}.certificate-request-status small{width:100%;margin-left:29px}}
 @media (max-width: 600px) {
   .certificate-sheet {
     padding: 8px;
