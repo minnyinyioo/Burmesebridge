@@ -3010,6 +3010,11 @@ svg {
 .course-certificate > button:disabled {
   opacity: 0.45;
 }
+.certificate-eligibility{display:grid;gap:8px;margin:14px 0}
+.certificate-eligibility>div{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft)}
+.certificate-eligibility .complete{color:var(--brand)}
+.certificate-eligibility .incomplete{color:#a33b3f;background:color-mix(in srgb,#b83238 7%,var(--surface))}
+.certificate-waiting{margin:0 0 13px;color:var(--muted);font-size:.92rem}
 .certificate-sheet {
   aspect-ratio: 297/210;
   margin: 8px 0 14px;

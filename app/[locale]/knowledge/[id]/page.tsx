@@ -788,7 +788,6 @@ export default function CoursePage() {
         locale={locale}
         productId={product.id}
         userId={userId}
-        progress={progressValue}
       />
       <ContentInteractions
         type="knowledge"
