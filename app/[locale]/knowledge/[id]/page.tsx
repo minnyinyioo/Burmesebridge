@@ -358,6 +358,43 @@ export default function CoursePage() {
           )
           .filter(Boolean)
       : [];
+  const normalizeCaptions = (value: unknown): string[] => {
+    let parsed: unknown = value;
+    if (typeof value === "string") {
+      try {
+        parsed = JSON.parse(value);
+      } catch {
+        return value.trim() ? [value] : [];
+      }
+    }
+    if (!Array.isArray(parsed)) return [];
+    const languageOrder =
+      locale === "zh"
+        ? ["zh", "my", "en"]
+        : locale === "en"
+          ? ["en", "my", "zh"]
+          : ["my", "zh", "en"];
+    return parsed
+      .map((entry) => {
+        let item: unknown = entry;
+        if (typeof item === "string" && item.trim().startsWith("{")) {
+          try {
+            item = JSON.parse(item);
+          } catch {
+            return item;
+          }
+        }
+        if (typeof item === "string") return item;
+        if (!item || typeof item !== "object") return "";
+        const row = item as Record<string, unknown>;
+        const caption = languageOrder
+          .map((key) => row[key])
+          .find((text) => typeof text === "string" && text.trim());
+        const start = typeof row.start === "string" ? row.start.trim() : "";
+        return `${start ? `${start}  ` : ""}${typeof caption === "string" ? caption : ""}`.trim();
+      })
+      .filter((item): item is string => Boolean(item));
+  };
   const handout = selectedContent
     ? locale === "zh"
       ? selectedContent.handout_zh ||
@@ -556,15 +593,17 @@ export default function CoursePage() {
               <p>{localize(product, "description")}</p>
             )}
             {selectedContent &&
-            normalizeList(selectedContent.captions).length ? (
+            normalizeCaptions(selectedContent.captions).length ? (
               <section className="lesson-resource-block">
                 <h3>
                   <Languages size={17} />
                   {copy.captions}
                 </h3>
-                {normalizeList(selectedContent.captions).map((item, index) => (
-                  <p key={`${index}-${item}`}>{item}</p>
-                ))}
+                {normalizeCaptions(selectedContent.captions).map(
+                  (item, index) => (
+                    <p key={`${index}-${item}`}>{item}</p>
+                  ),
+                )}
               </section>
             ) : null}
             {selectedContent &&
