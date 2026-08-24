@@ -57,7 +57,7 @@ export default async function HskVocabularyPage({
         next: "下一页",
         speak: "播放发音",
         myMeaning: "缅甸语释义",
-        generated: "原创图解 · 审核中",
+        generated: "原创图解 · BurmeseBridge",
         translationProgress: "HSK 1：缅甸语释义 150/150 · 原创图解 11/150",
       }
     : my
@@ -76,7 +76,7 @@ export default async function HskVocabularyPage({
           next: "နောက်စာမျက်နှာ",
           speak: "အသံထွက်ဖွင့်ရန်",
           myMeaning: "မြန်မာအဓိပ္ပာယ်",
-          generated: "မူပိုင်ရုပ်ပုံ · စိစစ်ဆဲ",
+          generated: "မူပိုင်ရုပ်ပုံ · BurmeseBridge",
           translationProgress: "HSK 1 — မြန်မာအဓိပ္ပာယ် 150/150 · မူပိုင်ရုပ်ပုံ 11/150",
         }
       : {
@@ -94,7 +94,7 @@ export default async function HskVocabularyPage({
           next: "Next",
           speak: "Play pronunciation",
           myMeaning: "Burmese definition",
-          generated: "Original illustration · in review",
+          generated: "Original visual · BurmeseBridge",
           translationProgress: "HSK 1: Burmese definitions 150/150 · original visuals 11/150",
         };
   let words: Entry[] = [];
