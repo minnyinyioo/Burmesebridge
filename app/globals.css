@@ -3062,27 +3062,79 @@ svg {
   margin: 1% 0 3%;
   font-size: clamp(15px, 2.5vw, 34px);
 }
-.certificate-frame > div {
-  display: flex;
-  justify-content: center;
-  gap: clamp(20px, 8vw, 100px);
+.certificate-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
-.certificate-frame > div span {
+.certificate-brand img {
+  width: clamp(30px, 4vw, 48px);
+  height: clamp(30px, 4vw, 48px);
+  border-radius: 10px;
+  object-fit: contain;
+}
+.certificate-brand strong {
+  color: #102f29;
+  font-size: clamp(10px, 1.5vw, 19px);
+  letter-spacing: -0.04em;
+}
+.certificate-brand strong span { color: #08745f; }
+.certificate-authentication {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 6vw, 72px);
+}
+.certificate-metadata {
+  display: flex;
+  gap: clamp(20px, 5vw, 64px);
+}
+.certificate-metadata > span {
   display: flex;
   align-items: center;
   gap: 5px;
   color: #65756f;
   font-size: clamp(7px, 1vw, 13px);
 }
-.certificate-frame > div b {
+.certificate-metadata b {
   margin-left: 4px;
   color: #173d35;
+}
+.certificate-qr { display: flex; align-items: center; gap: 8px; }
+.certificate-qr img {
+  width: clamp(42px, 6vw, 76px);
+  height: clamp(42px, 6vw, 76px);
+  padding: 2px;
+  background: #fffdf8;
+}
+.certificate-qr span {
+  max-width: 80px;
+  color: #536a63;
+  font-size: clamp(6px, 0.8vw, 10px);
+  line-height: 1.35;
+  text-align: left;
 }
 .certificate-frame footer {
   margin-top: auto;
   color: #65756f;
   font-size: clamp(6px, 0.85vw, 11px);
 }
+.certificate-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.certificate-actions > button,
+.certificate-actions > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 43px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-weight: 850;
+}
+.certificate-actions > button { border-color: var(--brand); color: #fff; background: var(--brand); }
+.certificate-actions > button:disabled { opacity: 0.45; }
+.certificate-actions > a { color: var(--brand); background: var(--surface); }
 @media (max-width: 600px) {
   .certificate-sheet {
     padding: 8px;
@@ -3090,9 +3142,9 @@ svg {
   .certificate-frame {
     outline-offset: -5px;
   }
-  .certificate-frame .brand-lockup-name {
-    display: none;
-  }
+  .certificate-authentication,
+  .certificate-metadata { gap: 8px; }
+  .certificate-qr span { display: none; }
 }
 .profile-settings {
   width: min(100%, 1080px);
