@@ -8,11 +8,11 @@ export type VocabularyEnrichment = {
 // BurmeseBridge editorial layer. These meanings are intentionally stored separately
 // from the MIT vocabulary source so translations and original artwork can be reviewed.
 export const hsk1VocabularyMy: Record<string, VocabularyEnrichment> = {
-  "爱": { meaningMy: "ချစ်သည်၊ ချစ်ခင်သည်" }, "八": { meaningMy: "ရှစ်" }, "爸爸": { meaningMy: "အဖေ၊ ဖခင်" },
-  "杯子": { meaningMy: "ခွက်" }, "北京": { meaningMy: "ပေကျင်းမြို့" }, "本": { meaningMy: "စာအုပ်များအတွက် အသုံးပြုသော ရေတွက်ပုဒ်" },
-  "不客气": { meaningMy: "အားမနာပါနှင့်၊ ရပါတယ်" }, "不": { meaningMy: "မ…ဘူး (အငြင်းပုဒ်)" }, "菜": { meaningMy: "ဟင်း၊ ဟင်းလျာ" },
-  "茶": { meaningMy: "လက်ဖက်ရည်၊ လက်ဖက်ခြောက်" }, "吃": { meaningMy: "စားသည်", image: "/images/hsk/vocabulary/hsk1-chi-eat.png", imageAltMy: "ထမင်းနှင့် ဟင်းလျာများကို တူဖြင့် စားနေသူ", imageStatus: "generated" },
-  "出租车": { meaningMy: "အငှားယာဉ်၊ တက္ကစီ" }, "打电话": { meaningMy: "ဖုန်းဆက်သည်" }, "大": { meaningMy: "ကြီးသော" },
+  "爱": { meaningMy: "ချစ်သည်၊ ချစ်ခင်သည်", image: "/images/hsk/vocabulary/hsk1-ai-love.png", imageAltMy: "တစ်ဦးကိုတစ်ဦး ချစ်ခင်အားပေးနေသော မိတ်ဆွေနှစ်ဦး", imageStatus: "generated" }, "八": { meaningMy: "ရှစ်" }, "爸爸": { meaningMy: "အဖေ၊ ဖခင်", image: "/images/hsk/vocabulary/hsk1-baba-father.png", imageAltMy: "ကလေးနှင့်အတူ စာဖတ်နေသော ဖခင်", imageStatus: "generated" },
+  "杯子": { meaningMy: "ခွက်", image: "/images/hsk/vocabulary/hsk1-beizi-cup.png", imageAltMy: "စားပွဲပေါ်ရှိ သောက်ရေခွက်တစ်လုံး", imageStatus: "generated" }, "北京": { meaningMy: "ပေကျင်းမြို့" }, "本": { meaningMy: "စာအုပ်များအတွက် အသုံးပြုသော ရေတွက်ပုဒ်" },
+  "不客气": { meaningMy: "အားမနာပါနှင့်၊ ရပါတယ်" }, "不": { meaningMy: "မ…ဘူး (အငြင်းပုဒ်)" }, "菜": { meaningMy: "ဟင်း၊ ဟင်းလျာ", image: "/images/hsk/vocabulary/hsk1-cai-dish.png", imageAltMy: "ပန်းကန်ပေါ်တွင် ပြင်ဆင်ထားသော ဟင်းလျာ", imageStatus: "generated" },
+  "茶": { meaningMy: "လက်ဖက်ရည်၊ လက်ဖက်ခြောက်", image: "/images/hsk/vocabulary/hsk1-cha-tea.png", imageAltMy: "လက်ဖက်ရွက်များနှင့် လက်ဖက်ရည်ပူတစ်ခွက်", imageStatus: "generated" }, "吃": { meaningMy: "စားသည်", image: "/images/hsk/vocabulary/hsk1-chi-eat.png", imageAltMy: "ထမင်းနှင့် ဟင်းလျာများကို တူဖြင့် စားနေသူ", imageStatus: "generated" },
+  "出租车": { meaningMy: "အငှားယာဉ်၊ တက္ကစီ", image: "/images/hsk/vocabulary/hsk1-chuzuche-taxi.png", imageAltMy: "လမ်းဘေးတွင် ခရီးသည်တင်နေသော တက္ကစီကား", imageStatus: "generated" }, "打电话": { meaningMy: "ဖုန်းဆက်သည်" }, "大": { meaningMy: "ကြီးသော" },
   "的": { meaningMy: "ပိုင်ဆိုင်မှု သို့မဟုတ် အထူးပြုဆက်နွယ်မှုကို ပြသော ပုဒ်" }, "点": { meaningMy: "နာရီ (အချိန်ပြ)" }, "电脑": { meaningMy: "ကွန်ပျူတာ" },
   "电视": { meaningMy: "ရုပ်မြင်သံကြား" }, "电影": { meaningMy: "ရုပ်ရှင်" }, "东西": { meaningMy: "ပစ္စည်း၊ အရာဝတ္ထု" }, "都": { meaningMy: "အားလုံး၊ လုံးဝ" },
   "读": { meaningMy: "ဖတ်သည်" }, "对不起": { meaningMy: "တောင်းပန်ပါတယ်" }, "多": { meaningMy: "များသော" }, "多少": { meaningMy: "ဘယ်လောက်၊ မည်မျှ" },
