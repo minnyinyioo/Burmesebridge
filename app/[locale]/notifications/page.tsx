@@ -120,6 +120,11 @@ export default function NotificationsPage() {
     if (type === "job_returned") return copy.jobReturned;
     return copy.system;
   }
+  function localizedHref(href: string | null) {
+    if (!href) return `/${locale}/orders`;
+    const path = href.replace(/^\/(my|zh|en)(?=\/|$)/, "") || "/";
+    return `/${locale}${path.startsWith("/") ? path : `/${path}`}`;
+  }
   return (
     <main className="notifications-page">
       <header>
@@ -139,7 +144,7 @@ export default function NotificationsPage() {
         {items.map((item) => (
           <article key={item.id} className={item.read_at ? "" : "unread"}>
             <Link
-              href={item.href ? `/${locale}${item.href}` : `/${locale}/orders`}
+              href={localizedHref(item.href)}
               onClick={() => mark(item.id)}
             >
               <span>{typeLabel(item.type)}</span>

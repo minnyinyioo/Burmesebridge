@@ -12,6 +12,7 @@ export default function AuthMenu({
   locale: string;
 }) {
   const [email, setEmail] = useState<string | null>(null);
+  const [canTeach, setCanTeach] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -62,6 +63,12 @@ export default function AuthMenu({
         await supabase.auth.getUser();
 
       setEmail(data.user?.email ?? null);
+      if (data.user) {
+        const { data: allowed } = await supabase.rpc("has_knowledge_instructor_workspace");
+        setCanTeach(Boolean(allowed));
+      } else {
+        setCanTeach(false);
+      }
     }
 
     getUser();
@@ -134,11 +141,11 @@ export default function AuthMenu({
             icon={<CircleUserRound size={17} />}
           />
 
-          <MenuLink
-            href={`/${locale}/teacher`}
-            label={t.teacher}
-            icon={<GraduationCap size={17} />}
-          />
+          {canTeach && <MenuLink
+              href={`/${locale}/teacher`}
+              label={t.teacher}
+              icon={<GraduationCap size={17} />}
+            />}
 
           <MenuLink
             href={`/${locale}/checkin`}
