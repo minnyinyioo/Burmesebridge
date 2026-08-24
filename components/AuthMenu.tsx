@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { CalendarCheck, ChevronDown, CircleUserRound, LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { CalendarCheck, ChevronDown, CircleUserRound, GraduationCap, LayoutDashboard, LogIn, LogOut } from "lucide-react";
 
 export default function AuthMenu({
   locale,
@@ -22,6 +22,7 @@ export default function AuthMenu({
       login: "အကောင့်ဝင်ရန်",
       me: "ကျွန်ုပ်၏အကောင့်",
       dashboard: "ထိန်းချုပ်ခန်း",
+      teacher: "ဆရာ Workbench",
       profile: "ကိုယ်ရေးအချက်အလက်",
       account: "အကောင့်ဆက်တင်များ",
       checkin: "နေ့စဉ်မှတ်တမ်း",
@@ -32,6 +33,7 @@ export default function AuthMenu({
       login: "登录",
       me: "我的",
       dashboard: "控制台",
+      teacher: "教师工作台",
       profile: "个人资料",
       account: "我的账号",
       checkin: "签到",
@@ -42,6 +44,7 @@ export default function AuthMenu({
       login: "Login",
       me: "My",
       dashboard: "Dashboard",
+      teacher: "Instructor Workspace",
       profile: "Profile",
       account: "My Account",
       checkin: "Check In",
@@ -129,6 +132,12 @@ export default function AuthMenu({
             href={`/${locale}/me`}
             label={t.account}
             icon={<CircleUserRound size={17} />}
+          />
+
+          <MenuLink
+            href={`/${locale}/teacher`}
+            label={t.teacher}
+            icon={<GraduationCap size={17} />}
           />
 
           <MenuLink

@@ -3153,6 +3153,7 @@ svg {
 .certificate-review-list button.reject,.certificate-issued-list button { background:#a93535; }
 .certificate-issued-list article { align-items:center; }
 @media(max-width:700px){.certificate-review-list article,.certificate-issued-list article{display:grid}.certificate-review-list article>div:last-child{width:100%}.certificate-request-status{align-items:flex-start;flex-wrap:wrap}.certificate-request-status small{width:100%;margin-left:29px}}
+.teacher-workspace{width:min(1180px,calc(100% - 32px));margin:42px auto 80px}.teacher-workspace>header{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}.teacher-workspace>header h1,.teacher-workspace>header p{margin:0}.teacher-workspace>section{padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}.teacher-workspace>section>h2{display:flex;align-items:center;gap:8px}.teacher-workspace>section>h2 span{padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);font-size:12px}
 @media (max-width: 600px) {
   .certificate-sheet {
     padding: 8px;
@@ -9257,3 +9258,9 @@ svg {
     grid-template-columns: 1fr;
   }
 }
+.instructor-assignment{margin-top:24px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.instructor-assignment h2{display:flex;align-items:center;gap:8px}
+.instructor-assignment>div{display:grid;grid-template-columns:1fr 1fr auto;gap:9px}
+.instructor-assignment select,.instructor-assignment input{min-height:42px}
+.instructor-assignment button{padding:0 16px;border:0;border-radius:9px;color:#fff;background:var(--brand);font-weight:800}
+@media(max-width:700px){.instructor-assignment>div{grid-template-columns:1fr}}
