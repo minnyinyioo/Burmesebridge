@@ -7,6 +7,7 @@ import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
 import { hsk3VocabularyMy } from "@/lib/hskVocabularyMyHsk3";
 import { hsk4VocabularyMy } from "@/lib/hskVocabularyMyHsk4";
 import { hsk5VocabularyMy } from "@/lib/hskVocabularyMyHsk5";
+import { hsk6VocabularyMy } from "@/lib/hskVocabularyMyHsk6";
 
 type Entry = { hanzi: string; pinyin: string; meaning: string };
 const PAGE_SIZE = 50;
@@ -46,7 +47,7 @@ export default async function HskVocabularyPage({
   const zh = locale === "zh",
     my = locale === "my";
   const levelTotals: Record<number, number> = { 1: 150, 2: 150, 3: 299, 4: 598, 5: 1300, 6: 2500 };
-  const activeVocabulary = level === 1 ? hsk1VocabularyMy : level === 2 ? hsk2VocabularyMy : level === 3 ? hsk3VocabularyMy : level === 4 ? hsk4VocabularyMy : level === 5 ? hsk5VocabularyMy : {};
+  const activeVocabulary = level === 1 ? hsk1VocabularyMy : level === 2 ? hsk2VocabularyMy : level === 3 ? hsk3VocabularyMy : level === 4 ? hsk4VocabularyMy : level === 5 ? hsk5VocabularyMy : level === 6 ? hsk6VocabularyMy : {};
   const meaningCount = Object.values(activeVocabulary).filter(
     (item) => item.meaningMy.trim().length > 0,
   ).length;
