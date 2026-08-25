@@ -53,6 +53,20 @@ export const hsk1VocabularyMy: Record<string, VocabularyEnrichment> = {
   "字": { meaningMy: "စာလုံး၊ အက္ခရာ", image: "/images/hsk/vocabulary/hsk1-zi-character.png", imageAltMy: "စက္ကူပေါ်တွင် စာလုံးရေးသားလေ့ကျင့်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" }, "昨天": { meaningMy: "မနေ့က", image: "/images/hsk/vocabulary/hsk1-zuotian-yesterday.png", imageAltMy: "ပြက္ခဒိန်၏ ယခင်နေ့နှင့် မနေ့ကဓာတ်ပုံကို ကြည့်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" }, "坐": { meaningMy: "ထိုင်သည်၊ စီးသည်", image: "/images/hsk/vocabulary/hsk1-zuo-sit.png", imageAltMy: "သစ်သားကုလားထိုင်ပေါ်တွင် စနစ်တကျ ထိုင်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" }, "做": { meaningMy: "လုပ်သည်၊ ပြုလုပ်သည်", image: "/images/hsk/vocabulary/hsk1-zuo-do.png", imageAltMy: "ရွှံ့ဖြင့် ပန်းကန်တစ်လုံး ပြုလုပ်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" }
 };
 
+Object.assign(hsk1VocabularyMy, {
+  "没": { meaningMy: "မရှိ၊ မ…ခဲ့ဘူး", image: "/images/hsk/vocabulary/hsk1-mei-not-have.png", imageAltMy: "ရေခဲသေတ္တာအလွတ်ကို လက်ဗလာဖြင့် ပြသနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "哪": { meaningMy: "ဘယ်၊ မည်သည့်", image: "/images/hsk/vocabulary/hsk1-na-which.png", imageAltMy: "တံခါးသုံးချပ်အနက် မည်သည့်တံခါးကို ရွေးရမည်ကို မေးနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "那": { meaningMy: "အဲဒါ၊ ထို", image: "/images/hsk/vocabulary/hsk1-na-that.png", imageAltMy: "အဝေးရှိ အနီရောင်ထီးကို ညွှန်ပြနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "呢": { meaningMy: "ပြန်လည်မေးမြန်းခြင်း သို့မဟုတ် လုပ်ရပ်ဆက်လက်ဖြစ်နေခြင်းကို ပြသော ပုဒ်", image: "/images/hsk/vocabulary/hsk1-ne-followup.png", imageAltMy: "မိတ်ဆွေနှင့် စကားပြောရာတွင် ပြန်လည်မေးမြန်းနေသော မြင်ကွင်း", imageStatus: "generated" },
+  "能": { meaningMy: "နိုင်သည်၊ ဖြစ်နိုင်သည်", image: "/images/hsk/vocabulary/hsk1-neng-can.png", imageAltMy: "သေတ္တာကို စင်ပေါ်သို့ အောင်မြင်စွာ တင်နိုင်သော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "你": { meaningMy: "သင်၊ မင်း", image: "/images/hsk/vocabulary/hsk1-ni-you.png", imageAltMy: "မိတ်ဆွေတစ်ဦးကို သင်ဟု ညွှန်ပြနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "年": { meaningMy: "နှစ်", image: "/images/hsk/vocabulary/hsk1-nian-year.png", imageAltMy: "တစ်နှစ်တာ ပြက္ခဒိန်နှင့် ရာသီလေးမျိုးကို လေ့လာနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "七": { meaningMy: "ခုနစ်", image: "/images/hsk/vocabulary/hsk1-qi-seven.png", imageAltMy: "စတော်ဘယ်ရီသီး ခုနစ်လုံးကို ရေတွက်ပြနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "日": { meaningMy: "ရက်၊ နေ", image: "/images/hsk/vocabulary/hsk1-ri-day.png", imageAltMy: "နေနှင့် နေ့ရက်ပြက္ခဒိန်ကို ညွှန်ပြနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "三": { meaningMy: "သုံး", image: "/images/hsk/vocabulary/hsk1-san-three.png", imageAltMy: "ခွက်သုံးလုံးကို ရေတွက်ပြနေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+  "上": { meaningMy: "အပေါ်၊ တက်သည်", image: "/images/hsk/vocabulary/hsk1-shang-up.png", imageAltMy: "လှေကားအပေါ်သို့ တက်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
+} satisfies Record<string, VocabularyEnrichment>);
+
 export function getVocabularyEnrichment(level: number, hanzi: string) {
   return level === 1 ? hsk1VocabularyMy[hanzi] : undefined;
 }
