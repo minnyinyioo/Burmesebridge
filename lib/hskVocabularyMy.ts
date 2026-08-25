@@ -6,6 +6,7 @@ export type VocabularyEnrichment = {
 };
 
 import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
+import { hsk3VocabularyMy } from "@/lib/hskVocabularyMyHsk3";
 
 // BurmeseBridge editorial layer. These meanings are intentionally stored separately
 // from the MIT vocabulary source so translations and original artwork can be reviewed.
@@ -72,5 +73,6 @@ Object.assign(hsk1VocabularyMy, {
 export function getVocabularyEnrichment(level: number, hanzi: string, pinyin?: string) {
   if (level === 1) return hsk1VocabularyMy[hanzi];
   if (level === 2) return hsk2VocabularyMy[pinyin ? `${hanzi}|${pinyin}` : hanzi] || hsk2VocabularyMy[hanzi];
+  if (level === 3) return hsk3VocabularyMy[pinyin ? `${hanzi}|${pinyin}` : hanzi] || hsk3VocabularyMy[hanzi];
   return undefined;
 }
