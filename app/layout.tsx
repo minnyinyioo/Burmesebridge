@@ -35,6 +35,11 @@ export default function RootLayout({
           src="https://cdn-cookieyes.com/client_data/6c81de09c6e5a628e58a45a2e082c572/script.js"
           strategy="beforeInteractive"
         />
+        <Script
+          id="mywot-website-owner-badge"
+          src="https://static.mywot.com/website_owners_badges/websiteOwnersBadge.js"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={appFont.variable}>
         <ThemeProvider>{children}</ThemeProvider>

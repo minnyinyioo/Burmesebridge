@@ -317,6 +317,20 @@ export default async function LocaleLayout({
                 loading="lazy"
               />
             </a>
+            <a
+              id="wot-badge0"
+              className="wot-badge"
+              href="https://www.mywot.com/scorecard/burmesebridge.eu.cc?wot_badge=0_white"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View BurmeseBridge verification report on MyWOT"
+            >
+              <div className="wot-logo" />
+              <div className="wot-shield" />
+              <p className="wot-secured">Verified Website</p>
+              <div className="wot-vertical" />
+              <p className="wot-report">See Report</p>
+            </a>
             <nav className="footer-legal" aria-label="Legal">
               <Link href={`/${locale}/privacy`}>
                 {locale === "zh"
