@@ -21,17 +21,17 @@ const seo = {
   my: {
     title: "BurmeseBridge | မြန်မာများအတွက် သင်ယူရေးနှင့် အချက်အလက်ပလက်ဖောင်း",
     description:
-      "ထိုင်းနိုင်ငံရှိ မြန်မာများအတွက် တရုတ်ဘာသာသင်ယူရေး၊ HSK စစ်ဆေးမှု၊ အလုပ်အကိုင်၊ သတင်းနှင့် လူမှုအသိုင်းအဝိုင်း။",
+      "ထိုင်းနိုင်ငံရှိ မြန်မာများအတွက် တရုတ်ဘာသာသင်ယူရေး၊ HSK စစ်ဆေးမှု၊ သတင်းနှင့် လူမှုအသိုင်းအဝိုင်း။",
   },
   zh: {
-    title: "BurmeseBridge | 面向缅甸用户的学习、工作与资讯平台",
+    title: "BurmeseBridge | 面向缅甸用户的学习与资讯平台",
     description:
-      "为在泰缅甸用户提供中文学习、HSK 水平测试、工作信息、新闻资讯与社区交流。",
+      "为在泰缅甸用户提供中文学习、HSK 水平测试、新闻资讯与社区交流。",
   },
   en: {
-    title: "BurmeseBridge | Learning, Jobs and Community for Myanmar Users",
+    title: "BurmeseBridge | Learning, News and Community for Myanmar Users",
     description:
-      "Chinese learning, HSK assessment, jobs, news and community services for Myanmar users in Thailand.",
+      "Chinese learning, HSK assessment, news and community services for Myanmar users in Thailand.",
   },
 };
 
@@ -244,13 +244,6 @@ export default async function LocaleLayout({
                   : locale === "my"
                     ? "အကြံပြုချက်နှင့် ချို့ယွင်းချက်တိုင်ကြားရန်"
                     : "Feedback & bugs"}
-              </Link>
-              <Link href={`/${locale}/safety`}>
-                {locale === "zh"
-                  ? "求职安全中心"
-                  : locale === "my"
-                    ? "အလုပ်ရှာဖွေသူ လုံခြုံရေး"
-                    : "Jobseeker safety"}
               </Link>
               <Link href={`/${locale}/privacy`}>
                 {locale === "zh"

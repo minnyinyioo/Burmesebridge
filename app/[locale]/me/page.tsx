@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   BookOpen,
-  BriefcaseBusiness,
   CalendarCheck,
   ClipboardList,
   FileText,
@@ -173,7 +172,6 @@ export default function MePage() {
     { href: `/${locale}/learn`, label: copy.learn, icon: BookOpen },
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },
     { href: `/${locale}/forum`, label: copy.forum, icon: MessageSquareText },
-    { href: `/${locale}/jobs`, label: copy.jobs, icon: BriefcaseBusiness },
     { href: `/${locale}/appeals`, label: locale === "zh" ? "申诉中心" : locale === "my" ? "အယူခံတင်ရန်" : "Appeals", icon: Gavel },
   ];
 

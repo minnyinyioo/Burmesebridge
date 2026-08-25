@@ -212,6 +212,7 @@ export default function HomePage() {
         "id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, created_at",
       )
       .eq("status", "published")
+      .neq("category", "jobs")
       .order("pinned", { ascending: false })
       .order("hot", { ascending: false })
       .order("featured", { ascending: false })
@@ -293,7 +294,9 @@ export default function HomePage() {
     return order.map((s) => row[`${field}_${s}`]).find(Boolean) || "";
   }
 
-  const pinnedItems = items.filter((item) => item.pinned).slice(0, 3);
+  const pinnedItems = items
+    .filter((item) => item.category !== "jobs" && item.pinned)
+    .slice(0, 3);
   const featuredLearn = items
     .filter((item) => item.category === "learn" && item.featured)
     .slice(0, 3);
@@ -482,19 +485,6 @@ export default function HomePage() {
         </ContentSection>
       ) : null}
 
-      <section className="home-trust">
-        <div>
-          <ShieldCheck size={24} />
-          <span>
-            <b>{t.safe}</b>
-            <p>{t.safeText}</p>
-          </span>
-        </div>
-        <Link href={`/${locale}/safety`}>
-          {t.safety}
-          <ArrowRight size={16} />
-        </Link>
-      </section>
     </main>
   );
 }

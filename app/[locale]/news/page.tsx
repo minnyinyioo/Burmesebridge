@@ -15,9 +15,9 @@ type NewsItem = { id:number; category:Category|null; pinned:boolean|null; featur
 export default function NewsPage() {
   const locale = String(useParams().locale || "my");
   const copy = {
-    my:{ title:"သတင်းအချက်အလက်", subtitle:"သတင်း၊ အလုပ်အကိုင်နှင့် လေ့လာရေးဆိုင်ရာ နောက်ဆုံးအချက်အလက်များ", eyebrow:"နောက်ဆုံးရ အချက်အလက်", empty:"လက်ရှိ ထုတ်ပြန်ထားသော အချက်အလက် မရှိသေးပါ", loading:"အချက်အလက်များ ရယူနေသည်", error:"အချက်အလက်များကို ရယူ၍ မရပါ", news:"သတင်း", jobs:"အလုပ်အကိုင်", learn:"လေ့လာရန်", detail:"အသေးစိတ်ဖတ်ရန်" },
-    zh:{ title:"信息中心", subtitle:"集中查看新闻、工作信息和学习内容。", eyebrow:"最新资讯", empty:"暂无发布内容", loading:"正在加载内容", error:"内容加载失败，请稍后重试", news:"新闻", jobs:"工作信息", learn:"学习内容", detail:"查看详情" },
-    en:{ title:"Information center", subtitle:"News, job opportunities, and learning updates in one place.", eyebrow:"Latest updates", empty:"No published content yet", loading:"Loading content", error:"Content could not be loaded. Please try again.", news:"News", jobs:"Jobs", learn:"Learning", detail:"Read more" },
+    my:{ title:"သတင်းအချက်အလက်", subtitle:"သတင်းနှင့် လေ့လာရေးဆိုင်ရာ နောက်ဆုံးအချက်အလက်များ", eyebrow:"နောက်ဆုံးရ အချက်အလက်", empty:"လက်ရှိ ထုတ်ပြန်ထားသော အချက်အလက် မရှိသေးပါ", loading:"အချက်အလက်များ ရယူနေသည်", error:"အချက်အလက်များကို ရယူ၍ မရပါ", news:"သတင်း", jobs:"အလုပ်အကိုင်", learn:"လေ့လာရန်", detail:"အသေးစိတ်ဖတ်ရန်" },
+    zh:{ title:"信息中心", subtitle:"集中查看新闻和学习内容。", eyebrow:"最新资讯", empty:"暂无发布内容", loading:"正在加载内容", error:"内容加载失败，请稍后重试", news:"新闻", jobs:"工作信息", learn:"学习内容", detail:"查看详情" },
+    en:{ title:"Information center", subtitle:"News and learning updates in one place.", eyebrow:"Latest updates", empty:"No published content yet", loading:"Loading content", error:"Content could not be loaded. Please try again.", news:"News", jobs:"Jobs", learn:"Learning", detail:"Read more" },
   };
   const t = copy[locale as keyof typeof copy] || copy.en;
   const [items,setItems] = useState<NewsItem[]>([]);
@@ -25,7 +25,7 @@ export default function NewsPage() {
   const [error,setError] = useState("");
 
   const loadItems = useCallback(async () => {
-    const result = await supabase.from("news").select("id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, created_at").eq("status","published").order("pinned",{ascending:false}).order("hot",{ascending:false}).order("featured",{ascending:false}).order("created_at",{ascending:false});
+    const result = await supabase.from("news").select("id, category, pinned, featured, hot, title_my, title_zh, title_en, content_my, content_zh, content_en, media_blocks, created_at").eq("status","published").neq("category","jobs").order("pinned",{ascending:false}).order("hot",{ascending:false}).order("featured",{ascending:false}).order("created_at",{ascending:false});
     if (result.error) { setError(result.error.message); setLoading(false); return; }
     setItems((result.data || []) as NewsItem[]); setError(""); setLoading(false);
   },[]);

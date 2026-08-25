@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    return [
+      { source: "/:locale(my|zh|en)/jobs", destination: "/:locale", permanent: false },
+      { source: "/:locale(my|zh|en)/safety", destination: "/:locale", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

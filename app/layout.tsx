@@ -14,7 +14,7 @@ const appFont = Padauk({
 export const metadata: Metadata = {
   title: "BurmeseBridge | 缅甸人中文学习平台",
   description:
-    "BurmeseBridge 是面向缅甸人的中文学习、社区交流、工作信息和新闻资讯平台。",
+    "BurmeseBridge 是面向缅甸人的中文学习、社区交流和新闻资讯平台。",
   verification: {
     google: "-mmaMu3f1WZnYLGzEJEtP3MsSCeFFlzt24FHKDsP_iw",
   },

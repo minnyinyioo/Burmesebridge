@@ -9,8 +9,8 @@ export const appConfig = {
 
   description: {
     my: "မြန်မာလူမျိုးများအတွက် တရုတ်ဘာသာ သင်ယူရေးနှင့် အချက်အလက် ပလက်ဖောင်း",
-    zh: "面向缅甸用户的中文学习、求职、资讯与社区平台",
-    en: "Chinese learning, jobs, news and community platform for Myanmar users",
+    zh: "面向缅甸用户的中文学习、资讯与社区平台",
+    en: "Chinese learning, news and community platform for Myanmar users",
   },
 
   routes: {

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "BurmeseBridge",
     short_name: "BurmeseBridge",
-    description: "A learning, information, jobs and community platform connecting Myanmar with the wider world.",
+    description: "A learning, information and community platform connecting Myanmar with the wider world.",
     start_url: "/my",
     display: "standalone",
     background_color: "#F7F4EC",
