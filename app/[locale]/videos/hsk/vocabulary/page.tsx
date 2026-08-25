@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, BookOpenText, Search } from "lucide-react";
 import VocabularySpeakButton from "@/components/hsk/VocabularySpeakButton";
-import { getVocabularyEnrichment } from "@/lib/hskVocabularyMy";
+import { getVocabularyEnrichment, hsk1VocabularyMy } from "@/lib/hskVocabularyMy";
 
 type Entry = { hanzi: string; pinyin: string; meaning: string };
 const PAGE_SIZE = 50;
@@ -41,6 +41,14 @@ export default async function HskVocabularyPage({
   const page = Math.max(1, Number(query.page) || 1);
   const zh = locale === "zh",
     my = locale === "my";
+  const hsk1MeaningCount = Object.values(hsk1VocabularyMy).filter(
+    (item) => item.meaningMy.trim().length > 0,
+  ).length;
+  const hsk1VisualCount = Object.values(hsk1VocabularyMy).filter(
+    (item) => Boolean(item.image),
+  ).length;
+  const hsk1Progress = `${hsk1MeaningCount}/150`;
+  const hsk1VisualProgress = `${hsk1VisualCount}/150`;
   const copy = zh
     ? {
         eyebrow: "缅甸语图解词库",
@@ -58,7 +66,7 @@ export default async function HskVocabularyPage({
         speak: "播放发音",
         myMeaning: "缅甸语释义",
         generated: "原创图解 · BurmeseBridge",
-        translationProgress: "HSK 1：缅甸语释义 150/150 · 原创图解 59/150",
+        translationProgress: `HSK 1：缅甸语释义 ${hsk1Progress} · 原创图解 ${hsk1VisualProgress}`,
       }
     : my
       ? {
@@ -77,7 +85,7 @@ export default async function HskVocabularyPage({
           speak: "အသံထွက်ဖွင့်ရန်",
           myMeaning: "မြန်မာအဓိပ္ပာယ်",
           generated: "မူပိုင်ရုပ်ပုံ · BurmeseBridge",
-          translationProgress: "HSK 1 — မြန်မာအဓိပ္ပာယ် 150/150 · မူပိုင်ရုပ်ပုံ 59/150",
+          translationProgress: `HSK 1 — မြန်မာအဓိပ္ပာယ် ${hsk1Progress} · မူပိုင်ရုပ်ပုံ ${hsk1VisualProgress}`,
         }
       : {
           eyebrow: "Burmese-first visual vocabulary",
@@ -95,7 +103,7 @@ export default async function HskVocabularyPage({
           speak: "Play pronunciation",
           myMeaning: "Burmese definition",
           generated: "Original visual · BurmeseBridge",
-          translationProgress: "HSK 1: Burmese definitions 150/150 · original visuals 59/150",
+          translationProgress: `HSK 1: Burmese definitions ${hsk1Progress} · original visuals ${hsk1VisualProgress}`,
         };
   let words: Entry[] = [];
   try {
