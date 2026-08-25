@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Padauk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "./home-v2.css";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -26,6 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="my" suppressHydrationWarning>
+      <head>
+        {/* CookieYes consent banner must load before interactive page scripts. */}
+        <Script
+          id="cookieyes"
+          src="https://cdn-cookieyes.com/client_data/6c81de09c6e5a628e58a45a2e082c572/script.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className={appFont.variable}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
