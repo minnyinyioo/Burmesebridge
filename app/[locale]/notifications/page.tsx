@@ -27,9 +27,6 @@ export default function NotificationsPage() {
           rejected: "付款审核结果",
           report: "举报处理结果",
           appeal: "申诉处理结果",
-          jobReviewed: "招聘已审核",
-          jobVerified: "招聘已验证",
-          jobReturned: "招聘已退回",
           system: "系统通知",
         }
       : locale === "my"
@@ -42,9 +39,6 @@ export default function NotificationsPage() {
             rejected: "ငွေပေးချေမှုရလဒ်",
             report: "တိုင်ကြားမှုရလဒ်",
             appeal: "အယူခံရလဒ်",
-            jobReviewed: "အလုပ်ကြော်ငြာ စိစစ်ပြီး",
-            jobVerified: "အလုပ်ကြော်ငြာ အတည်ပြုပြီး",
-            jobReturned: "အလုပ်ကြော်ငြာ ပြန်ပို့ထားသည်",
             system: "စနစ်အသိပေးချက်",
           }
         : {
@@ -56,9 +50,6 @@ export default function NotificationsPage() {
             rejected: "Payment review result",
             report: "Report review result",
             appeal: "Appeal review result",
-            jobReviewed: "Job listing reviewed",
-            jobVerified: "Job listing verified",
-            jobReturned: "Job listing returned",
             system: "System notification",
           };
   const [items, setItems] = useState<Notice[]>([]);
@@ -76,6 +67,7 @@ export default function NotificationsPage() {
       .from("user_notifications")
       .select("id,type,title,body,href,read_at,created_at")
       .eq("user_id", user.id)
+      .not("type", "in", "(job_reviewed,job_verified,job_returned)")
       .order("created_at", { ascending: false });
     setItems((data || []) as Notice[]);
   }, [locale, router]);
@@ -98,6 +90,7 @@ export default function NotificationsPage() {
       .from("user_notifications")
       .update({ read_at: new Date().toISOString() })
       .eq("user_id", userId)
+      .not("type", "in", "(job_reviewed,job_verified,job_returned)")
       .is("read_at", null);
     await load();
   }
@@ -115,9 +108,6 @@ export default function NotificationsPage() {
     if (type === "purchase_rejected") return copy.rejected;
     if (type.startsWith("report_")) return copy.report;
     if (type.startsWith("appeal_")) return copy.appeal;
-    if (type === "job_reviewed") return copy.jobReviewed;
-    if (type === "job_verified") return copy.jobVerified;
-    if (type === "job_returned") return copy.jobReturned;
     return copy.system;
   }
   function localizedHref(href: string | null) {

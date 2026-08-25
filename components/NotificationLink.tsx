@@ -16,6 +16,7 @@ export default function NotificationLink({ locale }: { locale: string }) {
         .from("user_notifications")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id)
+        .not("type", "in", "(job_reviewed,job_verified,job_returned)")
         .is("read_at", null);
       if (active) setCount(value || 0);
     }
