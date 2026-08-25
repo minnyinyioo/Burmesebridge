@@ -239,9 +239,9 @@ svg {
 .site-menu {
   min-width: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 2px;
+  gap: 12px;
   overflow: visible;
 }
 .site-menu a {
@@ -251,7 +251,7 @@ svg {
   justify-content: center;
   gap: 5px;
   min-height: 40px;
-  padding: 0 7px;
+  padding: 0 11px;
   border-radius: 10px;
   color: #536560;
   font-size: 13px;
