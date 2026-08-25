@@ -896,6 +896,10 @@ svg {
   width: 94px;
   height: 25px;
 }
+.trust-logo-trustpilot {
+  width: 92px;
+  height: 23px;
+}
 .trust-icon-img {
   width: 22px;
   height: 22px;
@@ -925,6 +929,7 @@ svg {
 }
 .status-green { color: #15803d; }
 .status-orange { color: #d96808; }
+.status-trustpilot { color: #126849; }
 .legal-page {
   width: min(920px, 100%);
   margin: 0 auto;
@@ -6166,8 +6171,8 @@ svg {
   .trust-badges-wrapper {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
   }
   .trust-card {
     width: 100%;
@@ -6175,11 +6180,15 @@ svg {
     height: 34px;
     justify-content: center;
     overflow: hidden;
-    padding: 0 5px;
+    padding: 0 3px;
   }
   .trust-logo-qualys {
-    width: 43px;
+    width: 36px;
     height: 17px;
+  }
+  .trust-logo-trustpilot {
+    width: 38px;
+    height: 16px;
   }
   .trust-icon-img {
     width: 16px;
@@ -6187,14 +6196,14 @@ svg {
   }
   .trust-divider {
     height: 15px;
-    margin: 0 4px;
+    margin: 0 3px;
   }
   .trust-title {
     display: none;
   }
   .trust-status {
     overflow: hidden;
-    font-size: clamp(7px, 2.25vw, 9px);
+    font-size: clamp(6px, 1.9vw, 8px);
     line-height: 1;
     text-overflow: ellipsis;
     white-space: nowrap;

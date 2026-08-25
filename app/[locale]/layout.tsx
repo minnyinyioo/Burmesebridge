@@ -299,6 +299,11 @@ export default async function LocaleLayout({
                 <span className="trust-divider" />
                 <span className="trust-text"><span className="trust-title">SSL Security</span><span className="trust-status status-green">Grade A+</span></span>
               </a>
+              <a className="trust-card" href="https://www.trustpilot.com/review/burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View and submit BurmeseBridge reviews on Trustpilot">
+                <img className="trust-logo-img trust-logo-trustpilot" src="/images/trust/trustpilot.svg" alt="Trustpilot" width="140" height="34" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">Customer Reviews</span><span className="trust-status status-trustpilot">Trustpilot</span></span>
+              </a>
               <a className="trust-card" href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer" title="Cloudflare CDN and security">
                 <img className="trust-icon-img" src="/images/trust/cloudflare.svg" alt="Cloudflare" width="22" height="22" loading="lazy" />
                 <span className="trust-divider" />
