@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowLeft, BookOpenText, Search } from "lucide-react";
 import VocabularySpeakButton from "@/components/hsk/VocabularySpeakButton";
 import { getVocabularyEnrichment, hsk1VocabularyMy } from "@/lib/hskVocabularyMy";
+import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
 
 type Entry = { hanzi: string; pinyin: string; meaning: string };
 const PAGE_SIZE = 50;
@@ -41,20 +42,23 @@ export default async function HskVocabularyPage({
   const page = Math.max(1, Number(query.page) || 1);
   const zh = locale === "zh",
     my = locale === "my";
-  const hsk1MeaningCount = Object.values(hsk1VocabularyMy).filter(
+  const levelTotals: Record<number, number> = { 1: 150, 2: 150, 3: 299, 4: 601, 5: 1300, 6: 2500 };
+  const activeVocabulary = level === 1 ? hsk1VocabularyMy : level === 2 ? hsk2VocabularyMy : {};
+  const meaningCount = Object.values(activeVocabulary).filter(
     (item) => item.meaningMy.trim().length > 0,
   ).length;
-  const hsk1VisualCount = Object.values(hsk1VocabularyMy).filter(
+  const visualCount = Object.values(activeVocabulary).filter(
     (item) => Boolean(item.image),
   ).length;
-  const hsk1Progress = `${hsk1MeaningCount}/150`;
-  const hsk1VisualProgress = `${hsk1VisualCount}/150`;
+  const levelTotal = levelTotals[level];
+  const meaningProgress = `${meaningCount}/${levelTotal}`;
+  const visualProgress = `${visualCount}/${levelTotal}`;
   const copy = zh
     ? {
         eyebrow: "缅甸语图解词库",
         title: "HSK 1–6 词汇卡片",
         intro:
-          "面向缅甸学习者的词汇课程：中文、拼音、缅甸语释义、普通话发音与原创图解。HSK 1 缅甸语释义已完整上线，图解正在逐词审核。",
+          "面向缅甸学习者的词汇课程：中文、拼音、专业缅甸语释义、普通话发音与原创图解。各级内容按翻译与审核进度逐步上线。",
         search: "搜索汉字、拼音、缅甸语或英文",
         submit: "搜索",
         words: "个词条",
@@ -66,14 +70,14 @@ export default async function HskVocabularyPage({
         speak: "播放发音",
         myMeaning: "缅甸语释义",
         generated: "原创图解 · BurmeseBridge",
-        translationProgress: `HSK 1：缅甸语释义 ${hsk1Progress} · 原创图解 ${hsk1VisualProgress}`,
+        translationProgress: `HSK ${level}：缅甸语释义 ${meaningProgress} · 原创图解 ${visualProgress}`,
       }
     : my
       ? {
           eyebrow: "မြန်မာရှင်းလင်းချက်ပါ ရုပ်ပုံဝေါဟာရ",
           title: "HSK ၁–၆ ဝေါဟာရကတ်များ",
           intro:
-            "မြန်မာကျောင်းသားများအတွက် တရုတ်စာ၊ Pinyin၊ မြန်မာအဓိပ္ပာယ်၊ စံတရုတ်အသံထွက်နှင့် မူပိုင်ရုပ်ပုံများပါဝင်သော ဝေါဟာရသင်ခန်းစာဖြစ်သည်။ HSK 1 မြန်မာအဓိပ္ပာယ်များ အပြည့်အစုံရရှိပါပြီ။",
+            "မြန်မာကျောင်းသားများအတွက် တရုတ်စာ၊ Pinyin၊ စနစ်တကျပြုစုထားသော မြန်မာအဓိပ္ပာယ်၊ စံတရုတ်အသံထွက်နှင့် မူပိုင်ရုပ်ပုံများပါဝင်သည့် ဝေါဟာရသင်ခန်းစာဖြစ်သည်။",
           search: "တရုတ်စာလုံး၊ Pinyin၊ မြန်မာ သို့မဟုတ် English ရှာရန်",
           submit: "ရှာရန်",
           words: " ဝေါဟာရ",
@@ -85,13 +89,13 @@ export default async function HskVocabularyPage({
           speak: "အသံထွက်ဖွင့်ရန်",
           myMeaning: "မြန်မာအဓိပ္ပာယ်",
           generated: "မူပိုင်ရုပ်ပုံ · BurmeseBridge",
-          translationProgress: `HSK 1 — မြန်မာအဓိပ္ပာယ် ${hsk1Progress} · မူပိုင်ရုပ်ပုံ ${hsk1VisualProgress}`,
+          translationProgress: `HSK ${level} — မြန်မာအဓိပ္ပာယ် ${meaningProgress} · မူပိုင်ရုပ်ပုံ ${visualProgress}`,
         }
       : {
           eyebrow: "Burmese-first visual vocabulary",
           title: "HSK 1–6 vocabulary cards",
           intro:
-            "Vocabulary lessons for learners in Myanmar: characters, pinyin, Burmese definitions, Mandarin audio and original visual explanations. All HSK 1 Burmese definitions are live; illustrations are being reviewed word by word.",
+            "Vocabulary lessons for learners in Myanmar: characters, pinyin, professionally edited Burmese definitions, Mandarin audio and original visual explanations. Each level is released according to its translation and review progress.",
           search: "Search Chinese, pinyin, Burmese or English",
           submit: "Search",
           words: " entries",
@@ -103,7 +107,7 @@ export default async function HskVocabularyPage({
           speak: "Play pronunciation",
           myMeaning: "Burmese definition",
           generated: "Original visual · BurmeseBridge",
-          translationProgress: `HSK 1: Burmese definitions ${hsk1Progress} · original visuals ${hsk1VisualProgress}`,
+          translationProgress: `HSK ${level}: Burmese definitions ${meaningProgress} · original visuals ${visualProgress}`,
         };
   let words: Entry[] = [];
   try {
@@ -112,7 +116,7 @@ export default async function HskVocabularyPage({
   const needle = q.toLocaleLowerCase();
   const filtered = needle
     ? words.filter((item) => {
-        const enriched = getVocabularyEnrichment(level, item.hanzi);
+        const enriched = getVocabularyEnrichment(level, item.hanzi, item.pinyin);
         return `${item.hanzi} ${item.pinyin} ${item.meaning} ${enriched?.meaningMy || ""}`
           .toLocaleLowerCase()
           .includes(needle);
@@ -170,7 +174,7 @@ export default async function HskVocabularyPage({
       {visible.length ? (
         <section className="hsk-vocabulary-grid">
           {visible.map((item, index) => {
-            const enriched = getVocabularyEnrichment(level, item.hanzi);
+            const enriched = getVocabularyEnrichment(level, item.hanzi, item.pinyin);
             return (
               <article
                 className={enriched?.image ? "has-visual" : ""}

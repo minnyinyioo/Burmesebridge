@@ -5,6 +5,8 @@ export type VocabularyEnrichment = {
   imageStatus?: "generated" | "reviewed";
 };
 
+import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
+
 // BurmeseBridge editorial layer. These meanings are intentionally stored separately
 // from the MIT vocabulary source so translations and original artwork can be reviewed.
 export const hsk1VocabularyMy: Record<string, VocabularyEnrichment> = {
@@ -67,6 +69,8 @@ Object.assign(hsk1VocabularyMy, {
   "上": { meaningMy: "အပေါ်၊ တက်သည်", image: "/images/hsk/vocabulary/hsk1-shang-up.png", imageAltMy: "လှေကားအပေါ်သို့ တက်နေသော BurmeseBridge လေ့လာရေးလမ်းညွှန်", imageStatus: "generated" },
 } satisfies Record<string, VocabularyEnrichment>);
 
-export function getVocabularyEnrichment(level: number, hanzi: string) {
-  return level === 1 ? hsk1VocabularyMy[hanzi] : undefined;
+export function getVocabularyEnrichment(level: number, hanzi: string, pinyin?: string) {
+  if (level === 1) return hsk1VocabularyMy[hanzi];
+  if (level === 2) return hsk2VocabularyMy[pinyin ? `${hanzi}|${pinyin}` : hanzi] || hsk2VocabularyMy[hanzi];
+  return undefined;
 }
