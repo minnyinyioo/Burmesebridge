@@ -316,6 +316,13 @@ export default async function LocaleLayout({
                     ? "ကိုယ်ရေးမူဝါဒ"
                     : "Privacy"}
               </Link>
+              <Link href="/privacy-policy">
+                {locale === "zh"
+                  ? "英文隐私政策完整版"
+                  : locale === "my"
+                    ? "အင်္ဂလိပ် ကိုယ်ရေးမူဝါဒ အပြည့်အစုံ"
+                    : "Full privacy policy"}
+              </Link>
               <Link href={`/${locale}/terms`}>
                 {locale === "zh"
                   ? "服务条款"

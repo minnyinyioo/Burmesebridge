@@ -1,5 +1,4 @@
 import LegalPage, { LegalSection } from "@/components/LegalPage";
-import Script from "next/script";
 
 const content: Record<string, { title: string; summary: string; updated: string; sections: LegalSection[] }> = {
   zh: { title: "隐私政策", summary: "本政策说明 BurmeseBridge 如何收集、使用、保存和保护你的个人信息。", updated: "2026年8月15日", sections: [
@@ -33,15 +32,5 @@ const content: Record<string, { title: string; summary: string; updated: string;
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-
-  return (
-    <>
-      <LegalPage locale={locale} {...(content[locale] || content.en)} />
-      <Script
-        id="cky-privacy-policy"
-        src="https://cdn-cookieyes.com/client_data/6c81de09c6e5a628e58a45a2e082c572/privacy-policy/script.js"
-        strategy="afterInteractive"
-      />
-    </>
-  );
+  return <LegalPage locale={locale} {...(content[locale] || content.en)} />;
 }
