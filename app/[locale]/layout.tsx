@@ -10,9 +10,7 @@ import Link from "next/link";
 import PasswordChangeGuard from "@/components/PasswordChangeGuard";
 import MfaGuard from "@/components/MfaGuard";
 import {
-  BriefcaseBusiness,
   Home,
-  LibraryBig,
   MessageCircle,
   Newspaper,
   PlaySquare,
@@ -135,10 +133,6 @@ export default async function LocaleLayout({
             <Home size={16} />
             {t.home}
           </Link>
-          <Link href={`/${locale}/jobs`}>
-            <BriefcaseBusiness size={16} />
-            {t.jobs}
-          </Link>
           <Link href={`/${locale}/news`}>
             <Newspaper size={16} />
             {t.news}
@@ -150,14 +144,10 @@ export default async function LocaleLayout({
           <Link href={`/${locale}/videos`}>
             <PlaySquare size={16} />
             {locale === "zh"
-              ? "学习视频"
+              ? "学习"
               : locale === "my"
-                ? "လေ့လာရေးဗီဒီယို"
-                : "Learn & videos"}
-          </Link>
-          <Link href={`/${locale}/knowledge`}>
-            <LibraryBig size={16} />
-            {t.knowledge}
+                ? "လေ့လာရန်"
+                : "Learn"}
           </Link>
         </div>
 
@@ -203,10 +193,17 @@ export default async function LocaleLayout({
               </strong>
               <Link href={`/${locale}/videos`}>
                 {locale === "zh"
-                  ? "学习视频"
+                  ? "学习中心"
                   : locale === "my"
-                    ? "လေ့လာရေးဗီဒီယို"
-                    : "Learn & videos"}
+                    ? "လေ့လာရေးစင်တာ"
+                    : "Learning center"}
+              </Link>
+              <Link href={`/${locale}/videos/hsk/vocabulary?level=1`}>
+                {locale === "zh"
+                  ? "HSK 1–6 词汇卡片"
+                  : locale === "my"
+                    ? "HSK ၁–၆ ဝေါဟာရကတ်များ"
+                    : "HSK 1–6 vocabulary cards"}
               </Link>
               <Link href={`/${locale}/hsk-test`}>
                 {locale === "zh"

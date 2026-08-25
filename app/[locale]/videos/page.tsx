@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ClipboardCheck, PlayCircle, Video } from "lucide-react";
+import { ArrowRight, BookOpen, ClipboardCheck, LibraryBig, PlayCircle, Video } from "lucide-react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import ContentInteractions from "@/components/ContentInteractions";
@@ -97,6 +97,14 @@ export default function VideosPage() {
         description={copy.intro}
       />
       <div className="video-feature-links">
+        <Link className="hsk-video-banner" href={`/${locale}/videos/hsk/vocabulary?level=1`}>
+          <span><BookOpen size={24} /></span>
+          <div>
+            <strong>{locale === "zh" ? "HSK 1–6 词汇卡片" : locale === "my" ? "HSK ၁–၆ ဝေါဟာရကတ်များ" : "HSK 1–6 vocabulary cards"}</strong>
+            <p>{locale === "zh" ? "汉字、拼音、专业缅甸语解释与发音" : locale === "my" ? "တရုတ်စာလုံး၊ Pinyin၊ မြန်မာအဓိပ္ပာယ်နှင့် အသံထွက်" : "Characters, Pinyin, professional Burmese meanings and audio"}</p>
+          </div>
+          <b>{copy.beginCourse}<ArrowRight size={17} /></b>
+        </Link>
         <Link className="hsk-video-banner" href={`/${locale}/videos/hsk`}>
           <span>
             <PlayCircle size={24} />
@@ -134,6 +142,14 @@ export default function VideosPage() {
             {copy.beginTest}
             <ArrowRight size={17} />
           </b>
+        </Link>
+        <Link className="hsk-video-banner" href={`/${locale}/knowledge`}>
+          <span><LibraryBig size={24} /></span>
+          <div>
+            <strong>{locale === "zh" ? "课程中心" : locale === "my" ? "သင်တန်းစင်တာ" : "Course center"}</strong>
+            <p>{locale === "zh" ? "免费与付费课程、作业、测验和学习进度" : locale === "my" ? "အခမဲ့နှင့် အခပေးသင်တန်း၊ အိမ်စာ၊ စစ်ဆေးမှုနှင့် တိုးတက်မှု" : "Free and paid courses, assignments, assessments and progress"}</p>
+          </div>
+          <b>{copy.beginCourse}<ArrowRight size={17} /></b>
         </Link>
       </div>
       <ContentDirectory>

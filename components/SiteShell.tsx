@@ -61,16 +61,12 @@ export default function SiteShell({
             {t.home}
           </Link>
 
-          <Link href={`/${locale}/learn`} style={navItem}>
+          <Link href={`/${locale}/videos`} style={navItem}>
             {t.learn}
           </Link>
 
           <Link href={`/${locale}/forum`} style={navItem}>
             {t.forum}
-          </Link>
-
-          <Link href={`/${locale}/jobs`} style={navItem}>
-            {t.jobs}
           </Link>
 
           <Link href={`/${locale}/me`} style={profileButton}>

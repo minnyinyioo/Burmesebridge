@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
-  BriefcaseBusiness,
   ChevronRight,
   ClipboardCheck,
   Globe,
@@ -16,7 +15,6 @@ import {
   PlayCircle,
   ShieldCheck,
   Sparkles,
-  TrendingUp,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Badge from "@/components/Badges";
@@ -60,9 +58,9 @@ export default function HomePage() {
   const text = {
     my: {
       heroBadge: "ထိုင်းနိုင်ငံရှိ မြန်မာများအတွက်",
-      heroTitle: "အလုပ်၊ သတင်း၊ တရုတ်စာ နှင့် လူမှုအသိုင်းအဝိုင်း",
+      heroTitle: "တရုတ်စာ၊ သတင်း နှင့် လူမှုအသိုင်းအဝိုင်း",
       heroSub:
-        "BurmeseBridge သည် မြန်မာများအတွက် သင်ယူရေး၊ အလုပ်အကိုင်နှင့် သတင်းအချက်အလက် ပလက်ဖောင်းဖြစ်သည်။",
+        "BurmeseBridge သည် မြန်မာများအတွက် သင်ယူရေး၊ သတင်းအချက်အလက်နှင့် လူမှုအသိုင်းအဝိုင်း ပလက်ဖောင်းဖြစ်သည်။",
       explore: "သင်တန်းများ ကြည့်ရန်",
       test: "HSK အဆင့် စစ်ဆေးရန်",
       news: "သတင်း",
@@ -108,8 +106,8 @@ export default function HomePage() {
     },
     zh: {
       heroBadge: "泰国 · 缅甸同胞专属平台",
-      heroTitle: "劳务、新闻、汉语学习与社区",
-      heroSub: "BurmeseBridge 是面向缅甸用户的学习、求职、资讯与社区平台。",
+      heroTitle: "汉语学习、新闻与社区",
+      heroSub: "BurmeseBridge 是面向缅甸用户的中文学习、资讯与社区平台。",
       explore: "浏览课程",
       test: "测试 HSK 水平",
       news: "新闻",
@@ -131,7 +129,7 @@ export default function HomePage() {
       empty: "暂无发布内容",
       services: "一个平台，连接学习与生活",
       servicesSub:
-        "围绕缅甸用户在泰国的真实需求，提供学习、求职、资讯与社区服务。",
+        "围绕缅甸用户的真实需求，提供系统学习、资讯与社区服务。",
       courses: "精选课程",
       allCourses: "查看全部课程",
       courseOpen: "查看课程",
@@ -154,9 +152,9 @@ export default function HomePage() {
     },
     en: {
       heroBadge: "For Myanmar nationals in Thailand",
-      heroTitle: "Jobs, News, Chinese Learning and Community",
+      heroTitle: "Chinese Learning, News and Community",
       heroSub:
-        "BurmeseBridge is a learning, job, news and community platform for Myanmar users.",
+        "BurmeseBridge is a Chinese learning, news and community platform for Myanmar users.",
       explore: "Explore courses",
       test: "Check HSK level",
       news: "News",
@@ -179,7 +177,7 @@ export default function HomePage() {
       empty: "No published content yet",
       services: "Learning and daily life, connected",
       servicesSub:
-        "Practical learning, jobs, information and community services built around Myanmar users in Thailand.",
+        "Practical learning, information and community services built around Myanmar users.",
       courses: "Featured courses",
       allCourses: "View all courses",
       courseOpen: "View course",
@@ -296,9 +294,6 @@ export default function HomePage() {
   }
 
   const pinnedItems = items.filter((item) => item.pinned).slice(0, 3);
-  const hotJobs = items
-    .filter((item) => item.category === "jobs" && item.hot)
-    .slice(0, 3);
   const featuredLearn = items
     .filter((item) => item.category === "learn" && item.featured)
     .slice(0, 3);
@@ -319,7 +314,7 @@ export default function HomePage() {
           <p>{t.heroSub}</p>
 
           <div className="home-hero-actions">
-            <Link href={`/${locale}/knowledge`} className="home-primary-button">
+            <Link href={`/${locale}/videos`} className="home-primary-button">
               <BookOpen size={17} />
               {t.explore}
             </Link>
@@ -352,19 +347,7 @@ export default function HomePage() {
                   ? "HSK သင်တန်း၊ ကျွမ်းကျင်မှု ၄ မျိုး၊ အိမ်စာနှင့် တိုးတက်မှု"
                   : "HSK courses, four-skill practice, assignments and progress"
             }
-            href={`/${locale}/knowledge`}
-          />
-          <ServiceCard
-            icon={<BriefcaseBusiness />}
-            title={t.jobs}
-            text={
-              locale === "zh"
-                ? "工作信息、求职安全提醒与举报入口"
-                : locale === "my"
-                  ? "အလုပ်အကိုင်၊ လုံခြုံရေးသတိပေးချက်နှင့် report"
-                  : "Job listings, safety guidance and reporting"
-            }
-            href={`/${locale}/jobs`}
+            href={`/${locale}/videos`}
           />
           <ServiceCard
             icon={<Newspaper />}
@@ -464,21 +447,6 @@ export default function HomePage() {
               content={getContent(item)}
               href={`/${locale}/content/${item.id}`}
               action={t.readMore}
-            />
-          ))}
-        </ContentSection>
-      ) : null}
-
-      {hotJobs.length ? (
-        <ContentSection title={t.hotJobs} icon={<TrendingUp size={20} />}>
-          {hotJobs.map((item) => (
-            <ContentCard
-              key={item.id}
-              item={item}
-              title={getTitle(item)}
-              content={getContent(item)}
-              href={`/${locale}/content/${item.id}`}
-              action={t.go}
             />
           ))}
         </ContentSection>

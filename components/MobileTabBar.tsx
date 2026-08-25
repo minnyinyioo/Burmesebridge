@@ -7,10 +7,10 @@ import { usePathname } from "next/navigation";
 export default function MobileTabBar({ locale }: { locale: string }) {
   const pathname = usePathname();
   const labels = locale === "zh"
-    ? { home: "首页", learn: "学习视频", forum: "社区", search: "搜索", me: "我的" }
+    ? { home: "首页", learn: "学习", forum: "社区", search: "搜索", me: "我的" }
     : locale === "my"
-      ? { home: "ပင်မစာမျက်နှာ", learn: "လေ့လာရေးဗီဒီယို", forum: "ဆွေးနွေးခန်း", search: "ရှာဖွေရန်", me: "ကျွန်ုပ်၏အကောင့်" }
-      : { home: "Home", learn: "Learn video", forum: "Community", search: "Search", me: "Me" };
+      ? { home: "ပင်မစာမျက်နှာ", learn: "လေ့လာရန်", forum: "ဆွေးနွေးခန်း", search: "ရှာဖွေရန်", me: "ကျွန်ုပ်၏အကောင့်" }
+      : { home: "Home", learn: "Learn", forum: "Community", search: "Search", me: "Me" };
   const tabs = [
     { key: "home", href: `/${locale}`, icon: Home, exact: true },
     { key: "learn", href: `/${locale}/videos`, icon: PlaySquare, exact: false },
