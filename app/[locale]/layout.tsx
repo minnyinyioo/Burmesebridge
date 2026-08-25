@@ -301,6 +301,22 @@ export default async function LocaleLayout({
                   ? "မူပိုင်ခွင့်အားလုံး ရယူထားသည်"
                   : "All rights reserved"}
             </div>
+            <a
+              className="footer-ssl-badge"
+              href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View BurmeseBridge SSL Labs security report"
+            >
+              {/* External verification badge supplied by SSL Labs/Shields.io. */}
+              <img
+                src="https://img.shields.io/badge/SSL%20Rating-A%2B-brightgreen?style=flat-square&logo=letsencrypt"
+                alt="SSL Labs Grade A+"
+                width="154"
+                height="20"
+                loading="lazy"
+              />
+            </a>
             <nav className="footer-legal" aria-label="Legal">
               <Link href={`/${locale}/privacy`}>
                 {locale === "zh"

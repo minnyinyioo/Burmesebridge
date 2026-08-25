@@ -850,6 +850,22 @@ svg {
   color: var(--brand);
   text-decoration: underline;
 }
+.footer-ssl-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  line-height: 0;
+}
+.footer-ssl-badge img {
+  display: block;
+  width: 154px;
+  height: 20px;
+}
+.footer-ssl-badge:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
 .legal-page {
   width: min(920px, 100%);
   margin: 0 auto;
