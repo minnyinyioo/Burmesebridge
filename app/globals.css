@@ -6160,6 +6160,45 @@ svg {
   .footer-legal {
     justify-content: flex-start;
   }
+  .trust-footer-container {
+    padding: 14px 0;
+  }
+  .trust-badges-wrapper {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .trust-card {
+    width: 100%;
+    min-width: 0;
+    height: 34px;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 5px;
+  }
+  .trust-logo-qualys {
+    width: 43px;
+    height: 17px;
+  }
+  .trust-icon-img {
+    width: 16px;
+    height: 16px;
+  }
+  .trust-divider {
+    height: 15px;
+    margin: 0 4px;
+  }
+  .trust-title {
+    display: none;
+  }
+  .trust-status {
+    overflow: hidden;
+    font-size: clamp(7px, 2.25vw, 9px);
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .site-footer-connect .footer-socials a {
     width: auto;
     height: 32px;
