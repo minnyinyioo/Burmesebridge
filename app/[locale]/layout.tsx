@@ -292,6 +292,30 @@ export default async function LocaleLayout({
               <SocialFooter />
             </div>
           </div>
+          <div className="trust-footer-container" aria-label="Security and hosting verification">
+            <div className="trust-badges-wrapper">
+              <a className="trust-card" href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the live Qualys SSL Labs report">
+                <img className="trust-logo-img trust-logo-qualys" src="/images/trust/qualys-ssl-labs.png" alt="Qualys SSL Labs" width="112" height="36" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">SSL Security</span><span className="trust-status status-green">Grade A+</span></span>
+              </a>
+              <a className="trust-card" href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer" title="Cloudflare CDN and security">
+                <img className="trust-icon-img" src="/images/trust/cloudflare.svg" alt="Cloudflare" width="22" height="22" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">Protected by</span><span className="trust-status status-orange">Cloudflare</span></span>
+              </a>
+              <a className="trust-card" href="https://www.mywot.com/scorecard/burmesebridge.eu.cc?wot_badge=0_white" target="_blank" rel="noopener noreferrer" title="View the BurmeseBridge MyWOT report">
+                <img className="trust-icon-img" src="/images/trust/mywot.png" alt="Web of Trust" width="22" height="22" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">Verified Website</span><span className="trust-status status-green">See Report</span></span>
+              </a>
+              <a className="trust-card" href="https://transparencyreport.google.com/safe-browsing/search?url=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the Google Safe Browsing transparency report">
+                <img className="trust-icon-img" src="/images/trust/google.png" alt="Google" width="22" height="22" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">Google Safe Browsing</span><span className="trust-status status-green">Verified Clean</span></span>
+              </a>
+            </div>
+          </div>
           <div className="site-footer-bottom">
             <div>
               © 2026 BurmeseBridge ·{" "}
@@ -301,36 +325,6 @@ export default async function LocaleLayout({
                   ? "မူပိုင်ခွင့်အားလုံး ရယူထားသည်"
                   : "All rights reserved"}
             </div>
-            <a
-              className="footer-ssl-badge"
-              href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View BurmeseBridge SSL Labs security report"
-            >
-              {/* External verification badge supplied by SSL Labs/Shields.io. */}
-              <img
-                src="https://img.shields.io/badge/SSL%20Rating-A%2B-brightgreen?style=flat-square&logo=letsencrypt"
-                alt="SSL Labs Grade A+"
-                width="154"
-                height="20"
-                loading="lazy"
-              />
-            </a>
-            <a
-              id="wot-badge0"
-              className="wot-badge"
-              href="https://www.mywot.com/scorecard/burmesebridge.eu.cc?wot_badge=0_white"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View BurmeseBridge verification report on MyWOT"
-            >
-              <div className="wot-logo" />
-              <div className="wot-shield" />
-              <p className="wot-secured">Verified Website</p>
-              <div className="wot-vertical" />
-              <p className="wot-report">See Report</p>
-            </a>
             <nav className="footer-legal" aria-label="Legal">
               <Link href={`/${locale}/privacy`}>
                 {locale === "zh"

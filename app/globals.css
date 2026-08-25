@@ -850,22 +850,81 @@ svg {
   color: var(--brand);
   text-decoration: underline;
 }
-.footer-ssl-badge {
-  display: inline-flex;
-  flex: 0 0 auto;
+.trust-footer-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+.trust-badges-wrapper {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  line-height: 0;
+  justify-content: center;
+  gap: 10px;
 }
-.footer-ssl-badge img {
-  display: block;
-  width: 154px;
-  height: 20px;
+.trust-card {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid #dbe2e8;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 5%);
+  color: #0f172a;
+  text-decoration: none;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
-.footer-ssl-badge:focus-visible {
-  border-radius: 3px;
+.trust-card:hover {
+  border-color: #b8c4ce;
+  box-shadow: 0 3px 8px rgb(15 23 42 / 9%);
+  transform: translateY(-1px);
+}
+.trust-card:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 3px;
 }
+.trust-logo-img,
+.trust-icon-img {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+.trust-logo-qualys {
+  width: 94px;
+  height: 25px;
+}
+.trust-icon-img {
+  width: 22px;
+  height: 22px;
+}
+.trust-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 10px;
+  background: #dbe2e8;
+}
+.trust-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.15;
+}
+.trust-title {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+.trust-status {
+  font-size: 11px;
+  font-weight: 800;
+}
+.status-green { color: #15803d; }
+.status-orange { color: #d96808; }
 .legal-page {
   width: min(920px, 100%);
   margin: 0 auto;
