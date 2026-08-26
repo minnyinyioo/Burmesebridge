@@ -906,10 +906,6 @@ svg {
   width: 94px;
   height: 25px;
 }
-.trust-logo-trustpilot {
-  width: 92px;
-  height: 23px;
-}
 .trust-icon-img {
   width: 22px;
   height: 22px;
@@ -939,7 +935,6 @@ svg {
 }
 .status-green { color: #15803d; }
 .status-orange { color: #d96808; }
-.status-trustpilot { color: #126849; }
 .legal-page {
   width: min(920px, 100%);
   margin: 0 auto;
@@ -6181,7 +6176,7 @@ svg {
   .trust-badges-wrapper {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 3px;
   }
   .trust-card {
@@ -6195,10 +6190,6 @@ svg {
   .trust-logo-qualys {
     width: 36px;
     height: 17px;
-  }
-  .trust-logo-trustpilot {
-    width: 38px;
-    height: 16px;
   }
   .trust-producthunt-badge {
     width: 45px;

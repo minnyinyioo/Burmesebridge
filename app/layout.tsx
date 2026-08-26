@@ -28,7 +28,6 @@ export default function RootLayout({
   return (
     <html lang="my" suppressHydrationWarning>
       <head>
-        <meta name="wot-verification" content="abb7f58035c8270c79ed" />
         {/* CookieYes consent banner must load before interactive page scripts. */}
         <Script
           id="cookieyes"
