@@ -81,7 +81,7 @@ function loginRedirect(request: NextRequest, locale: string, nextPath: string): 
   return NextResponse.redirect(login);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!isAdminPath(pathname)) return NextResponse.next();
 
