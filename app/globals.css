@@ -886,6 +886,16 @@ svg {
   outline: 2px solid var(--brand);
   outline-offset: 3px;
 }
+.trust-card-producthunt {
+  padding: 0;
+  overflow: hidden;
+}
+.trust-producthunt-badge {
+  display: block;
+  width: 185px;
+  height: 40px;
+  object-fit: contain;
+}
 .trust-logo-img,
 .trust-icon-img {
   display: block;
@@ -6171,8 +6181,8 @@ svg {
   .trust-badges-wrapper {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
   }
   .trust-card {
     width: 100%;
@@ -6189,6 +6199,10 @@ svg {
   .trust-logo-trustpilot {
     width: 38px;
     height: 16px;
+  }
+  .trust-producthunt-badge {
+    width: 45px;
+    height: 32px;
   }
   .trust-icon-img {
     width: 16px;

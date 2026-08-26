@@ -294,15 +294,18 @@ export default async function LocaleLayout({
           </div>
           <div className="trust-footer-container" aria-label="Security and hosting verification">
             <div className="trust-badges-wrapper">
-              <a className="trust-card" href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the live Qualys SSL Labs report">
-                <img className="trust-logo-img trust-logo-qualys" src="/images/trust/qualys-ssl-labs.png" alt="Qualys SSL Labs" width="112" height="36" loading="lazy" />
-                <span className="trust-divider" />
-                <span className="trust-text"><span className="trust-title">SSL Security</span><span className="trust-status status-green">Grade A+</span></span>
+              <a className="trust-card trust-card-producthunt" href="https://www.producthunt.com/products/burmesebridge?utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-burmesebridge" target="_blank" rel="noopener noreferrer" title="View BurmeseBridge on Product Hunt">
+                <img className="trust-producthunt-badge" src="/images/trust/product-hunt-featured.svg" alt="BurmeseBridge on Product Hunt" width="250" height="54" loading="lazy" />
               </a>
               <a className="trust-card" href="https://www.trustpilot.com/review/burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View and submit BurmeseBridge reviews on Trustpilot">
                 <img className="trust-logo-img trust-logo-trustpilot" src="/images/trust/trustpilot.svg" alt="Trustpilot" width="140" height="34" loading="lazy" />
                 <span className="trust-divider" />
                 <span className="trust-text"><span className="trust-title">Customer Reviews</span><span className="trust-status status-trustpilot">Trustpilot</span></span>
+              </a>
+              <a className="trust-card" href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the live Qualys SSL Labs report">
+                <img className="trust-logo-img trust-logo-qualys" src="/images/trust/qualys-ssl-labs.png" alt="Qualys SSL Labs" width="112" height="36" loading="lazy" />
+                <span className="trust-divider" />
+                <span className="trust-text"><span className="trust-title">SSL Security</span><span className="trust-status status-green">Grade A+</span></span>
               </a>
               <a className="trust-card" href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer" title="Cloudflare CDN and security">
                 <img className="trust-icon-img" src="/images/trust/cloudflare.svg" alt="Cloudflare" width="22" height="22" loading="lazy" />
