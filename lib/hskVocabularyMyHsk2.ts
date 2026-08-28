@@ -150,6 +150,6 @@ export const hsk2VocabularyMy: Record<string, VocabularyEnrichment> = {
   "准备": { meaningMy: "ပြင်ဆင်သည်၊ အဆင်သင့်ပြုလုပ်သည်", image: "/images/hsk/vocabulary/hsk2-zhunbei-prepare.png", imageAltMy: "နေ့ချင်းခရီးမထွက်မီ ရေဘူး၊ မိုးကာ၊ အစားအစာနှင့် အရေးပေါ်ပစ္စည်းများကို ကျောပိုးအိတ်ထဲ စနစ်တကျ ပြင်ဆင်နေသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
   "自行车": { meaningMy: "စက်ဘီး", image: "/images/hsk/vocabulary/hsk2-zixingche-bicycle.png", imageAltMy: "မြန်မာရပ်ကွက်လမ်းပေါ်တွင် ဘီးနှစ်ဘီးနှင့် ဖရိမ်အပြည့်အစုံပါသော အစိမ်းရောင်စက်ဘီးကို ကိုင်ထားသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
   "走": { meaningMy: "လမ်းလျှောက်သည်၊ ထွက်ခွာသည်", image: "/images/hsk/vocabulary/hsk2-zou-walk.png", imageAltMy: "အိမ်တံခါးဝရှိ မိသားစုဝင်ကို လက်ပြနှုတ်ဆက်ကာ ဥယျာဉ်လမ်းအတိုင်း လမ်းလျှောက်ထွက်ခွာနေသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
-  "最": { meaningMy: "အများဆုံး၊ အ…ဆုံး" },
-  "左边": { meaningMy: "ဘယ်ဘက်" },
+  "最": { meaningMy: "အများဆုံး၊ အ…ဆုံး", image: "/images/hsk/vocabulary/hsk2-zui-most.png", imageAltMy: "အမြင့်မတူသော အပင်သုံးပင်အနက် အမြင့်ဆုံးအပင်ကို လက်ဟန်ဖြင့် ပြသနေသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
+  "左边": { meaningMy: "ဘယ်ဘက်", image: "/images/hsk/vocabulary/hsk2-zuobian-left-side.png", imageAltMy: "အလယ်ရှိ ထိုင်ခုံ၏ ဘယ်ဘက်တွင် ရပ်နေပြီး ညာဘက်ရှိ အပင်နှင့် နေရာကွာခြားမှုကို ပြသနေသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
 };
