@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, BookOpenText, Search } from "lucide-react";
 import VocabularySpeakButton from "@/components/hsk/VocabularySpeakButton";
+import SitePagination from "@/components/SitePagination";
 import { getVocabularyEnrichment, hsk1VocabularyMy } from "@/lib/hskVocabularyMy";
 import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
 import { hsk3VocabularyMy } from "@/lib/hskVocabularyMyHsk3";
@@ -69,8 +70,6 @@ export default async function HskVocabularyPage({
         source: "数据来源与许可证",
         back: "返回四技能课程",
         empty: "没有匹配的词条",
-        previous: "上一页",
-        next: "下一页",
         speak: "播放发音",
         myMeaning: "缅甸语释义",
         generated: "原创图解 · BurmeseBridge",
@@ -88,8 +87,6 @@ export default async function HskVocabularyPage({
           source: "ဒေတာရင်းမြစ်နှင့် လိုင်စင်",
           back: "ဘာသာစွမ်းရည်လေးမျိုးသို့",
           empty: "ကိုက်ညီသော ဝေါဟာရမရှိပါ",
-          previous: "ရှေ့စာမျက်နှာ",
-          next: "နောက်စာမျက်နှာ",
           speak: "အသံထွက်ဖွင့်ရန်",
           myMeaning: "မြန်မာအဓိပ္ပာယ်",
           generated: "မူပိုင်ရုပ်ပုံ · BurmeseBridge",
@@ -106,8 +103,6 @@ export default async function HskVocabularyPage({
           source: "Data source and license",
           back: "Back to four-skill courses",
           empty: "No matching entries",
-          previous: "Previous",
-          next: "Next",
           speak: "Play pronunciation",
           myMeaning: "Burmese definition",
           generated: "Original visual · BurmeseBridge",
@@ -132,8 +127,6 @@ export default async function HskVocabularyPage({
     (current - 1) * PAGE_SIZE,
     current * PAGE_SIZE,
   );
-  const href = (nextPage: number) =>
-    `/${locale}/videos/hsk/vocabulary?level=${level}&q=${encodeURIComponent(q)}&page=${nextPage}`;
   return (
     <main className="hsk-vocabulary-page">
       <Link className="hsk-vocabulary-back" href={`/${locale}/videos/hsk`}>
@@ -214,23 +207,13 @@ export default async function HskVocabularyPage({
       ) : (
         <p className="hsk-vocabulary-empty">{copy.empty}</p>
       )}
-      <footer className="hsk-vocabulary-pagination">
-        <Link
-          aria-disabled={current <= 1}
-          href={current <= 1 ? "#" : href(current - 1)}
-        >
-          {copy.previous}
-        </Link>
-        <span>
-          {current} / {pages}
-        </span>
-        <Link
-          aria-disabled={current >= pages}
-          href={current >= pages ? "#" : href(current + 1)}
-        >
-          {copy.next}
-        </Link>
-      </footer>
+      <SitePagination
+        currentPage={current}
+        totalPages={pages}
+        pathname={`/${locale}/videos/hsk/vocabulary`}
+        query={{ level, q }}
+        locale={locale}
+      />
       <aside>
         <a
           href={`https://github.com/tnm/hsk/blob/main/public/data/hsk${level}.csv`}
