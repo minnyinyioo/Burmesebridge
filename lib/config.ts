@@ -5,7 +5,7 @@ export const appConfig = {
 
   defaultLocale: "my",
 
-  domain: "https://burmesebridge.eu.cc",
+  domain: "https://burmesebridge.com",
 
   description: {
     my: "မြန်မာလူမျိုးများအတွက် တရုတ်ဘာသာ သင်ယူရေးနှင့် အချက်အလက် ပလက်ဖောင်း",

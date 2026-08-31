@@ -1,6 +1,6 @@
 # Burmesebridge notebook
 
-Scope: `minnyinyioo/Burmesebridge` only. Live branch: `codex/password-recovery`. Domain: `https://burmesebridge.eu.cc`.
+Scope: `minnyinyioo/Burmesebridge` only. Live branch: `codex/password-recovery`. Domain: `https://burmesebridge.com`.
 
 ## Production (2026-08-16 14:49 ICT)
 

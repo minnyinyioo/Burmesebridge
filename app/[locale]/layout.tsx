@@ -42,16 +42,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const current = seo[locale as keyof typeof seo] || seo.en;
-  const canonical = `https://burmesebridge.eu.cc/${locale}`;
+  const canonical = `https://burmesebridge.com/${locale}`;
   return {
     title: current.title,
     description: current.description,
     alternates: {
       canonical,
       languages: {
-        "my-MM": "https://burmesebridge.eu.cc/my",
-        "zh-CN": "https://burmesebridge.eu.cc/zh",
-        en: "https://burmesebridge.eu.cc/en",
+        "my-MM": "https://burmesebridge.com/my",
+        "zh-CN": "https://burmesebridge.com/zh",
+        en: "https://burmesebridge.com/en",
       },
     },
     openGraph: {
@@ -62,7 +62,7 @@ export async function generateMetadata({
       description: current.description,
       images: [
         {
-          url: "https://burmesebridge.eu.cc/brand-icon-1024.png",
+          url: "https://burmesebridge.com/brand-icon-1024.png",
           width: 1024,
           height: 1024,
           alt: "BurmeseBridge",
@@ -73,7 +73,7 @@ export async function generateMetadata({
       card: "summary",
       title: current.title,
       description: current.description,
-      images: ["https://burmesebridge.eu.cc/brand-icon-1024.png"],
+      images: ["https://burmesebridge.com/brand-icon-1024.png"],
     },
   };
 }
@@ -297,7 +297,7 @@ export default async function LocaleLayout({
               <a className="trust-card trust-card-producthunt" href="https://www.producthunt.com/products/burmesebridge?utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-burmesebridge" target="_blank" rel="noopener noreferrer" title="View BurmeseBridge on Product Hunt">
                 <img className="trust-producthunt-badge" src="/images/trust/product-hunt-featured.svg" alt="BurmeseBridge on Product Hunt" width="250" height="54" loading="lazy" />
               </a>
-              <a className="trust-card" href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the live Qualys SSL Labs report">
+              <a className="trust-card" href="https://www.ssllabs.com/ssltest/analyze.html?d=burmesebridge.com" target="_blank" rel="noopener noreferrer" title="View the live Qualys SSL Labs report">
                 <img className="trust-logo-img trust-logo-qualys" src="/images/trust/qualys-ssl-labs.png" alt="Qualys SSL Labs" width="112" height="36" loading="lazy" />
                 <span className="trust-divider" />
                 <span className="trust-text"><span className="trust-title">SSL Security</span><span className="trust-status status-green">Grade A+</span></span>
@@ -307,7 +307,7 @@ export default async function LocaleLayout({
                 <span className="trust-divider" />
                 <span className="trust-text"><span className="trust-title">Protected by</span><span className="trust-status status-orange">Cloudflare</span></span>
               </a>
-              <a className="trust-card" href="https://transparencyreport.google.com/safe-browsing/search?url=burmesebridge.eu.cc" target="_blank" rel="noopener noreferrer" title="View the Google Safe Browsing transparency report">
+              <a className="trust-card" href="https://transparencyreport.google.com/safe-browsing/search?url=burmesebridge.com" target="_blank" rel="noopener noreferrer" title="View the Google Safe Browsing transparency report">
                 <img className="trust-icon-img" src="/images/trust/google.png" alt="Google" width="22" height="22" loading="lazy" />
                 <span className="trust-divider" />
                 <span className="trust-text"><span className="trust-title">Google Safe Browsing</span><span className="trust-status status-green">Verified Clean</span></span>

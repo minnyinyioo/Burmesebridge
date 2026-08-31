@@ -4,7 +4,7 @@ import LegalPage, { LegalSection } from "@/components/LegalPage";
 export const metadata: Metadata = {
   title: "Privacy Policy | BurmeseBridge",
   description: "The complete English privacy policy for BurmeseBridge, effective August 25, 2026.",
-  alternates: { canonical: "https://burmesebridge.eu.cc/privacy-policy" },
+  alternates: { canonical: "https://burmesebridge.com/privacy-policy" },
 };
 
 const sections: LegalSection[] = [
@@ -12,8 +12,8 @@ const sections: LegalSection[] = [
     title: "Introduction",
     paragraphs: [
       "Effective Date: August 25, 2026",
-      'This privacy policy for Jonas Lee ("We", "Us" or "Our") tells you how we may collect, use and share your information when you visit our website www.burmesebridge.eu.cc.',
-      "We appreciate your decision to use our website www.burmesebridge.eu.cc and to trust us with your valuable personal information. In this document, we seek to explain in the clearest terms possible our privacy practices. We strongly encourage you to read this document (and any other related documents) carefully before using the website. If there are any terms or conditions in this document that you do not agree with, please do not use the website, or in case you are already using it, please discontinue the use immediately. By using the website, you are accepting and consenting to the practices described in this Privacy Policy.",
+      'This privacy policy for Jonas Lee ("We", "Us" or "Our") tells you how we may collect, use and share your information when you visit our website www.burmesebridge.com.',
+      "We appreciate your decision to use our website www.burmesebridge.com and to trust us with your valuable personal information. In this document, we seek to explain in the clearest terms possible our privacy practices. We strongly encourage you to read this document (and any other related documents) carefully before using the website. If there are any terms or conditions in this document that you do not agree with, please do not use the website, or in case you are already using it, please discontinue the use immediately. By using the website, you are accepting and consenting to the practices described in this Privacy Policy.",
     ],
   },
   {
@@ -79,7 +79,7 @@ const sections: LegalSection[] = [
     "For any questions or concerns regarding your privacy, or to exercise any of your rights, you may contact us using the following details:",
   ], items: [
     "Address: 12 Soi. 2 Sai Ma, Mueang Nonthaburi District, Nonthaburi 11000 dcon prime",
-    "Email address: admin@burmesebridge.eu.cc",
+    "Email address: admin@burmesebridge.com",
   ] },
 ];
 

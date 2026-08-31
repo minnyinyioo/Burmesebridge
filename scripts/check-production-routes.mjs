@@ -3,7 +3,7 @@ import { join, relative, sep } from "node:path";
 
 const root = process.cwd();
 const appDir = join(root, "app");
-const origin = (process.env.SITE_URL || "https://burmesebridge.eu.cc").replace(/\/$/, "");
+const origin = (process.env.SITE_URL || "https://burmesebridge.com").replace(/\/$/, "");
 const locales = ["zh", "my", "en"];
 
 async function findPages(dir) {

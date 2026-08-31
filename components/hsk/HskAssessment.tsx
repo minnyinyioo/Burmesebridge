@@ -73,7 +73,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
     const {data,error} = await supabase.from("hsk_assessment_attempts").insert({user_id:user.id,estimated_level:scored.estimatedLevel,cefr_level:scored.cefr,score:scored.score,correct_answers:scored.correct,total_questions:scored.total,answers,level_breakdown:scored.byLevel,skill_breakdown:scored.bySkill}).select("report_code,created_at").single();
     if(error||!data){setSaved("error");return;}
     const code=String(data.report_code),createdAt=new Date(String(data.created_at));
-    setReportMeta({id:code,date:formatReportDate(createdAt,locale),verificationUrl:`https://burmesebridge.eu.cc/${locale}/hsk-result/${encodeURIComponent(code)}`});
+    setReportMeta({id:code,date:formatReportDate(createdAt,locale),verificationUrl:`https://burmesebridge.com/${locale}/hsk-result/${encodeURIComponent(code)}`});
     setSaved("saved");
   }
   function advance(){if(answers[question.id] === undefined)return;if(index === hskQuestions.length-1){void finish();return;}setIndex(index+1);}
@@ -88,8 +88,8 @@ export default function HskAssessment({ locale }: { locale: string }) {
   const wrong = hskQuestions.filter((item)=>!isHskAnswerCorrect(item,answers[item.id])).map((item)=>localizeHskQuestion(item,locale));
   return <main className="hsk-page">
     <div className="hsk-report">
-      <header className="hsk-report-brand"><span className="hsk-report-lockup"><Image src="/brand-icon-1024.png" width={42} height={42} alt=""/><strong>Burmese<span>Bridge</span></strong></span><div><strong>{copy.result}</strong><span>burmesebridge.eu.cc</span></div></header>
-      <section className="hsk-report-meta"><span><b>{copy.reportNo}</b>{reportMeta.id||"—"}</span><span><b>{copy.generated}</b>{reportMeta.date}</span><span><b>{copy.contact}</b>admin@burmesebridge.eu.cc</span></section>
+      <header className="hsk-report-brand"><span className="hsk-report-lockup"><Image src="/brand-icon-1024.png" width={42} height={42} alt=""/><strong>Burmese<span>Bridge</span></strong></span><div><strong>{copy.result}</strong><span>burmesebridge.com</span></div></header>
+      <section className="hsk-report-meta"><span><b>{copy.reportNo}</b>{reportMeta.id||"—"}</span><span><b>{copy.generated}</b>{reportMeta.date}</span><span><b>{copy.contact}</b>admin@burmesebridge.com</span></section>
       <section className="hsk-result-head"><CheckCircle2 size={34}/><span>{copy.result}</span><h1>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : copy.pre}</h1><p>{result.estimatedLevel ? copy.levelAdvice.replace("{level}",String(result.estimatedLevel)) : copy.advice}</p><small>{copy.notice}</small></section>
       <div className="hsk-result-grid"><article><span>{copy.level}</span><strong>{result.estimatedLevel ? `HSK ${result.estimatedLevel}` : "Pre-HSK"}</strong><small>CEFR-style: {result.cefr}</small></article><article><span>{copy.score}</span><strong>{result.score}%</strong><small>{copy.correct}: {result.correct}/{result.total}</small></article></div>
       <section className="hsk-breakdown"><h2>{copy.analysis}</h2>{result.byLevel.map(item=><div key={item.level}><span>HSK {item.level}</span><div><i style={{width:`${item.rate*100}%`}}/></div><strong>{item.correct}/{item.total}</strong></div>)}</section>
@@ -105,7 +105,7 @@ export default function HskAssessment({ locale }: { locale: string }) {
       <div className="hsk-pdf-score"><strong>{result.score}%</strong><span>{copy.score}<b>{result.correct}/{result.total} {copy.correct}</b></span></div>
       <div className="hsk-pdf-breakdowns"><section><h2>{copy.analysis}</h2>{result.byLevel.map(item=><div key={item.level}><span>HSK {item.level}</span><i><b style={{width:`${item.rate*100}%`}}/></i><strong>{item.correct}/{item.total}</strong></div>)}</section><section><h2>{copy.skillAnalysis}</h2>{result.bySkill.map(item=><div key={item.skill}><span>{item.skill}</span><i><b style={{width:`${item.rate*100}%`}}/></i><strong>{item.correct}/{item.total}</strong></div>)}</section></div>
       <div className="hsk-pdf-auth"><div><span>{copy.generated}<b>{reportMeta.date}</b></span><span><ShieldCheck size={18}/>{copy.reportNo}<b>{reportMeta.id}</b></span></div><div className="certificate-qr">{qrCode?<img src={qrCode} alt={copy.verify}/>:null}<span>{copy.verify}</span></div></div>
-      <footer>burmesebridge.eu.cc · admin@burmesebridge.eu.cc · {copy.notice}</footer>
+      <footer>burmesebridge.com · admin@burmesebridge.com · {copy.notice}</footer>
     </div></div></div>
     <p className={`hsk-save-state ${saved}`}>{saved==="saved"?copy.saved:saved==="guest"?copy.guest:saved==="error"?copy.saveError:""}</p>{pdfState==="error"?<p className="hsk-hint hsk-pdf-error">{copy.pdfError}</p>:null}<div className="hsk-result-actions"><button className="hsk-secondary" onClick={start}><RotateCcw size={18}/>{copy.restart}</button><button className="hsk-secondary" disabled={pdfState==="working"||saved!=="saved"||!qrCode} onClick={()=>void downloadPdf()}><Download size={18}/>{pdfState==="working"?copy.downloading:copy.download}</button><Link className="hsk-primary" href={`/${locale}/videos`}>{copy.learn}<ArrowRight size={18}/></Link></div>
   </main>;

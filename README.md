@@ -1,6 +1,6 @@
 # BurmeseBridge
 
-BurmeseBridge 是面向缅甸语、中文及英文用户的学习、资讯、招聘与社区平台。项目使用 Next.js App Router、Supabase 和 Vercel 构建，生产站点为 [burmesebridge.eu.cc](https://burmesebridge.eu.cc)。
+BurmeseBridge 是面向缅甸语、中文及英文用户的学习、资讯、招聘与社区平台。项目使用 Next.js App Router、Supabase 和 Vercel 构建，生产站点为 [burmesebridge.com](https://burmesebridge.com)。
 
 > 当前状态：持续开发中。核心认证、内容、审核、知识付费和安全功能已经上线；全站专业缅甸语文案仍在逐页审校。
 
@@ -122,8 +122,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\repair-supabase-history.ps1
 Supabase Dashboard → Authentication → URL Configuration：
 
 ```text
-Site URL: https://burmesebridge.eu.cc
-Redirect URL: https://burmesebridge.eu.cc/auth/callback
+Site URL: https://burmesebridge.com
+Redirect URL: https://burmesebridge.com/auth/callback
 ```
 
 本地调试可加入：
@@ -214,8 +214,8 @@ middleware.ts              管理员路由和认证访问保护
 
 ## 联系方式
 
-- 网站：[https://burmesebridge.eu.cc](https://burmesebridge.eu.cc)
-- 邮箱：[admin@burmesebridge.eu.cc](mailto:admin@burmesebridge.eu.cc)
+- 网站：[https://burmesebridge.com](https://burmesebridge.com)
+- 邮箱：[admin@burmesebridge.com](mailto:admin@burmesebridge.com)
 - GitHub：[minnyinyioo/Burmesebridge](https://github.com/minnyinyioo/Burmesebridge)
 
 ## 许可证

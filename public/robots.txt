@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://burmesebridge.eu.cc
+Host: https://burmesebridge.com
 
 # Sitemaps
-Sitemap: https://burmesebridge.eu.cc/sitemap.xml
+Sitemap: https://burmesebridge.com/sitemap.xml

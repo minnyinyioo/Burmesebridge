@@ -5,12 +5,12 @@ Updated: 2026-08-15
 ## App details
 
 - App name: `BurmeseBridge`
-- Website: `https://burmesebridge.eu.cc`
-- App domain: `burmesebridge.eu.cc`
-- Privacy policy: `https://burmesebridge.eu.cc/en/privacy`
-- Terms of service: `https://burmesebridge.eu.cc/en/terms`
-- User data deletion: `https://burmesebridge.eu.cc/en/data-deletion`
-- App icon: `https://burmesebridge.eu.cc/brand-icon-1024.png`
+- Website: `https://burmesebridge.com`
+- App domain: `burmesebridge.com`
+- Privacy policy: `https://burmesebridge.com/en/privacy`
+- Terms of service: `https://burmesebridge.com/en/terms`
+- User data deletion: `https://burmesebridge.com/en/data-deletion`
+- App icon: `https://burmesebridge.com/brand-icon-1024.png`
 - Supabase OAuth callback for Meta: `https://zoxixufbhagfhltfmeef.supabase.co/auth/v1/callback`
 - Requested permissions: `public_profile`, `email`
 
@@ -20,10 +20,10 @@ Updated: 2026-08-15
 
 ## Reviewer instructions
 
-1. Visit `https://burmesebridge.eu.cc/en/login`.
+1. Visit `https://burmesebridge.com/en/login`.
 2. Select **Facebook** under “or continue with”.
 3. Complete the Facebook consent screen using a reviewer account.
-4. After authorization, the app exchanges the OAuth code through `/auth/callback` and redirects to `https://burmesebridge.eu.cc/en/me`.
+4. After authorization, the app exchanges the OAuth code through `/auth/callback` and redirects to `https://burmesebridge.com/en/me`.
 5. Confirm that the user is signed in and the account profile is available.
 6. The user can review the privacy policy and request deletion through the footer links.
 

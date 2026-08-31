@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: "https://burmesebridge.eu.cc",
+  siteUrl: "https://burmesebridge.com",
   generateRobotsTxt: true,
   exclude: [
     "/my/jobs",
