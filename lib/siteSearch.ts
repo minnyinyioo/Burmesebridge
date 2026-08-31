@@ -1,6 +1,8 @@
 import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { hskCourses } from "@/lib/hskCourses";
 import { hsk1VocabularyMy } from "@/lib/hskVocabularyMy";
 import { hsk2VocabularyMy } from "@/lib/hskVocabularyMyHsk2";
@@ -53,9 +55,8 @@ async function loadHskWords() {
   const levels = await Promise.all(Array.from({ length: 6 }, async (_, index) => {
     const level = index + 1;
     try {
-      const response = await fetch(`https://raw.githubusercontent.com/tnm/hsk/main/public/data/hsk${level}.csv`, { next: { revalidate: 86400 } });
-      if (!response.ok) return [];
-      return (await response.text()).split(/\r?\n/).map((line) => {
+      const csv = await readFile(path.join(process.cwd(), "public", "data", "hsk", `hsk${level}.csv`), "utf8");
+      return csv.split(/\r?\n/).map((line) => {
         const first = line.indexOf(",");
         const second = line.indexOf(",", first + 1);
         return first > 0 && second > first ? { level, hanzi: line.slice(0, first).trim(), pinyin: line.slice(first + 1, second).trim(), meaning: line.slice(second + 1).trim() } : null;

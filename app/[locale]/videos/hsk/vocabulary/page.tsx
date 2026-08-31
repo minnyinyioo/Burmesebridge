@@ -9,16 +9,17 @@ import { hsk3VocabularyMy } from "@/lib/hskVocabularyMyHsk3";
 import { hsk4VocabularyMy } from "@/lib/hskVocabularyMyHsk4";
 import { hsk5VocabularyMy } from "@/lib/hskVocabularyMyHsk5";
 import { hsk6VocabularyMy } from "@/lib/hskVocabularyMyHsk6";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 type Entry = { hanzi: string; pinyin: string; meaning: string };
 const PAGE_SIZE = 50;
 async function loadWords(level: number): Promise<Entry[]> {
-  const response = await fetch(
-    `https://raw.githubusercontent.com/tnm/hsk/main/public/data/hsk${level}.csv`,
-    { next: { revalidate: 86400 } },
+  const csv = await readFile(
+    path.join(process.cwd(), "public", "data", "hsk", `hsk${level}.csv`),
+    "utf8",
   );
-  if (!response.ok) throw new Error("Vocabulary source unavailable");
-  return (await response.text())
+  return csv
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
