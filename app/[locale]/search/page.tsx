@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { BookOpen, Clock3, GraduationCap, MessageCircle, Newspaper, PlaySquare, Search, Trash2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 
 type Result = { id: string; title: string; excerpt: string; type: "news" | "learn" | "forum" | "video" | "knowledge"; href: string };
 type ResultType = Result["type"];
@@ -31,31 +30,22 @@ export default function SearchPage() {
   useEffect(() => {
     setInput(query);
     if (query.length < 1) { setResults([]); setLoading(false); return; }
-    let active = true;
+    const controller = new AbortController();
     setLoading(true);
     setError("");
-    const safe = query.replace(/[%_,()]/g, " ").trim().slice(0, 80);
-    if (!safe) { setResults([]); setLoading(false); return; }
-    const pattern = `%${safe}%`;
-    Promise.all([
-      supabase.from("news").select("id,category,title_my,title_zh,title_en,content_my,content_zh,content_en").eq("status", "published").neq("category", "jobs").or(`title_my.ilike.${pattern},title_zh.ilike.${pattern},title_en.ilike.${pattern},content_my.ilike.${pattern},content_zh.ilike.${pattern},content_en.ilike.${pattern}`).limit(20),
-      supabase.from("posts").select("id,content").ilike("content", pattern).limit(12),
-      supabase.from("videos").select("id,title,description").eq("status", "published").or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(12),
-      supabase.from("knowledge_products").select("id,title_my,title_zh,title_en,description_my,description_zh,description_en").eq("status", "published").or(`title_my.ilike.${pattern},title_zh.ilike.${pattern},title_en.ilike.${pattern},description_my.ilike.${pattern},description_zh.ilike.${pattern},description_en.ilike.${pattern}`).limit(12),
-    ]).then(([news, posts, videos, products]) => {
-      if (!active) return;
-      if (news.error && posts.error && videos.error && products.error) {
-        setError(copy.failed); setResults([]); setLoading(false); return;
-      }
-      const localized = (row: Record<string, unknown>, field: string) => String((locale === "zh" ? row[`${field}_zh`] || row[`${field}_my`] || row[`${field}_en`] : locale === "en" ? row[`${field}_en`] || row[`${field}_my`] || row[`${field}_zh`] : row[`${field}_my`] || row[`${field}_zh`] || row[`${field}_en`]) || "");
-      const all: Result[] = [];
-      for (const row of news.data || []) { const category = row.category === "learn" ? "learn" : "news"; all.push({ id: `content-${row.id}`, title: localized(row, "title"), excerpt: localized(row, "content"), type: category, href: `/${locale}/content/${row.id}` }); }
-      for (const row of posts.data || []) all.push({ id: `post-${row.id}`, title: String(row.content).slice(0, 72), excerpt: String(row.content), type: "forum", href: `/${locale}/forum#post-${row.id}` });
-      for (const row of videos.data || []) all.push({ id: `video-${row.id}`, title: row.title, excerpt: row.description || "", type: "video", href: `/${locale}/videos#video-${row.id}` });
-      for (const row of products.data || []) all.push({ id: `course-${row.id}`, title: localized(row, "title"), excerpt: localized(row, "description"), type: "knowledge", href: `/${locale}/knowledge/${row.id}` });
-      setResults(all); setLoading(false);
-    }).catch(() => { if (active) { setError(copy.failed); setResults([]); setLoading(false); } });
-    return () => { active = false; };
+    fetch(`/api/search?q=${encodeURIComponent(query)}&locale=${encodeURIComponent(locale)}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("search failed");
+        const payload = await response.json() as { results?: Result[] };
+        setResults(payload.results || []);
+      })
+      .catch((requestError: unknown) => {
+        if (requestError instanceof DOMException && requestError.name === "AbortError") return;
+        setError(locale === "zh" ? "搜索暂时不可用，请稍后重试" : locale === "my" ? "ရှာဖွေ၍ မရသေးပါ။ နောက်မှ ထပ်စမ်းပါ" : "Search is temporarily unavailable. Please try again.");
+        setResults([]);
+      })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, [query, locale]);
 
   function remember(value: string) {

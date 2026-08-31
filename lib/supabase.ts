@@ -1,7 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const configuredAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+function validSupabaseUrl(value: string | undefined) {
+  if (!value) return false;
+  try { return ["http:", "https:"].includes(new URL(value).protocol); } catch { return false; }
+}
+
+// Keep public/static pages usable in local previews when environment values are
+// placeholders. Production uses the configured project and key unchanged.
+const supabaseUrl = validSupabaseUrl(configuredUrl) ? configuredUrl! : "https://zoxixufbhagfhltfmeef.supabase.co";
+const supabaseAnonKey = configuredAnonKey && configuredAnonKey.length > 20 ? configuredAnonKey : "local-preview-anon-key";
 const COOKIE_CHUNK = 3180;
 
 function supabaseProjectRef(): string {
