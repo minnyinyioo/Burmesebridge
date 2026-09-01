@@ -212,6 +212,13 @@ export default async function LocaleLayout({
                     ? "HSK တရုတ်ဘာသာအဆင့် စစ်ဆေးမှု"
                     : "HSK placement test"}
               </Link>
+              <Link href={`/${locale}/certificate`}>
+                {locale === "zh"
+                  ? "证书查询"
+                  : locale === "my"
+                    ? "လက်မှတ် စစ်ဆေးရန်"
+                    : "Certificate lookup"}
+              </Link>
               <Link href={`/${locale}/news`}>
                 {locale === "zh" ? "新闻" : locale === "my" ? "သတင်း" : "News"}
               </Link>

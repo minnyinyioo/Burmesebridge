@@ -9269,6 +9269,66 @@ svg {
   padding: 40px 20px;
   text-align: center;
 }
+.certificate-lookup-page {
+  width: min(100% - 32px, 760px);
+  min-height: 72vh;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 24px;
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+.certificate-lookup-card {
+  width: 100%;
+  padding: clamp(28px, 5vw, 52px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 96%, var(--brand-soft)), var(--surface));
+  box-shadow: 0 24px 70px rgba(18, 62, 51, 0.1);
+  text-align: center;
+}
+.certificate-lookup-icon {
+  width: 62px;
+  height: 62px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 18px;
+  color: #fff;
+  background: var(--brand);
+}
+.certificate-lookup-card h1 { margin: 18px 0 8px; font-size: clamp(30px, 5vw, 48px); }
+.certificate-lookup-card > p { max-width: 590px; margin: 0 auto; color: var(--muted); line-height: 1.75; }
+.certificate-lookup-card form { display: grid; gap: 10px; margin-top: 30px; text-align: left; }
+.certificate-lookup-card label { color: var(--text); font-weight: 800; }
+.certificate-lookup-card form > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 15px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  color: var(--muted);
+  background: var(--surface);
+}
+.certificate-lookup-card input { width: 100%; border: 0; outline: 0; color: var(--text); background: transparent; font: inherit; text-transform: uppercase; }
+.certificate-lookup-card button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: var(--brand);
+  font-weight: 850;
+  cursor: pointer;
+}
+.certificate-lookup-card > small { display: flex; align-items: flex-start; justify-content: center; gap: 7px; margin-top: 20px; color: var(--muted); line-height: 1.55; }
+.certificate-lookup-card > small svg { flex: 0 0 auto; margin-top: 2px; color: var(--brand); }
 .certificate-verify-page > header {
   display: flex;
   align-items: center;
@@ -9315,12 +9375,13 @@ svg {
   margin: 5px 0 0;
   font-weight: 800;
 }
-.certificate-verify-page > a {
-  margin-top: 18px;
-  color: var(--brand);
-  font-weight: 800;
-}
+.certificate-verify-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 18px; }
+.certificate-verify-links a { color: var(--brand); font-weight: 800; }
 @media (max-width: 560px) {
+  .certificate-lookup-page { min-height: 64vh; padding: 28px 0 48px; }
+  .certificate-lookup-card { padding: 24px 18px; border-radius: 18px; }
+  .certificate-lookup-card > small { text-align: left; }
+  .certificate-verify-card { padding: 24px 18px; }
   .certificate-verify-card dl {
     grid-template-columns: 1fr;
   }
