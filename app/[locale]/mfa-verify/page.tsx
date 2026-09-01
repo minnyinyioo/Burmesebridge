@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { KeyRound } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { supabase } from "@/lib/supabase";
@@ -9,6 +9,9 @@ import { supabase } from "@/lib/supabase";
 export default function MfaVerifyPage() {
   const locale = String(useParams().locale || "en");
   const router = useRouter();
+  const search = useSearchParams();
+  const rawNext = search.get("next") || `/${locale}/me`;
+  const next = rawNext.startsWith(`/${locale}/`) && !rawNext.includes("//") ? rawNext : `/${locale}/me`;
   const [factorId, setFactorId] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,14 +25,14 @@ export default function MfaVerifyPage() {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) { router.replace(`/${locale}/login`); return; }
       const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (aal?.currentLevel === "aal2") { router.replace(`/${locale}/me`); return; }
+      if (aal?.currentLevel === "aal2") { router.replace(next); return; }
       const { data, error: listError } = await supabase.auth.mfa.listFactors();
       const verified = data?.totp.find((factor) => factor.status === "verified");
       if (listError || !verified) { setError(copy.missing); return; }
       setFactorId(verified.id);
     }
     void prepare();
-  }, [copy.missing, locale, router]);
+  }, [copy.missing, locale, next, router]);
 
   async function verify(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,7 +41,7 @@ export default function MfaVerifyPage() {
     const { error: verifyError } = await supabase.auth.mfa.challengeAndVerify({ factorId, code });
     setBusy(false);
     if (verifyError) { setError(copy.invalid); return; }
-    router.replace(`/${locale}/me`); router.refresh();
+    router.replace(next); router.refresh();
   }
 
   return <main className="auth-page"><section className="auth-card"><BrandLogo size={30} className="auth-brand" /><KeyRound className="auth-heading-icon" />
