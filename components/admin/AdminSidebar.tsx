@@ -20,6 +20,7 @@ import {
   BriefcaseBusiness,
   GraduationCap,
   UserCog,
+  CreditCard,
 } from "lucide-react";
 
 /**
@@ -107,6 +108,7 @@ export default function AdminSidebar() {
     },
     { label: "staff" in t ? t.staff : "ဝန်ထမ်းခွင့်ပြုချက်", href: `/${locale}/admin/staff`, icon: UserCog },
     { label: t.students, href: `/${locale}/admin/students`, icon: GraduationCap },
+    { label: locale === "zh" ? "实体 NFC 卡" : locale === "my" ? "NFC ကတ်" : "Physical NFC cards", href: `/${locale}/admin/physical-cards`, icon: CreditCard },
     { label: locale === "zh" ? "招聘审核" : locale === "my" ? "အလုပ်ကြော်ငြာ စိစစ်ရေး" : "Job reviews", href: `/${locale}/admin/jobs`, icon: BriefcaseBusiness },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
     { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },
