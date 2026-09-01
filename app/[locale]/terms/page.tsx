@@ -1,7 +1,7 @@
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 
 const content: Record<string, { title: string; summary: string; updated: string; sections: LegalSection[] }> = {
-  zh: { title: "服务条款", summary: "使用 BurmeseBridge 即表示你同意遵守本条款及适用法律。", updated: "2026年8月14日", sections: [
+  zh: { title: "服务条款", summary: "使用 BurmeseBridge 即表示你同意遵守本条款及适用法律。", updated: "2026年9月1日", sections: [
     { title: "1. 服务范围", paragraphs: ["BurmeseBridge 提供学习、新闻、工作信息、社区讨论、视频和知识内容等网络服务。功能可能随着产品发展调整。"] },
     { title: "2. 账号责任", paragraphs: ["你应提供准确资料、保护账号凭据并对账号活动负责。不得冒充他人、转售账号或绕过平台安全措施。"] },
     { title: "3. 社区规则", paragraphs: ["禁止发布违法、欺诈、骚扰、仇恨、恶意软件、垃圾广告、侵犯隐私或知识产权的内容。平台可以审核、限制或删除违规内容，并在严重情况下暂停账号。"] },
@@ -12,9 +12,10 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "8. 求职者安全与举报", paragraphs: ["不要仅凭平台帖子转账、旅行或交付证件。应在安全地点面试，将行程和雇主信息告知可信联系人，并保留职位、聊天、合同和付款记录。若面临即时危险，请优先离开现场并联系当地紧急服务、警方或反人口贩卖机构，同时通过平台举报功能报告。"] },
     { title: "9. 责任边界", paragraphs: ["平台会采取合理的内容审核和安全措施，但无法预先核实每项第三方招聘信息，也不是雇佣合同当事方。在适用法律允许范围内，因用户或第三方的虚假陈述、线下交易、雇佣决定或违法行为产生的责任由相应行为人承担。本条款不排除平台依法不得排除的责任，也不限制受害者依法举报和求偿的权利。"] },
     { title: "10. 第三方链接", paragraphs: ["平台可能包含第三方网站、职位、视频或社交平台链接。第三方内容和服务由其提供者负责，访问前请自行核实。"] },
-    { title: "11. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 admin@burmesebridge.com。"] },
+    { title: "11. 私立学习平台与教育证件", paragraphs: ["BurmeseBridge 是面向大众开放的私立在线学习平台，不是政府部门、政府学校、大学、考试主管机关或政府认可的教育认证机构。平台课程、成绩、结业证书、学生证和教师证仅用于记录或证明用户在 BurmeseBridge 平台内的学习、教学及审核状态。", "除非证件页面另有明确说明，这些文件不构成国家学历、学位、教师资格、职业执照、移民文件、政府身份证明或政府教育机构认证，也不得被用户修改、转售、冒用或用于误导第三方。平台可对证件设置有效期、防伪码、公开验证状态，并在资料不实、账号滥用或违规时撤销证件。"] },
+    { title: "12. 条款变更与联系", paragraphs: ["重要变更会通过网站公布。继续使用服务代表接受更新后的条款。如有问题，请联系 admin@burmesebridge.com。"] },
   ] },
-  my: { title: "ဝန်ဆောင်မှု စည်းမျဉ်းများ", summary: "BurmeseBridge ကို အသုံးပြုခြင်းဖြင့် ဤစည်းမျဉ်းများနှင့် သက်ဆိုင်ရာဥပဒေများကို လိုက်နာရန် သဘောတူပါသည်။", updated: "၂၀၂၆ ဩဂုတ် ၁၄", sections: [
+  my: { title: "ဝန်ဆောင်မှု စည်းမျဉ်းများ", summary: "BurmeseBridge ကို အသုံးပြုခြင်းဖြင့် ဤစည်းမျဉ်းများနှင့် သက်ဆိုင်ရာဥပဒေများကို လိုက်နာရန် သဘောတူပါသည်။", updated: "၂၀၂၆ စက်တင်ဘာ ၁", sections: [
     { title: "၁။ ဝန်ဆောင်မှု", paragraphs: ["BurmeseBridge တွင် သင်ယူမှု၊ သတင်း၊ အလုပ်အကိုင်၊ community၊ ဗီဒီယိုနှင့် paid knowledge content များ ပါဝင်သည်။ လုပ်ဆောင်ချက်များကို အချိန်နှင့်အမျှ ပြောင်းလဲနိုင်သည်။"] },
     { title: "၂။ အကောင့်တာဝန်", paragraphs: ["မှန်ကန်သောအချက်အလက်ပေးရန်၊ login အချက်အလက်ကို ကာကွယ်ရန်နှင့် မိမိအကောင့်လှုပ်ရှားမှုအတွက် တာဝန်ယူရန် လိုအပ်သည်။"] },
     { title: "၃။ Community စည်းမျဉ်း", paragraphs: ["တရားမဝင်၊ လိမ်လည်၊ နှောင့်ယှက်၊ အမုန်းစကား၊ spam၊ malware၊ ကိုယ်ရေးလုံခြုံမှု သို့မဟုတ် မူပိုင်ခွင့်ချိုးဖောက်သော အကြောင်းအရာ မတင်ရ။ ချိုးဖောက်သည့်အကြောင်းအရာ သို့မဟုတ် အကောင့်ကို ကန့်သတ်/ဖယ်ရှားနိုင်သည်။"] },
@@ -25,9 +26,10 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "၈။ အလုပ်ရှာဖွေသူ လုံခြုံရေး", paragraphs: ["Post တစ်ခုတည်းကို ယုံ၍ ငွေလွှဲခြင်း၊ ခရီးသွားခြင်း သို့မဟုတ် စာရွက်စာတမ်းပေးခြင်း မပြုပါနှင့်။ Interview ကို လုံခြုံသောနေရာတွင်လုပ်ပြီး အလုပ်ရှင်နှင့် ခရီးစဉ်အချက်အလက်ကို ယုံကြည်ရသူအား မျှဝေပါ။ အရေးပေါ်အန္တရာယ်ရှိပါက ဒေသဆိုင်ရာ ရဲတပ်ဖွဲ့/အရေးပေါ်ဝန်ဆောင်မှုကို ဆက်သွယ်ပြီး platform တွင် report လုပ်ပါ။"] },
     { title: "၉။ တာဝန်ကန့်သတ်ချက်", paragraphs: ["Platform သည် သင့်လျော်သောစိစစ်မှု ပြုလုပ်သော်လည်း third-party အလုပ်တိုင်းကို ကြိုတင်အတည်ပြုနိုင်မည်မဟုတ်ဘဲ အလုပ်စာချုပ်၏ အဖွဲ့ဝင်မဟုတ်ပါ။ အသုံးပြုသူ သို့မဟုတ် third party ၏ လိမ်လည်ဖော်ပြမှု၊ offline transaction၊ အလုပ်ခန့်ဆုံးဖြတ်ချက်နှင့် တရားမဝင်လုပ်ရပ်အတွက် သက်ဆိုင်ရာလုပ်ဆောင်သူက တာဝန်ယူရမည်။ ဤစည်းမျဉ်းသည် ဥပဒေအရ မဖယ်ရှားနိုင်သောတာဝန် သို့မဟုတ် နစ်နာသူ၏ တိုင်ကြား/လျော်ကြေးတောင်းခွင့်ကို မကန့်သတ်ပါ။"] },
     { title: "၁၀။ ပြင်ပလင့်ခ်", paragraphs: ["ပြင်ပဝဘ်ဆိုက်၊ အလုပ်၊ ဗီဒီယို သို့မဟုတ် social link များ ပါနိုင်သည်။ အသုံးမပြုမီ ကိုယ်တိုင်စစ်ဆေးပါ။"] },
-    { title: "၁၁။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသော ပြောင်းလဲမှုများကို ဝဘ်ဆိုက်တွင် အသိပေးကြေညာပါမည်။ မေးမြန်းလိုသည်များကို admin@burmesebridge.com သို့ ပေးပို့နိုင်ပါသည်။"] },
+    { title: "၁၁။ ပုဂ္ဂလိကသင်ယူရေးပလက်ဖောင်းနှင့် ပညာရေးကတ်များ", paragraphs: ["BurmeseBridge သည် လူတိုင်းအတွက် ဖွင့်လှစ်ထားသော ပုဂ္ဂလိကအွန်လိုင်းသင်ယူရေးပလက်ဖောင်း ဖြစ်သည်။ အစိုးရဌာန၊ အစိုးရကျောင်း၊ တက္ကသိုလ်၊ စာမေးပွဲအာဏာပိုင် သို့မဟုတ် အစိုးရအသိအမှတ်ပြု ပညာရေးအဖွဲ့ မဟုတ်ပါ။ သင်တန်း၊ ရမှတ်၊ ပြီးဆုံးလက်မှတ်၊ ကျောင်းသားကတ်နှင့် ဆရာကတ်တို့သည် BurmeseBridge အတွင်း သင်ယူမှု၊ သင်ကြားမှုနှင့် စစ်ဆေးအတည်ပြုမှုအခြေအနေကိုသာ မှတ်တမ်းတင် သို့မဟုတ် သက်သေပြသည်။", "စာမျက်နှာတွင် အတိအလင်း မဖော်ပြထားလျှင် ဤစာရွက်စာတမ်းများသည် နိုင်ငံတော်ဘွဲ့၊ ဒီဂရီ၊ ဆရာလိုင်စင်၊ လုပ်ငန်းလိုင်စင်၊ လူဝင်မှုစာရွက်စာတမ်း၊ အစိုးရ ID သို့မဟုတ် အစိုးရပညာရေးအသိအမှတ်ပြုမှု မဟုတ်ပါ။ ပြင်ဆင်ခြင်း၊ ပြန်လည်ရောင်းချခြင်း၊ အခြားသူအဖြစ် အသုံးပြုခြင်း သို့မဟုတ် တတိယသူကို လှည့်ဖြားရန် အသုံးပြုခြင်း မပြုရ။"] },
+    { title: "၁၂။ ပြောင်းလဲမှုနှင့် ဆက်သွယ်ရန်", paragraphs: ["အရေးကြီးသော ပြောင်းလဲမှုများကို ဝဘ်ဆိုက်တွင် အသိပေးကြေညာပါမည်။ မေးမြန်းလိုသည်များကို admin@burmesebridge.com သို့ ပေးပို့နိုင်ပါသည်။"] },
   ] },
-  en: { title: "Terms of Service", summary: "By using BurmeseBridge, you agree to these terms and applicable laws.", updated: "August 14, 2026", sections: [
+  en: { title: "Terms of Service", summary: "By using BurmeseBridge, you agree to these terms and applicable laws.", updated: "September 1, 2026", sections: [
     { title: "1. The service", paragraphs: ["BurmeseBridge provides learning, news, job information, community discussions, videos, and knowledge content. Features may change as the product develops."] },
     { title: "2. Account responsibility", paragraphs: ["You must provide accurate information, protect your credentials, and take responsibility for account activity. You may not impersonate others, resell accounts, or bypass security controls."] },
     { title: "3. Community rules", paragraphs: ["Do not publish illegal, fraudulent, harassing, hateful, malicious, spam, privacy-infringing, or intellectual-property-infringing content. We may moderate or remove violations and suspend accounts in serious cases."] },
@@ -38,7 +40,8 @@ const content: Record<string, { title: string; summary: string; updated: string;
     { title: "8. Jobseeker safety and reporting", paragraphs: ["Do not transfer money, travel, or hand over documents based only on a platform post. Verify independently, interview in a safe place, tell a trusted contact about the employer and journey, and preserve listings, messages, contracts, and payment records. If in immediate danger, leave when safe and contact local emergency services, police, or anti-trafficking authorities, then report the listing to the platform."] },
     { title: "9. Allocation of responsibility", paragraphs: ["We take reasonable moderation and security measures but cannot pre-verify every third-party listing and are not a party to employment contracts. To the extent permitted by law, the relevant actor remains responsible for false statements, offline transactions, employment decisions, and unlawful conduct. Nothing here excludes liability that cannot legally be excluded or limits a victim's right to report or seek a remedy."] },
     { title: "10. Third-party links", paragraphs: ["The service may link to third-party websites, jobs, videos, or social platforms. Those providers are responsible for their services; verify them before relying on them."] },
-    { title: "11. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact admin@burmesebridge.com with questions."] },
+    { title: "11. Private learning platform and education IDs", paragraphs: ["BurmeseBridge is a private online learning platform open to the public. It is not a government department, government school, university, examination authority, or government-recognized accrediting body. Platform courses, scores, completion certificates, student IDs, and teacher IDs only record or confirm learning, teaching, and review status within BurmeseBridge.", "Unless a credential page expressly states otherwise, these documents are not national qualifications, degrees, teaching licences, professional licences, immigration documents, government identity documents, or government education accreditation. Users may not alter, resell, impersonate with, or use them to mislead third parties. We may apply expiry dates, authenticity codes, public verification status, and revoke credentials for false information, account misuse, or violations."] },
+    { title: "12. Changes and contact", paragraphs: ["Material changes will be posted on the website. Continued use means acceptance of updated terms. Contact admin@burmesebridge.com with questions."] },
   ] },
 };
 

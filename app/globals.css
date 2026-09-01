@@ -9386,6 +9386,54 @@ svg {
     grid-template-columns: 1fr;
   }
 }
+.student-admin-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0; }
+.student-admin-stats article { display:grid;grid-template-columns:auto 1fr;gap:3px 11px;align-items:center;padding:17px;border:1px solid var(--border);border-radius:15px;background:var(--surface); }
+.student-admin-stats svg { grid-row:1/3;color:var(--brand); }
+.student-admin-stats strong { font-size:23px;line-height:1; }
+.student-admin-stats span { color:var(--muted);font-size:12px; }
+.education-legal-notice { padding:13px 15px;border:1px solid color-mix(in srgb,var(--brand) 28%,var(--border));border-radius:12px;color:var(--muted);background:var(--brand-soft);font-size:12px;line-height:1.7; }
+.student-admin-search { display:flex;align-items:center;gap:9px;margin:18px 0;padding:0 14px;min-height:48px;border:1px solid var(--border);border-radius:12px;color:var(--muted);background:var(--surface); }
+.student-admin-search input { width:100%;border:0;outline:0;background:transparent;color:var(--text);font:inherit; }
+.student-roster { display:grid;gap:14px; }
+.student-roster > article { padding:19px;border:1px solid var(--border);border-radius:17px;background:var(--surface);box-shadow:0 10px 35px rgba(18,62,51,.05); }
+.student-roster > article > header { display:flex;justify-content:space-between;gap:14px;align-items:flex-start; }
+.student-roster h2,.student-roster header p { margin:0; }
+.student-roster header p { margin-top:3px;color:var(--muted);font-size:12px; }
+.student-roster header > span { padding:4px 9px;border-radius:999px;color:var(--muted);background:var(--surface-soft);font-size:11px;font-weight:800; }
+.student-roster header > span.is-verified { color:var(--brand);background:var(--brand-soft); }
+.student-roster dl { display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin:16px 0;overflow:hidden;border:1px solid var(--border);border-radius:11px;background:var(--border); }
+.student-roster dl div { padding:11px;background:var(--surface-soft); }
+.student-roster dt { color:var(--muted);font-size:10px; }
+.student-roster dd { margin:4px 0 0;font-weight:800;overflow-wrap:anywhere; }
+.student-roster dd small { display:block;margin-top:2px;color:var(--muted);font-weight:500; }
+.student-record-controls { display:grid;grid-template-columns:150px 1fr auto;gap:8px; }
+.student-record-controls select,.student-record-controls input { min-height:40px;padding:0 10px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text); }
+.student-record-controls button,.student-roster footer button { display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:0;border-radius:9px;color:#fff;background:var(--brand);font-weight:800;cursor:pointer; }
+.student-roster footer { display:flex;flex-wrap:wrap;gap:8px;margin-top:10px; }
+.student-roster footer .danger { background:#a94731; }
+.student-record-controls button:disabled,.student-roster button:disabled { opacity:.5;cursor:wait; }
+.education-id-section { margin-top:22px;padding:22px;border:1px solid var(--border);border-radius:18px;background:var(--surface); }
+.education-id-section > h2 { display:flex;align-items:center;gap:8px;margin:0 0 16px; }
+.education-id-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px; }
+.education-id-card { position:relative;overflow:hidden;padding:20px;border:1px solid rgba(14,90,73,.24);border-radius:20px;color:#123b32;background:linear-gradient(145deg,#fffdf8,#eaf6f1);box-shadow:0 18px 46px rgba(14,90,73,.1); }
+.education-id-card::after { content:"";position:absolute;right:-70px;top:-70px;width:190px;height:190px;border:1px solid rgba(14,90,73,.1);border-radius:50%; }
+.education-id-card > header { position:relative;z-index:1;display:flex;align-items:center;gap:10px; }
+.education-id-card > header > div { display:grid; }
+.education-id-card > header span { font-size:11px;font-weight:800; }
+.education-id-card > header strong { font-size:17px; }
+.education-id-card > header > svg { margin-left:auto;color:#0e7561; }
+.education-id-card h3 { position:relative;z-index:1;margin:24px 0 16px;font-size:25px; }
+.education-id-card dl { position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0; }
+.education-id-card dt { color:#65756f;font-size:9px; }
+.education-id-card dd { margin:3px 0 0;font-size:11px;font-weight:850;overflow-wrap:anywhere; }
+.education-id-auth { position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:18px; }
+.education-id-auth img { width:72px;height:72px;padding:2px;background:#fff; }
+.education-id-auth a { display:inline-flex;align-items:center;gap:5px;color:#0e5a49;font-size:11px;font-weight:850; }
+.education-id-card > p { position:relative;z-index:1;margin:12px 0 0;color:#65756f;font-size:9px;line-height:1.5; }
+.education-id-empty { margin:0;padding:18px;border:1px dashed var(--border);border-radius:12px;color:var(--muted); }
+.education-card-type { display:inline-block;margin-top:5px;padding:5px 10px;border-radius:999px;color:var(--brand);background:var(--brand-soft); }
+@media(max-width:900px){.student-admin-stats{grid-template-columns:repeat(2,1fr)}.student-roster dl{grid-template-columns:repeat(2,1fr)}.education-id-list{grid-template-columns:1fr}}
+@media(max-width:600px){.student-admin-stats{grid-template-columns:1fr 1fr}.student-record-controls{grid-template-columns:1fr}.student-roster dl{grid-template-columns:1fr}.education-id-section{padding:15px}.education-id-card{padding:17px}.education-id-card dl{grid-template-columns:1fr}.education-id-auth{align-items:center}}
 .profile-settings > .directory-state {
   min-height: 420px;
 }

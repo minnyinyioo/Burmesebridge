@@ -22,6 +22,7 @@ export type BadgeType =
   | "moderator"
   | "admin"
   | "teacher"
+  | "student"
   | "company"
   | "author"
   | "vip"
@@ -51,6 +52,7 @@ verified:"အတည်ပြုပြီး",
 moderator:"စီမံခန့်ခွဲသူ",
 admin:"အက်မင်",
 teacher:"ဆရာ",
+student:"ကျောင်းသား",
 company:"ကုမ္ပဏီ",
 author:"စာရေးသူ",
 vip:"VIP",
@@ -65,6 +67,7 @@ verified:"已认证",
 moderator:"版主",
 admin:"管理员",
 teacher:"老师",
+student:"学生",
 company:"企业",
 author:"作者",
 vip:"VIP",
@@ -79,6 +82,7 @@ verified:"Verified",
 moderator:"Moderator",
 admin:"Admin",
 teacher:"Teacher",
+student:"Student",
 company:"Company",
 author:"Author",
 vip:"VIP",
@@ -115,6 +119,10 @@ color:"#dc2626"
 teacher:{
 icon:<GraduationCap size={16}/>,
 color:"#7c3aed"
+},
+student:{
+icon:<GraduationCap size={16}/>,
+color:"#0e7561"
 },
 
 company:{

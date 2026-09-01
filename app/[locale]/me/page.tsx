@@ -17,6 +17,7 @@ import { supabase } from "@/lib/supabase";
 import DeleteAccountPanel from "@/components/DeleteAccountPanel";
 import AccountSecurityPanel from "@/components/AccountSecurityPanel";
 import AccountProfilePanel from "@/components/AccountProfilePanel";
+import EducationIdCards from "@/components/EducationIdCards";
 
 type Profile = {
   id: string;
@@ -248,6 +249,7 @@ export default function MePage() {
           </button>
         </div>
         <AccountProfilePanel locale={locale} userId={profile?.id || ""} email={email} initialName={profile?.display_name || ""} nameUpdatedAt={profile?.display_name_updated_at || null} verified={Boolean(profile?.verified)} />
+        {profile?.id ? <EducationIdCards locale={locale} userId={profile.id} /> : null}
         <AccountSecurityPanel locale={locale} />
         {email ? <DeleteAccountPanel locale={locale} email={email} /> : null}
       </section>

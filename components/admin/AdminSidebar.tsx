@@ -18,6 +18,7 @@ import {
   Bug,
   Megaphone,
   BriefcaseBusiness,
+  GraduationCap,
 } from "lucide-react";
 
 /**
@@ -35,6 +36,7 @@ export default function AdminSidebar() {
     my: {
       dashboard: "ဒက်ရှ်ဘုတ်",
       users: "အသုံးပြုသူများ",
+      students: "ကျောင်းသား စီမံခန့်ခွဲမှု",
       posts: "ပို့စ်များ",
       publish: "အချက်အလက်တင်ရန်",
       ban: "ပိတ်ပင်မှု စင်တာ",
@@ -47,6 +49,7 @@ export default function AdminSidebar() {
     zh: {
       dashboard: "总览",
       users: "用户",
+      students: "学生管理",
       posts: "帖子",
       publish: "发布信息",
       ban: "封禁中心",
@@ -59,6 +62,7 @@ export default function AdminSidebar() {
     en: {
       dashboard: "Dashboard",
       users: "Users",
+      students: "Students",
       posts: "Posts",
       publish: "Publish",
       ban: "Ban Center",
@@ -98,6 +102,7 @@ export default function AdminSidebar() {
       href: `/${locale}/admin/verification`,
       icon: BadgeCheck,
     },
+    { label: t.students, href: `/${locale}/admin/students`, icon: GraduationCap },
     { label: locale === "zh" ? "招聘审核" : locale === "my" ? "အလုပ်ကြော်ငြာ စိစစ်ရေး" : "Job reviews", href: `/${locale}/admin/jobs`, icon: BriefcaseBusiness },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
     { label: t.knowledge, href: `/${locale}/admin/knowledge`, icon: LibraryBig },

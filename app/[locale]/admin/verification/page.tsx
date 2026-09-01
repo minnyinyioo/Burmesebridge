@@ -10,7 +10,7 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 type RequestRow = {
   id: number;
   user_id: string;
-  requested_badge: "teacher" | "company" | "author";
+  requested_badge: "student" | "teacher" | "company" | "author";
   evidence: string;
   status: "pending" | "approved" | "rejected";
   created_at: string;
@@ -33,11 +33,11 @@ function VerificationContent() {
   const [notes, setNotes] = useState<Record<number, string>>({});
 
   const copy = locale === "zh" ? {
-    title: "身份审核", subtitle: "审核教师、企业和作者的专业身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", teacher: "教师", company: "企业", author: "作者", note: "审核备注；拒绝时必须填写原因", reasonRequired: "请填写拒绝原因", reviewed: "审核时间",
+    title: "身份审核", subtitle: "审核学生、教师、企业和作者的身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", student:"学生", teacher: "教师", company: "企业", author: "作者", note: "审核备注；拒绝时必须填写原因", reasonRequired: "请填写拒绝原因", reviewed: "审核时间",
   } : locale === "en" ? {
-    title: "Identity verification", subtitle: "Review teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", teacher: "Teacher", company: "Company", author: "Author", note: "Review note; a reason is required when rejecting", reasonRequired: "Enter a rejection reason", reviewed: "Reviewed",
+    title: "Identity verification", subtitle: "Review student, teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", student:"Student", teacher: "Teacher", company: "Company", author: "Author", note: "Review note; a reason is required when rejecting", reasonRequired: "Enter a rejection reason", reviewed: "Reviewed",
   } : {
-    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", note: "စစ်ဆေးမှတ်ချက်၊ ပယ်ချလျှင် အကြောင်းပြချက် လိုအပ်သည်", reasonRequired: "ပယ်ချရသည့် အကြောင်းပြချက် ရေးပါ", reviewed: "စစ်ဆေးချိန်",
+    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ကျောင်းသား၊ ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", student:"ကျောင်းသား", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", note: "စစ်ဆေးမှတ်ချက်၊ ပယ်ချလျှင် အကြောင်းပြချက် လိုအပ်သည်", reasonRequired: "ပယ်ချရသည့် အကြောင်းပြချက် ရေးပါ", reviewed: "စစ်ဆေးချိန်",
   };
 
   const loadRequests = useCallback(async (nextFilter = filter) => {
