@@ -64,7 +64,7 @@ export default function AuthMenu({
 
       setEmail(data.user?.email ?? null);
       if (data.user) {
-        const { data: allowed } = await supabase.rpc("has_knowledge_instructor_workspace");
+        const { data: allowed } = await supabase.rpc("can_access_teacher_portal");
         setCanTeach(Boolean(allowed));
       } else {
         setCanTeach(false);
