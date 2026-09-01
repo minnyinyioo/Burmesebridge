@@ -19,6 +19,7 @@ import {
   Megaphone,
   BriefcaseBusiness,
   GraduationCap,
+  UserCog,
 } from "lucide-react";
 
 /**
@@ -50,6 +51,7 @@ export default function AdminSidebar() {
       dashboard: "总览",
       users: "用户",
       students: "学生管理",
+      staff: "后台人员权限",
       posts: "帖子",
       publish: "发布信息",
       ban: "封禁中心",
@@ -63,6 +65,7 @@ export default function AdminSidebar() {
       dashboard: "Dashboard",
       users: "Users",
       students: "Students",
+      staff: "Staff access",
       posts: "Posts",
       publish: "Publish",
       ban: "Ban Center",
@@ -102,6 +105,7 @@ export default function AdminSidebar() {
       href: `/${locale}/admin/verification`,
       icon: BadgeCheck,
     },
+    { label: "staff" in t ? t.staff : "ဝန်ထမ်းခွင့်ပြုချက်", href: `/${locale}/admin/staff`, icon: UserCog },
     { label: t.students, href: `/${locale}/admin/students`, icon: GraduationCap },
     { label: locale === "zh" ? "招聘审核" : locale === "my" ? "အလုပ်ကြော်ငြာ စိစစ်ရေး" : "Job reviews", href: `/${locale}/admin/jobs`, icon: BriefcaseBusiness },
     { label: t.videos, href: `/${locale}/admin/videos`, icon: Video },
