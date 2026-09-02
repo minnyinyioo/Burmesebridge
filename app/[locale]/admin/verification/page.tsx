@@ -16,6 +16,9 @@ type RequestRow = {
   created_at: string;
   reviewed_at: string | null;
   review_note: string | null;
+  evidence_path: string | null;
+  terms_version: string | null;
+  terms_consented_at: string | null;
   profiles?: { display_name: string | null; email: string | null } | null;
 };
 
@@ -31,21 +34,28 @@ function VerificationContent() {
   const [busy, setBusy] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [notes, setNotes] = useState<Record<number, string>>({});
+  const [evidenceUrls, setEvidenceUrls] = useState<Record<number, string>>({});
 
   const copy = locale === "zh" ? {
-    title: "身份审核", subtitle: "审核学生、教师、企业和作者的身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", student:"学生", teacher: "教师", company: "企业", author: "作者", note: "审核备注；拒绝时必须填写原因", reasonRequired: "请填写拒绝原因", reviewed: "审核时间",
+    title: "身份审核", subtitle: "审核学生、教师、企业和作者的身份申请", pending: "待审核", approved: "已通过", rejected: "已拒绝", approve: "通过", reject: "拒绝", empty: "暂无申请", student:"学生", teacher: "教师", company: "企业", author: "作者", note: "审核备注；拒绝时必须填写原因", reasonRequired: "请填写拒绝原因", reviewed: "审核时间", viewAttachment: "查看附件", consent: "条款同意时间",
   } : locale === "en" ? {
-    title: "Identity verification", subtitle: "Review student, teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", student:"Student", teacher: "Teacher", company: "Company", author: "Author", note: "Review note; a reason is required when rejecting", reasonRequired: "Enter a rejection reason", reviewed: "Reviewed",
+    title: "Identity verification", subtitle: "Review student, teacher, company, and author applications", pending: "Pending", approved: "Approved", rejected: "Rejected", approve: "Approve", reject: "Reject", empty: "No applications", student:"Student", teacher: "Teacher", company: "Company", author: "Author", note: "Review note; a reason is required when rejecting", reasonRequired: "Enter a rejection reason", reviewed: "Reviewed", viewAttachment: "View attachment", consent: "Terms consented",
   } : {
-    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ကျောင်းသား၊ ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", student:"ကျောင်းသား", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", note: "စစ်ဆေးမှတ်ချက်၊ ပယ်ချလျှင် အကြောင်းပြချက် လိုအပ်သည်", reasonRequired: "ပယ်ချရသည့် အကြောင်းပြချက် ရေးပါ", reviewed: "စစ်ဆေးချိန်",
+    title: "အထောက်အထား စစ်ဆေးခြင်း", subtitle: "ကျောင်းသား၊ ဆရာ၊ ကုမ္ပဏီနှင့် စာရေးသူ လျှောက်လွှာများကို စစ်ဆေးပါ", pending: "စောင့်ဆိုင်း", approved: "အတည်ပြုပြီး", rejected: "ပယ်ချပြီး", approve: "အတည်ပြု", reject: "ပယ်ချ", empty: "လျှောက်လွှာ မရှိသေးပါ", student:"ကျောင်းသား", teacher: "ဆရာ", company: "ကုမ္ပဏီ", author: "စာရေးသူ", note: "စစ်ဆေးမှတ်ချက်၊ ပယ်ချလျှင် အကြောင်းပြချက် လိုအပ်သည်", reasonRequired: "ပယ်ချရသည့် အကြောင်းပြချက် ရေးပါ", reviewed: "စစ်ဆေးချိန်", viewAttachment: "ဖိုင်ကို ကြည့်ရန်", consent: "စည်းမျဉ်းသဘောတူချိန်",
   };
 
   const loadRequests = useCallback(async (nextFilter = filter) => {
     const { data, error } = await supabase.from("verification_requests")
-      .select("id, user_id, requested_badge, evidence, status, created_at, reviewed_at, review_note, profiles!verification_requests_user_id_fkey(display_name, email)")
+      .select("id, user_id, requested_badge, evidence, evidence_path, terms_version, terms_consented_at, status, created_at, reviewed_at, review_note, profiles!verification_requests_user_id_fkey(display_name, email)")
       .eq("status", nextFilter).order("created_at", { ascending: true });
     if (error) { setMessage(error.message); return; }
-    setRequests((data || []) as unknown as RequestRow[]);
+    const rows = (data || []) as unknown as RequestRow[];
+    const signedEntries = await Promise.all(rows.filter((row) => row.evidence_path).map(async (row) => {
+      const { data: signed } = await supabase.storage.from("verification-evidence").createSignedUrl(row.evidence_path as string, 300);
+      return [row.id, signed?.signedUrl || ""] as const;
+    }));
+    setEvidenceUrls(Object.fromEntries(signedEntries.filter(([, url]) => url)));
+    setRequests(rows);
   }, [filter]);
 
   useEffect(() => {
@@ -73,7 +83,7 @@ function VerificationContent() {
       <div className="verification-list">
         {requests.length === 0 && <div className="feedCard home-empty">{copy.empty}</div>}
         {requests.map((request) => <article className="feedCard verification-card" key={request.id}>
-          <div className="verification-detail"><span className="verification-type">{copy[request.requested_badge]}</span><h2>{request.profiles?.display_name || request.profiles?.email || request.user_id}</h2><p>{request.evidence}</p><time>{new Date(request.created_at).toLocaleString()}</time>{request.review_note && <blockquote>{request.review_note}</blockquote>}{request.reviewed_at && <time>{copy.reviewed}: {new Date(request.reviewed_at).toLocaleString()}</time>}</div>
+          <div className="verification-detail"><span className="verification-type">{copy[request.requested_badge]}</span><h2>{request.profiles?.display_name || request.profiles?.email || request.user_id}</h2><p>{request.evidence}</p>{evidenceUrls[request.id] ? <a className="verification-evidence-link" href={evidenceUrls[request.id]} target="_blank" rel="noreferrer">{copy.viewAttachment}</a> : null}{request.terms_consented_at && <small>{copy.consent}: {new Date(request.terms_consented_at).toLocaleString()}</small>}<time>{new Date(request.created_at).toLocaleString()}</time>{request.review_note && <blockquote>{request.review_note}</blockquote>}{request.reviewed_at && <time>{copy.reviewed}: {new Date(request.reviewed_at).toLocaleString()}</time>}</div>
           {request.status === "pending" && <div className="verification-review"><textarea value={notes[request.id] || ""} onChange={(event) => setNotes((current) => ({ ...current, [request.id]: event.target.value }))} placeholder={copy.note} rows={3} /><div className="verification-actions"><button disabled={busy === request.id} onClick={() => review(request.id, "approved")}><Check size={16} />{copy.approve}</button><button className="reject" disabled={busy === request.id} onClick={() => review(request.id, "rejected")}><X size={16} />{copy.reject}</button></div></div>}
         </article>)}
       </div>
