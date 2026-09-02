@@ -53,6 +53,7 @@ export default function MePage() {
           checkin: "每日签到",
           forum: "社区论坛",
           jobs: "工作信息",
+          verification: "申请教师 / 作者等认证",
           profile: "编辑资料",
           logout: "退出登录",
           load: "正在加载账户…",
@@ -71,6 +72,7 @@ export default function MePage() {
             checkin: "နေ့စဉ် Check-in",
             forum: "Community",
             jobs: "အလုပ်အကိုင်",
+            verification: "ဆရာ / စာရေးသူ စစ်ဆေးအတည်ပြုရန်",
             profile: "ကိုယ်ရေးအချက်အလက် ပြင်ရန်",
             logout: "အကောင့်ထွက်ရန်",
             load: "အကောင့်ကို ဖွင့်နေသည်…",
@@ -88,6 +90,7 @@ export default function MePage() {
             checkin: "Daily check-in",
             forum: "Community forum",
             jobs: "Jobs",
+            verification: "Apply for teacher / author verification",
             profile: "Edit profile",
             logout: "Log out",
             load: "Loading your account…",
@@ -173,6 +176,7 @@ export default function MePage() {
     { href: `/${locale}/learn`, label: copy.learn, icon: BookOpen },
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },
     { href: `/${locale}/forum`, label: copy.forum, icon: MessageSquareText },
+    { href: "#profile-settings", label: copy.verification, icon: ShieldCheck },
     { href: `/${locale}/appeals`, label: locale === "zh" ? "申诉中心" : locale === "my" ? "အယူခံတင်ရန်" : "Appeals", icon: Gavel },
   ];
 
