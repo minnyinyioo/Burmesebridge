@@ -103,7 +103,7 @@ export const hsk4VocabularyMy: Record<string, VocabularyEnrichment> = {
   "而": { meaningMy: "နှင့်၊ သို့သော်၊ ထိုသို့ဖြင့် ဆက်သွယ်ဖော်ပြသော စကားဆက်", image: "/images/hsk/vocabulary/hsk4-er-contrast.png", imageAltMy: "နေသာသောလမ်းနှင့် မိုးရွာသောလမ်းတို့၏ ဆန့်ကျင်ကွာခြားမှုကြားတွင် ထီးကိုင်ရပ်နေသည့် BurmeseBridge လူငယ်", imageStatus: "generated" },
   "儿童": { meaningMy: "ကလေးသူငယ်", image: "/images/hsk/vocabulary/hsk4-ertong-children.png", imageAltMy: "ကလေးသူငယ်များနှင့် ပုံဆွဲ၊ အတုံးဆောက် လေ့လာမှုလုပ်နေသည့် BurmeseBridge လူငယ်", imageStatus: "generated" },
   "发": { meaningMy: "ပို့သည်၊ ထုတ်ပေးသည်၊ ဖြစ်ပေါ်သည်", image: "/images/hsk/vocabulary/hsk4-fa-send.png", imageAltMy: "ဖုန်းမှတစ်ဆင့် သူငယ်ချင်းထံ သတင်းစကားပို့နေသည့် BurmeseBridge လူငယ်", imageStatus: "generated" },
-  "发生": { meaningMy: "ဖြစ်ပွားသည်၊ ဖြစ်ပေါ်သည်" },
+  "发生": { meaningMy: "ဖြစ်ပွားသည်၊ ဖြစ်ပေါ်သည်", image: "/images/hsk/vocabulary/hsk4-fasheng-occur.png", imageAltMy: "မိုးရုတ်တရက်ရွာသွန်းလာသည့် ဖြစ်ရပ်ကို BurmeseBridge လူငယ်က ထီးဖွင့်ကာ သတိပြုနေသည့် မြင်ကွင်း", imageStatus: "generated" },
   "发展": { meaningMy: "ဖွံ့ဖြိုးတိုးတက်သည်၊ ဖွံ့ဖြိုးတိုးတက်မှု" },
   "法律": { meaningMy: "ဥပဒေ၊ ဥပဒေဆိုင်ရာ" },
   "翻译": { meaningMy: "ဘာသာပြန်သည်၊ ဘာသာပြန်ဆိုသူ" },
