@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, CreditCard, LockKeyhole, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -29,13 +29,28 @@ export default function CourseCheckout({locale,productId,userId,price,currency,r
   const [message,setMessage] = useState("");
   const [loading,setLoading] = useState(false);
   const [termsRead,setTermsRead] = useState(false);
+  const [termsMeasured,setTermsMeasured] = useState(false);
   const [termsConsent,setTermsConsent] = useState(false);
+  const termsRef = useRef<HTMLDivElement>(null);
   const selected = methods.find((item) => String(item.id) === methodId);
   const termsVersion = "purchase-2026-09-02";
 
+  useEffect(() => {
+    if (!open || !methods.length) return;
+    setTermsMeasured(false);
+    const frame = window.requestAnimationFrame(() => {
+      const element = termsRef.current;
+      if (!element) return;
+      const needsScroll = element.scrollHeight > element.clientHeight + 1;
+      setTermsMeasured(true);
+      if (!needsScroll) setTermsRead(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, methods.length, locale]);
+
   async function revealCheckout() {
     if (!userId) { router.push(`/${locale}/login?next=/${locale}/knowledge/${productId}`); return; }
-    setTermsRead(false); setTermsConsent(false); setMessage(""); setOpen(true);
+    setTermsRead(false); setTermsMeasured(false); setTermsConsent(false); setMessage(""); setOpen(true);
     if (methods.length) return;
     const [{data,error},{data:planData}] = await Promise.all([
       supabase.from("knowledge_payment_methods").select("id,name,account_name,account_number,instructions_my,instructions_zh,instructions_en").eq("enabled",true).order("sort_order"),
@@ -96,9 +111,9 @@ export default function CourseCheckout({locale,productId,userId,price,currency,r
           {selected ? <div className="checkout-account"><span>{copy.holder}<strong>{selected.account_name}</strong></span><span>{copy.account}<code>{selected.account_number}</code></span>{instructions ? <p>{instructions}</p> : null}</div> : null}
           <label>{copy.reference}<input required value={reference} onChange={(event) => setReference(event.target.value)}/></label>
           <label>{copy.proof}<PaymentProofInput locale={locale} file={proof} onChange={setProof}/></label>
-          <section className="purchase-terms"><h3>{copy.termsTitle}</h3><p>{copy.termsHint}</p><div className="purchase-terms-scroll" tabIndex={0} onScroll={(event) => { const element = event.currentTarget; if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setTermsRead(true); }}>{purchaseTerms.map((term, index) => <p key={index}>{term}</p>)}{termsRead ? <strong>✓ {copy.termsEnd}</strong> : null}</div><label className="purchase-terms-consent"><input type="checkbox" disabled={!termsRead} checked={termsConsent} onChange={(event) => setTermsConsent(event.target.checked)}/><span>{copy.termsConsent}</span></label></section>
+          <section className="purchase-terms"><h3>{copy.termsTitle}</h3><p>{copy.termsHint}</p><div ref={termsRef} className="purchase-terms-scroll" tabIndex={0} onScroll={(event) => { const element = event.currentTarget; if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setTermsRead(true); }}>{purchaseTerms.map((term, index) => <p key={index}>{term}</p>)}{termsRead ? <strong>✓ {copy.termsEnd}</strong> : null}</div><label className="purchase-terms-consent"><input type="checkbox" disabled={!termsMeasured || !termsRead} checked={termsConsent} onChange={(event) => setTermsConsent(event.target.checked)}/><span>{copy.termsConsent}</span></label></section>
           {message ? <p className="knowledge-message">{message}</p> : null}
-          <button className="checkout-submit" disabled={loading || !termsRead || !termsConsent}>{loading ? copy.sending : copy.submit}</button>
+          <button className="checkout-submit" disabled={loading || !termsMeasured || !termsRead || !termsConsent}>{loading ? copy.sending : copy.submit}</button>
         </form> : <p>{message || copy.unavailable}</p>}
       </section>
     </div> : null}
