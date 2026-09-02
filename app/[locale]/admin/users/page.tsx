@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -16,6 +16,17 @@ type AdminUser = {
   banned_until: string | null;
 };
 
+const SYSTEM_ROLES = ["member", "moderator", "admin", "banned"] as const;
+const KNOWN_POSITION_ROLES = ["teacher", "student", "company", "author"] as const;
+
+function normaliseRole(value: string | null | undefined) {
+  return value?.trim().toLowerCase() || "";
+}
+
+function isSystemRole(value: string) {
+  return (SYSTEM_ROLES as readonly string[]).includes(value);
+}
+
 export default function AdminUsersPage() {
   return (
     <AdminGuard>
@@ -27,6 +38,15 @@ export default function AdminUsersPage() {
 function UsersContent() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [resetting, setResetting] = useState<string | null>(null);
+
+  const roleOptions = useMemo(() => {
+    const discovered = users.flatMap((user) => [normaliseRole(user.role), normaliseRole(user.badge)]);
+    return Array.from(new Set([
+      ...SYSTEM_ROLES,
+      ...KNOWN_POSITION_ROLES,
+      ...discovered.filter(Boolean),
+    ]));
+  }, [users]);
 
   const loadUsers = useCallback(async () => {
     const { data, error } = await supabase
@@ -42,15 +62,25 @@ function UsersContent() {
     setUsers(data || []);
   }, []);
 
-  async function updateRole(userId: string, role: string) {
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        role,
-        badge: role === "banned" ? "member" : role,
-        verified: role === "admin" || role === "moderator",
-      })
-      .eq("id", userId);
+  async function updateRole(user: AdminUser, selectedRole: string) {
+    const role = normaliseRole(selectedRole);
+    if (!role) return;
+
+    // System roles control moderation access. Position roles are identity
+    // badges; assigning one here never grants verification or teacher access.
+    const updates = isSystemRole(role)
+      ? {
+          role,
+          badge: role === "banned" ? "member" : role,
+          verified: role === "admin" || role === "moderator",
+        }
+      : {
+          role: "member",
+          badge: role,
+          verified: Boolean(user.verified && normaliseRole(user.badge) === role),
+        };
+
+    const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
 
     if (error) {
       alert(error.message);
@@ -122,14 +152,15 @@ function UsersContent() {
                   <KeyRound size={16} /> {resetting === user.id ? "Resetting…" : "Reset password"}
                 </button>
                 <select
-                  value={user.role || "member"}
-                  onChange={(event) => updateRole(user.id, event.target.value)}
+                  value={(() => {
+                    const role = normaliseRole(user.role);
+                    const badge = normaliseRole(user.badge);
+                    return role === "member" && badge && badge !== "member" ? badge : role || "member";
+                  })()}
+                  onChange={(event) => void updateRole(user, event.target.value)}
                   style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #e2e8f0", fontWeight: 700 }}
                 >
-                  <option value="member">member</option>
-                  <option value="moderator">moderator</option>
-                  <option value="admin">admin</option>
-                  <option value="banned">banned</option>
+                  {roleOptions.map((role) => <option key={role} value={role}>{role}</option>)}
                 </select>
               </div>
             </div>
