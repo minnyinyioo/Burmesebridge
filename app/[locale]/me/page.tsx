@@ -18,6 +18,7 @@ import DeleteAccountPanel from "@/components/DeleteAccountPanel";
 import AccountSecurityPanel from "@/components/AccountSecurityPanel";
 import AccountProfilePanel from "@/components/AccountProfilePanel";
 import EducationIdCards from "@/components/EducationIdCards";
+import KycApplicationPanel from "@/components/kyc/KycApplicationPanel";
 
 type Profile = {
   id: string;
@@ -54,6 +55,7 @@ export default function MePage() {
           forum: "社区论坛",
           jobs: "工作信息",
           verification: "申请教师 / 作者等认证",
+          kyc: "KYC 身份核验",
           profile: "编辑资料",
           logout: "退出登录",
           load: "正在加载账户…",
@@ -73,6 +75,7 @@ export default function MePage() {
             forum: "Community",
             jobs: "အလုပ်အကိုင်",
             verification: "ဆရာ / စာရေးသူ စစ်ဆေးအတည်ပြုရန်",
+            kyc: "KYC ကိုယ်ရေးအထောက်အထား",
             profile: "ကိုယ်ရေးအချက်အလက် ပြင်ရန်",
             logout: "အကောင့်ထွက်ရန်",
             load: "အကောင့်ကို ဖွင့်နေသည်…",
@@ -91,6 +94,7 @@ export default function MePage() {
             forum: "Community forum",
             jobs: "Jobs",
             verification: "Apply for teacher / author verification",
+            kyc: "KYC identity verification",
             profile: "Edit profile",
             logout: "Log out",
             load: "Loading your account…",
@@ -177,6 +181,7 @@ export default function MePage() {
     { href: `/${locale}/checkin`, label: copy.checkin, icon: CalendarCheck },
     { href: `/${locale}/forum`, label: copy.forum, icon: MessageSquareText },
     { href: "#profile-settings", label: copy.verification, icon: ShieldCheck },
+    { href: "#kyc-verification", label: copy.kyc, icon: ShieldCheck },
     { href: `/${locale}/appeals`, label: locale === "zh" ? "申诉中心" : locale === "my" ? "အယူခံတင်ရန်" : "Appeals", icon: Gavel },
   ];
 
@@ -253,6 +258,7 @@ export default function MePage() {
           </button>
         </div>
         <AccountProfilePanel locale={locale} userId={profile?.id || ""} email={email} initialName={profile?.display_name || ""} nameUpdatedAt={profile?.display_name_updated_at || null} verified={Boolean(profile?.verified)} />
+        {profile?.id ? <KycApplicationPanel locale={locale} userId={profile.id} /> : null}
         {profile?.id ? <EducationIdCards locale={locale} userId={profile.id} /> : null}
         <AccountSecurityPanel locale={locale} />
         {email ? <DeleteAccountPanel locale={locale} email={email} /> : null}
