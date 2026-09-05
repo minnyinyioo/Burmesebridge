@@ -8218,18 +8218,27 @@ svg {
 .hsk-report-meta {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
+  gap: 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 14px;
-  background: var(--border);
+  background: transparent;
 }
 .hsk-report-meta > span {
   display: grid;
   gap: 5px;
   padding: 13px 15px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   background: var(--surface);
   font-size: 12px;
+}
+.hsk-report-meta > span:nth-child(3n),
+.hsk-report-meta > span:last-child {
+  border-right: 0;
+}
+.hsk-report-meta > span:nth-last-child(-n + 3) {
+  border-bottom: 0;
 }
 .hsk-report-meta b {
   color: var(--muted);
@@ -9585,17 +9594,26 @@ svg {
 .certificate-verify-card dl {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
+  gap: 0;
   margin: 24px 0 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--border);
+  background: transparent;
   text-align: left;
 }
 .certificate-verify-card dl > div {
   padding: 14px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   background: var(--surface);
+}
+.certificate-verify-card dl > div:nth-child(2n),
+.certificate-verify-card dl > div:last-child {
+  border-right: 0;
+}
+.certificate-verify-card dl > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
 }
 .certificate-verify-card dt {
   color: var(--muted);
