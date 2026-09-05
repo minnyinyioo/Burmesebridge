@@ -280,6 +280,34 @@ export default async function LocaleLayout({
                     ? "ငွေပြန်အမ်းရေး မူဝါဒ"
                     : "Refund policy"}
               </Link>
+              <Link href={`/${locale}/payment-policy`}>
+                {locale === "zh"
+                  ? "支付政策"
+                  : locale === "my"
+                    ? "ငွေပေးချေမှု မူဝါဒ"
+                    : "Payment policy"}
+              </Link>
+              <Link href={`/${locale}/verification-policy`}>
+                {locale === "zh"
+                  ? "身份认证政策"
+                  : locale === "my"
+                    ? "Identity verification မူဝါဒ"
+                    : "Verification policy"}
+              </Link>
+              <Link href={`/${locale}/teacher-author-agreement`}>
+                {locale === "zh"
+                  ? "教师与作者协议"
+                  : locale === "my"
+                    ? "ဆရာ/စာရေးသူ သဘောတူညီချက်"
+                    : "Teacher & author agreement"}
+              </Link>
+              <Link href={`/${locale}/acceptable-use-policy`}>
+                {locale === "zh"
+                  ? "可接受使用政策"
+                  : locale === "my"
+                    ? "အသုံးပြုခွင့် မူဝါဒ"
+                    : "Acceptable use policy"}
+              </Link>
               <Link href={`/${locale}/community-guidelines`}>
                 {locale === "zh"
                   ? "社区规则"
@@ -300,6 +328,13 @@ export default async function LocaleLayout({
                   : locale === "my"
                     ? "အသုံးပြုသူ၏ အချက်အလက်များကို ဖျက်ရန်"
                     : "User data deletion"}
+              </Link>
+              <Link href={`/${locale}/cookie-policy`}>
+                {locale === "zh"
+                  ? "Cookie 使用政策"
+                  : locale === "my"
+                    ? "Cookie မူဝါဒ"
+                    : "Cookie policy"}
               </Link>
             </nav>
             <div className="site-footer-connect">
@@ -372,6 +407,13 @@ export default async function LocaleLayout({
                   : locale === "my"
                     ? "ငွေပြန်အမ်း"
                     : "Refunds"}
+              </Link>
+              <Link href={`/${locale}/cookie-policy`}>
+                {locale === "zh"
+                  ? "Cookie"
+                  : locale === "my"
+                    ? "Cookie"
+                    : "Cookie"}
               </Link>
               <Link href={`/${locale}/data-deletion`}>
                 {locale === "zh"

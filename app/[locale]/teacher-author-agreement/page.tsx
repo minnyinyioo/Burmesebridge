@@ -1,0 +1,36 @@
+import LegalPage, { LegalSection } from "@/components/LegalPage";
+
+const content: Record<string, { title: string; summary: string; updated: string; sections: LegalSection[] }> = {
+  zh: { title: "教师与作者协议", summary: "本协议适用于申请或使用 BurmeseBridge 教师、作者、课程发布和内容创作权限的用户。", updated: "2026年9月5日", sections: [
+    { title: "1. 适用对象", paragraphs: ["本协议适用于教师、作者、课程发布者、内容贡献者、审核通过的教学人员及代表机构发布内容的账号。申请或使用相关权限即表示同意本协议、服务条款、隐私政策、版权政策和平台审核规则。"] },
+    { title: "2. 原创与授权承诺", paragraphs: ["教师和作者必须保证提交的课程、讲义、题目、文本、图片、音频、视频、课件和其他材料为本人原创，或已取得可核验且允许平台展示、分发、销售和存档的合法授权。不得抄袭、搬运、洗稿、盗用素材、伪造授权或隐瞒第三方权利。"] },
+    { title: "3. 教学与学生安全", paragraphs: ["教师和作者不得私自向学生索取密码、验证码、身份证件、精确定位、银行信息、财产、礼物或其他非必要敏感信息；不得骚扰、胁迫、歧视、诱导站外交易、私下收费或以认证、就业、成绩等名义施压。"] },
+    { title: "4. 课程发布与 Admin 审核", paragraphs: ["教师可创建或提交课程，但课程上线、付费权限、证书签发、学生证/教师证发放及重要内容变更必须经过 Admin 审核。平台可要求补充资料、修改内容、暂停发布或拒绝上线。"] },
+    { title: "5. 收益与结算", paragraphs: ["若平台启用教师或作者收益分成，具体比例、结算周期、税费、退款扣回、争议处理和支付方式以后台显示或双方书面确认的规则为准。在未正式启用收益计划前，平台展示权限不代表已产生收益或付款义务。"] },
+    { title: "6. 投诉、下架与责任", paragraphs: ["因教师或作者内容引发版权、肖像权、隐私、合同、税务、消费者争议、监管或平台声誉问题时，平台可下架内容、暂停收益、限制账号、撤销认证、保存证据并依法配合权利人、支付渠道或有关机构。上传者应对自身内容和行为承担相应责任。"] },
+    { title: "7. 终止与申诉", paragraphs: ["平台可因风险、违规、长期不活跃或业务调整暂停或终止教师/作者权限。用户可按页面指引提交申诉和补充证据，但申诉期间平台可继续采取必要保护措施。"] },
+  ] },
+  my: { title: "ဆရာနှင့် စာရေးသူ သဘောတူညီချက်", summary: "BurmeseBridge teacher၊ author၊ course publishing နှင့် content creation permission အသုံးပြုသူများအတွက် စည်းမျဉ်း။", updated: "၂၀၂၆ စက်တင်ဘာ ၅", sections: [
+    { title: "၁။ သက်ဆိုင်သူများ", paragraphs: ["ဤ agreement သည် teacher၊ author၊ course publisher၊ content contributor၊ verified teaching staff နှင့် institution ကိုယ်စား content တင်သော account များနှင့် သက်ဆိုင်သည်။ Permission လျှောက်ထားခြင်း သို့မဟုတ် အသုံးပြုခြင်းသည် ဤ agreement၊ Terms၊ Privacy Policy၊ Copyright Policy နှင့် review rules ကို သဘောတူခြင်း ဖြစ်သည်။"] },
+    { title: "၂။ Original content နှင့် licence", paragraphs: ["Teacher/author သည် course၊ handout၊ question၊ text၊ image၊ audio၊ video၊ slide နှင့် material များသည် မိမိကိုယ်တိုင်ဖန်တီးထားခြင်း သို့မဟုတ် platform တွင် display၊ distribute၊ sell နှင့် archive လုပ်နိုင်သော verifiable licence ရှိကြောင်း အာမခံရမည်။ Plagiarism၊ copied content၊ fake licence နှင့် third-party right hiding မပြုရ။"] },
+    { title: "၃။ Teaching နှင့် student safety", paragraphs: ["Teacher/author သည် student ထံမှ password၊ verification code၊ ID document၊ precise location၊ bank information၊ property၊ gift သို့မဟုတ် မလိုအပ်သော sensitive information မတောင်းရ။ Harassment၊ coercion၊ discrimination၊ off-platform transaction၊ private fee collection သို့မဟုတ် certificate/job/score အမည်ဖြင့် ဖိအားပေးခြင်း မပြုရ။"] },
+    { title: "၄။ Course publishing နှင့် Admin review", paragraphs: ["Teacher သည် course ကို create/submit လုပ်နိုင်သော်လည်း publication၊ paid access၊ certificate issuance၊ student/teacher card နှင့် material change များသည် Admin review လိုအပ်သည်။ Platform သည် evidence တောင်း၊ edit တောင်း၊ suspend သို့မဟုတ် reject လုပ်နိုင်သည်။"] },
+    { title: "၅။ Earnings နှင့် settlement", paragraphs: ["Teacher/author revenue sharing ကို platform ဖွင့်ပါက percentage၊ settlement period၊ tax/fee၊ refund deduction၊ dispute handling နှင့် payment method သည် dashboard သို့မဟုတ် written agreement အတိုင်း ဖြစ်သည်။ Revenue plan မဖွင့်သေးပါက publishing permission သည် payment obligation မဟုတ်ပါ။"] },
+    { title: "၆။ Complaint၊ takedown နှင့် responsibility", paragraphs: ["Content ကြောင့် copyright၊ image right၊ privacy၊ contract၊ tax၊ consumer dispute၊ regulatory issue သို့မဟုတ် platform reputation harm ဖြစ်ပါက platform သည် content remove၊ earnings suspend၊ account restrict၊ verification revoke၊ evidence retain နှင့် သက်ဆိုင်ရာအဖွဲ့နှင့် ပူးပေါင်းနိုင်သည်။ Uploader သည် မိမိ content နှင့် conduct အတွက် တာဝန်ယူရမည်။"] },
+    { title: "၇။ Termination နှင့် appeal", paragraphs: ["Risk၊ violation၊ long inactivity သို့မဟုတ် business adjustment ကြောင့် teacher/author permission ကို suspend သို့မဟုတ် terminate လုပ်နိုင်သည်။ User သည် appeal တင်နိုင်သော်လည်း appeal အတွင်း platform သည် necessary protection measure ကို ဆက်လက်လုပ်နိုင်သည်။"] },
+  ] },
+  en: { title: "Teacher and Author Agreement", summary: "This agreement applies to users who apply for or use BurmeseBridge teacher, author, course publishing, or content creation permissions.", updated: "September 5, 2026", sections: [
+    { title: "1. Who this applies to", paragraphs: ["This agreement applies to teachers, authors, course publishers, content contributors, approved teaching personnel, and accounts publishing on behalf of an organisation. Applying for or using these permissions means accepting this agreement, the Terms, Privacy Policy, Copyright Policy, and platform review rules."] },
+    { title: "2. Originality and licence promise", paragraphs: ["Teachers and authors must ensure that courses, handouts, questions, text, images, audio, video, slides, and other materials are original or covered by a verifiable licence allowing display, distribution, paid sale, and archiving on the platform. Plagiarism, copied content, rewritten infringement, stolen assets, forged licences, and hidden third-party rights are prohibited."] },
+    { title: "3. Teaching and student safety", paragraphs: ["Teachers and authors must not privately request passwords, verification codes, identity documents, precise location, bank information, property, gifts, or unnecessary sensitive information from students. Harassment, coercion, discrimination, off-platform transactions, private fees, and pressure using certificates, jobs, or scores are prohibited."] },
+    { title: "4. Course publishing and Admin review", paragraphs: ["Teachers may create or submit courses, but publication, paid access, certificate issuance, student/teacher IDs, and material changes require Admin review. The platform may request evidence, require edits, suspend publication, or reject release."] },
+    { title: "5. Earnings and settlement", paragraphs: ["If teacher or author revenue sharing is enabled, the percentage, settlement period, taxes, fees, refund deductions, disputes, and payment method are governed by the dashboard terms or written agreement. Until a revenue plan is formally enabled, publishing permission does not create earnings or payment obligations."] },
+    { title: "6. Complaints, takedowns, and responsibility", paragraphs: ["If content causes copyright, image-right, privacy, contract, tax, consumer, regulatory, or reputational issues, the platform may remove content, suspend earnings, restrict accounts, revoke verification, preserve evidence, and cooperate lawfully with rights holders, payment channels, or authorities. Uploaders are responsible for their own content and conduct."] },
+    { title: "7. Termination and appeals", paragraphs: ["The platform may suspend or terminate teacher/author permissions for risk, violations, long inactivity, or operational changes. Users may appeal with supporting evidence, but the platform may keep necessary protective measures in place during review."] },
+  ] },
+};
+
+export default async function TeacherAuthorAgreementPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return <LegalPage locale={locale} {...(content[locale] || content.en)} />;
+}

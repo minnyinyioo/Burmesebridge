@@ -1,0 +1,36 @@
+import LegalPage, { LegalSection } from "@/components/LegalPage";
+
+const content: Record<string, { title: string; summary: string; updated: string; sections: LegalSection[] }> = {
+  zh: { title: "可接受使用政策", summary: "本政策说明 BurmeseBridge 全站允许和禁止的使用方式。", updated: "2026年9月5日", sections: [
+    { title: "1. 基本原则", paragraphs: ["用户应以合法、安全、诚实、尊重和合理的方式使用 BurmeseBridge。不得利用平台伤害他人、规避付费权限、破坏系统、侵犯权利或制造安全风险。"] },
+    { title: "2. 账号与访问控制", paragraphs: ["不得批量注册、买卖账号、共享付费账号、冒用他人身份、绕过登录、绕过 KYC、绕过 Mux 签名播放、破解课程权限或使用自动化手段滥用平台资源。"] },
+    { title: "3. 内容与社区行为", paragraphs: ["不得发布违法、欺诈、骚扰、仇恨、暴力、性剥削、人口贩卖、恶意软件、垃圾广告、误导性招聘、隐私泄露、侵犯版权或侵犯第三方权利的内容。"] },
+    { title: "4. 技术安全", paragraphs: ["不得扫描、攻击、干扰、反向工程、抓取非公开内容、测试未授权漏洞、破坏 API、绕过速率限制、上传恶意文件或试图访问他人数据。善意安全报告应通过反馈页面或 admin@burmesebridge.com 提交。"] },
+    { title: "5. 付费内容保护", paragraphs: ["课程、视频、音频、讲义、题库、证书和会员资料仅供授权用户本人使用。禁止录屏传播、转售、出租、共享、公开发布下载链接、转存到公共仓库或使用技术手段复制付费内容。"] },
+    { title: "6. 执行措施", paragraphs: ["违反本政策时，平台可采取提醒、隐藏内容、删除内容、限制功能、冻结收益、撤销认证、撤销证书、暂停或永久封禁账号、保存证据并依法报告。"] },
+    { title: "7. 申诉", paragraphs: ["用户可按相关页面提交申诉和证据。平台会根据风险、证据、历史记录和对用户安全的影响进行复核。"] },
+  ] },
+  my: { title: "အသုံးပြုခွင့် မူဝါဒ", summary: "BurmeseBridge ကို မည်သို့အသုံးပြုနိုင်/မပြုနိုင်သည်ကို ဖော်ပြသည်။", updated: "၂၀၂၆ စက်တင်ဘာ ၅", sections: [
+    { title: "၁။ အခြေခံမူ", paragraphs: ["BurmeseBridge ကို lawful၊ safe၊ honest၊ respectful နှင့် reasonable နည်းဖြင့် အသုံးပြုရမည်။ Platform ကို အသုံးပြု၍ အခြားသူကို ထိခိုက်စေခြင်း၊ paid access bypass လုပ်ခြင်း၊ system ဖျက်ဆီးခြင်း သို့မဟုတ် rights infringement မပြုရ။"] },
+    { title: "၂။ Account နှင့် access control", paragraphs: ["Mass registration၊ account sale၊ paid account sharing၊ impersonation၊ login bypass၊ KYC bypass၊ Mux signed playback bypass၊ course permission cracking သို့မဟုတ် automated abuse မပြုရ။"] },
+    { title: "၃။ Content နှင့် community behavior", paragraphs: ["Illegal၊ fraud၊ harassment၊ hate၊ violence၊ sexual exploitation၊ human trafficking၊ malware၊ spam၊ misleading jobs၊ privacy leak၊ copyright infringement သို့မဟုတ် third-party rights infringement content မတင်ရ။"] },
+    { title: "၄။ Technical security", paragraphs: ["Unauthorized scanning၊ attack၊ interference၊ reverse engineering၊ private content scraping၊ vulnerability testing၊ API abuse၊ rate-limit bypass၊ malicious file upload သို့မဟုတ် other user data access attempt မပြုရ။ Good-faith security report ကို feedback page သို့မဟုတ် admin@burmesebridge.com သို့ ပေးပို့ပါ။"] },
+    { title: "၅။ Paid content protection", paragraphs: ["Course၊ video၊ audio၊ handout၊ question bank၊ certificate နှင့် membership material များကို authorized user ကိုယ်တိုင်သာ အသုံးပြုရမည်။ Screen recording distribution၊ resale၊ rental၊ sharing၊ public download link သို့မဟုတ် paid content copying မပြုရ။"] },
+    { title: "၆။ Enforcement", paragraphs: ["Violation ဖြစ်ပါက platform သည် warning၊ content hiding/removal၊ feature restriction၊ earnings freeze၊ verification/certificate revocation၊ account suspension/ban၊ evidence retention နှင့် lawful report ပြုလုပ်နိုင်သည်။"] },
+    { title: "၇။ Appeal", paragraphs: ["User သည် relevant page မှ appeal နှင့် evidence တင်နိုင်သည်။ Platform သည် risk၊ evidence၊ history နှင့် user safety impact အပေါ်မူတည်၍ review လုပ်ပါမည်။"] },
+  ] },
+  en: { title: "Acceptable Use Policy", summary: "This policy explains permitted and prohibited use across BurmeseBridge.", updated: "September 5, 2026", sections: [
+    { title: "1. Core principle", paragraphs: ["Users must use BurmeseBridge lawfully, safely, honestly, respectfully, and reasonably. The platform must not be used to harm others, bypass paid access, disrupt systems, infringe rights, or create safety risks."] },
+    { title: "2. Accounts and access controls", paragraphs: ["Mass registration, account selling, paid-account sharing, impersonation, login bypass, KYC bypass, Mux signed-playback bypass, course-permission cracking, and automated resource abuse are prohibited."] },
+    { title: "3. Content and community conduct", paragraphs: ["Illegal, fraudulent, harassing, hateful, violent, exploitative, trafficking-related, malware, spam, misleading recruitment, privacy-infringing, copyright-infringing, or third-party-rights-infringing content is prohibited."] },
+    { title: "4. Technical security", paragraphs: ["Unauthorised scanning, attacks, interference, reverse engineering, scraping non-public content, unauthorised vulnerability testing, API abuse, rate-limit bypass, malicious uploads, or attempts to access another user's data are prohibited. Good-faith security reports should be sent through feedback or admin@burmesebridge.com."] },
+    { title: "5. Paid-content protection", paragraphs: ["Courses, videos, audio, handouts, question banks, certificates, and membership materials are for the authorised user's personal use only. Recording and distributing, reselling, renting, sharing, publishing download links, mirroring to public repositories, or technically copying paid content is prohibited."] },
+    { title: "6. Enforcement", paragraphs: ["For violations, we may issue warnings, hide or remove content, limit features, freeze earnings, revoke verification or certificates, suspend or permanently ban accounts, preserve evidence, and report lawfully where appropriate."] },
+    { title: "7. Appeals", paragraphs: ["Users may submit appeals and supporting evidence through the relevant page. We review appeals based on risk, evidence, history, and the impact on user safety."] },
+  ] },
+};
+
+export default async function AcceptableUsePolicyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return <LegalPage locale={locale} {...(content[locale] || content.en)} />;
+}
