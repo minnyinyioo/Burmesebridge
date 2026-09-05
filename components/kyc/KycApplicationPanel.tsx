@@ -26,6 +26,15 @@ type KycRow = {
 
 const TERMS_VERSION = "kyc-2026-09-05";
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+const CURRENT_YEAR = new Date().getFullYear();
+const BIRTH_YEARS = Array.from({ length: CURRENT_YEAR - 1899 }, (_, index) => String(CURRENT_YEAR - index));
+const BIRTH_MONTHS = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0"));
+
+function daysInMonth(year: string, month: string) {
+  const numericYear = Number(year || CURRENT_YEAR);
+  const numericMonth = Number(month || 1);
+  return new Date(numericYear, numericMonth, 0).getDate();
+}
 
 export default function KycApplicationPanel({ locale, userId, defaultExpanded = false }: { locale: string; userId: string; defaultExpanded?: boolean }) {
   const copy = locale === "zh" ? {
@@ -63,6 +72,9 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
   const [kind, setKind] = useState<ApplicationKind>("student");
   const [legalName, setLegalName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [birthMonth, setBirthMonth] = useState("");
+  const [birthDay, setBirthDay] = useState("");
   const [nationality, setNationality] = useState("");
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
@@ -95,6 +107,26 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
     });
     return () => window.cancelAnimationFrame(frame);
   }, [expanded, kind, locale]);
+
+  useEffect(() => {
+    if (!birthYear || !birthMonth || !birthDay) {
+      setDateOfBirth("");
+      return;
+    }
+    setDateOfBirth(`${birthYear}-${birthMonth}-${birthDay}`);
+  }, [birthYear, birthMonth, birthDay]);
+
+  const birthDays = Array.from({ length: daysInMonth(birthYear, birthMonth) }, (_, index) => String(index + 1).padStart(2, "0"));
+
+  function changeBirthYear(value: string) {
+    setBirthYear(value);
+    if (birthDay && Number(birthDay) > daysInMonth(value, birthMonth)) setBirthDay("");
+  }
+
+  function changeBirthMonth(value: string) {
+    setBirthMonth(value);
+    if (birthDay && Number(birthDay) > daysInMonth(birthYear, value)) setBirthDay("");
+  }
 
   function pickFile(event: ChangeEvent<HTMLInputElement>, side: "front" | "back") {
     const file = event.target.files?.[0] || null;
@@ -164,7 +196,7 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
       <div className="kyc-form-grid">
         <label>{copy.kind}<select value={kind} onChange={event => setKind(event.target.value as ApplicationKind)}><option value="student">{copy.student}</option><option value="teacher">{copy.teacher}</option><option value="author">{copy.author}</option><option value="company">{copy.company}</option></select></label>
         <label>{copy.legalName}<input value={legalName} onChange={event => setLegalName(event.target.value)} autoComplete="name" /></label>
-        <label>{copy.dob}<input type="date" value={dateOfBirth} onChange={event => setDateOfBirth(event.target.value)} /></label>
+        <label>{copy.dob}<div className="kyc-date-selects"><select value={birthYear} onChange={event => changeBirthYear(event.target.value)} aria-label={`${copy.dob} year`}><option value="">YYYY</option>{BIRTH_YEARS.map(year => <option key={year} value={year}>{year}</option>)}</select><select value={birthMonth} onChange={event => changeBirthMonth(event.target.value)} aria-label={`${copy.dob} month`}><option value="">MM</option>{BIRTH_MONTHS.map(month => <option key={month} value={month}>{month}</option>)}</select><select value={birthDay} onChange={event => setBirthDay(event.target.value)} aria-label={`${copy.dob} day`}><option value="">DD</option>{birthDays.map(day => <option key={day} value={day}>{day}</option>)}</select></div></label>
         <label>{copy.nationality}<input value={nationality} onChange={event => setNationality(event.target.value)} /></label>
         <label>{copy.country}<input value={country} onChange={event => setCountry(event.target.value)} /></label>
         <label>{copy.documentType}<select value={documentType} onChange={event => setDocumentType(event.target.value)}><option value="passport">{copy.passport}</option><option value="national_id">{copy.national_id}</option><option value="driving_licence">{copy.driving_licence}</option><option value="other">{copy.other}</option></select></label>
