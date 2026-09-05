@@ -256,8 +256,9 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
         <label className="kyc-upload-box"><span>{backFile ? <FileCheck2 size={17}/> : <ImagePlus size={17}/>} {copy.back}</span><small>{backFile ? `${copy.selected}: ${backFile.name}` : copy.uploadHint}</small><input type="file" accept={ACCEPTED_TYPES.join(",")} onChange={event => pickFile(event, "back")} /></label>
       </div>
       <div className="kyc-terms"><h3>{copy.termsTitle}</h3><p>{copy.termsHint}</p><div ref={termsRef} className="kyc-terms-scroll" tabIndex={0} onScroll={event => { const element = event.currentTarget; if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setTermsRead(true); }}>{copy.terms.map((term, index) => <p key={index}>{term}</p>)}{termsRead ? <strong>✓ {copy.read}</strong> : null}</div><label className="kyc-consent"><input type="checkbox" checked={consent} disabled={!termsRead} onChange={event => setConsent(event.target.checked)} /><span>{copy.read}</span></label></div>
-      <button type="button" className="kyc-submit" onClick={() => void submit()} disabled={busy || !termsRead || !consent}>{busy ? copy.submitting : copy.submit}</button>
+      <button type="button" className="kyc-submit" onClick={() => void submit()} disabled={busy}>{busy ? copy.submitting : copy.submit}</button>
     </> : null}
+    {message ? <p className="verification-message" role="status">{message}</p> : null}
     <p className="kyc-privacy-note"><LockKeyhole size={15}/>{copy.privacy}</p>
   </section>;
 }
