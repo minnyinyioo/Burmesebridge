@@ -4,6 +4,10 @@ import { muxWebhookSecret, verifyMuxSignature } from "@/lib/muxServer";
 
 export const runtime = "nodejs";
 
+export async function GET() {
+  return NextResponse.json({ ok: true, service: "mux-webhook", accepts: "signed POST" });
+}
+
 export async function POST(request: Request) {
   const raw = await request.text();
   const signature = request.headers.get("mux-signature") || "";
