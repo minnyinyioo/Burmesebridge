@@ -8,12 +8,13 @@ import { supabase } from "@/lib/supabase";
 
 type Card = { id: number; card_no: string; card_type: "student" | "teacher" };
 type Request = { id: number; status: string; tracking_no: string | null; created_at: string };
-type LocationType = "countries" | "states" | "cities";
+type LocationType = "countries" | "states" | "cities" | "postal";
 
-async function getLocations(type: LocationType, country = "", state = "") {
+async function getLocations(type: LocationType, country = "", state = "", city = "") {
   const query = new URLSearchParams({ type });
   if (country) query.set("country", country);
   if (state) query.set("state", state);
+  if (city) query.set("city", city);
   const response = await fetch(`/api/locations?${query}`);
   if (!response.ok) throw new Error("Unable to load locations");
   return response.json() as Promise<LocationOption[]>;
@@ -25,8 +26,8 @@ export default function PhysicalCardApplicationForm({ locale }: { locale: string
   const [cardId, setCardId] = useState(""), [name, setName] = useState(""), [phone, setPhone] = useState("");
   const [country, setCountry] = useState("MM"), [region, setRegion] = useState(""), [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState(""), [address, setAddress] = useState(""), [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false), [countries, setCountries] = useState<LocationOption[]>([]), [regions, setRegions] = useState<LocationOption[]>([]), [cities, setCities] = useState<LocationOption[]>([]);
-  const [loadingCountries, setLoadingCountries] = useState(true), [loadingRegions, setLoadingRegions] = useState(true), [loadingCities, setLoadingCities] = useState(false);
+  const [busy, setBusy] = useState(false), [countries, setCountries] = useState<LocationOption[]>([]), [regions, setRegions] = useState<LocationOption[]>([]), [cities, setCities] = useState<LocationOption[]>([]), [postalOptions, setPostalOptions] = useState<LocationOption[]>([]);
+  const [loadingCountries, setLoadingCountries] = useState(true), [loadingRegions, setLoadingRegions] = useState(true), [loadingCities, setLoadingCities] = useState(false), [loadingPostal, setLoadingPostal] = useState(false);
 
   const copy = locale === "zh" ? {
     eyebrow: "实体证件服务", title: "实体 NFC 卡申请", intro: "收件信息单独填写，避免账号页面拥挤。NFC 只连接本站实时查验记录，制作前须由 Admin 审核。", card: "选择电子证件", name: "收件人姓名", phone: "联系电话（含国家区号）", country: "国家 / 地区", region: "州 / 省 / 地区", city: "城市 / 区县", postal: "邮政编码", address: "街道、门牌号和详细地址", submit: "提交审核", need: "尚无有效电子学生证或教师证，暂时无法申请。", status: "申请记录", success: "申请已提交，Admin 审核后才会制作。", chooseCountry: "选择国家或地区", chooseRegion: "选择州、省或地区", chooseCity: "选择城市或区县", search: "输入名称搜索…", empty: "没有匹配的地点", manualRegion: "填写州、省或地区", manualCity: "填写城市或区县",
@@ -64,12 +65,22 @@ export default function PhysicalCardApplicationForm({ locale }: { locale: string
   }, []);
 
   async function changeCountry(value: string) {
-    setCountry(value); setRegion(""); setCity(""); setRegions([]); setCities([]); setLoadingRegions(true);
+    setCountry(value); setRegion(""); setCity(""); setPostalCode(""); setPostalOptions([]); setRegions([]); setCities([]); setLoadingRegions(true);
     try { setRegions(await getLocations("states", value)); } catch { setMessage("Unable to load regions. Please try again."); } finally { setLoadingRegions(false); }
   }
   async function changeRegion(value: string) {
-    setRegion(value); setCity(""); setCities([]); setLoadingCities(true);
+    setRegion(value); setCity(""); setPostalCode(""); setPostalOptions([]); setCities([]); setLoadingCities(true);
     try { setCities(await getLocations("cities", country, value)); } catch { setMessage("Unable to load cities. Please try again."); } finally { setLoadingCities(false); }
+  }
+  async function changeCity(value: string) {
+    setCity(value); setPostalCode(""); setPostalOptions([]);
+    if (!country || !region || !value) return;
+    setLoadingPostal(true);
+    try {
+      const next = await getLocations("postal", country, region, value);
+      setPostalOptions(next);
+      if (next.length === 1) setPostalCode(next[0].value);
+    } catch { setPostalOptions([]); } finally { setLoadingPostal(false); }
   }
   async function submit(event: FormEvent) {
     event.preventDefault(); setBusy(true); setMessage("");
@@ -89,8 +100,8 @@ export default function PhysicalCardApplicationForm({ locale }: { locale: string
       <label><span>{copy.phone}</span><input required minLength={6} maxLength={40} autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} /></label>
       <label className="full"><span>{copy.country}</span><LocationCombobox value={country} options={countries} placeholder={copy.chooseCountry} searchPlaceholder={copy.search} emptyText={copy.empty} loading={loadingCountries} onChange={value => void changeCountry(value)} /></label>
       <label><span>{copy.region}</span>{!loadingRegions && regions.length === 0 ? <input required maxLength={120} autoComplete="address-level1" placeholder={copy.manualRegion} value={region} onChange={event => { setRegion(event.target.value); setCity(""); }} /> : <LocationCombobox value={region} options={regions} placeholder={copy.chooseRegion} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!country} loading={loadingRegions} onChange={value => void changeRegion(value)} />}</label>
-      <label><span>{copy.city}</span>{region && !loadingCities && cities.length === 0 ? <input required maxLength={120} autoComplete="address-level2" placeholder={copy.manualCity} value={city} onChange={event => setCity(event.target.value)} /> : <LocationCombobox value={city} options={cities} placeholder={copy.chooseCity} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!region} loading={loadingCities} onChange={setCity} />}</label>
-      <label><span>{copy.postal}</span><input maxLength={24} autoComplete="postal-code" value={postalCode} onChange={event => setPostalCode(event.target.value)} /></label>
+      <label><span>{copy.city}</span>{region && !loadingCities && cities.length === 0 ? <input required maxLength={120} autoComplete="address-level2" placeholder={copy.manualCity} value={city} onChange={event => void changeCity(event.target.value)} /> : <LocationCombobox value={city} options={cities} placeholder={copy.chooseCity} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!region} loading={loadingCities} onChange={value => void changeCity(value)} />}</label>
+      <label><span>{copy.postal}</span>{postalOptions.length > 1 ? <LocationCombobox value={postalCode} options={postalOptions} placeholder={copy.postal} searchPlaceholder={copy.search} emptyText={copy.empty} loading={loadingPostal} onChange={setPostalCode} /> : <input maxLength={24} autoComplete="postal-code" value={postalCode} onChange={event => setPostalCode(event.target.value)} placeholder={loadingPostal ? "…" : ""} />}</label>
       <label className="full"><span>{copy.address}</span><textarea required minLength={5} maxLength={700} autoComplete="street-address" value={address} onChange={event => setAddress(event.target.value)} /></label>
       <button disabled={busy}><CreditCard size={18} />{copy.submit}</button>
     </form>}

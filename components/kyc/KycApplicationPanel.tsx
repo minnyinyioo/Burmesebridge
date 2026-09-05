@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 
 type ApplicationKind = "student" | "teacher" | "author" | "company";
-type LocationType = "countries" | "states" | "cities";
+type LocationType = "countries" | "states" | "cities" | "postal";
 type KycRow = {
   id: number;
   application_kind: ApplicationKind;
@@ -38,10 +38,11 @@ function daysInMonth(year: string, month: string) {
   return new Date(numericYear, numericMonth, 0).getDate();
 }
 
-async function getLocations(type: LocationType, country = "", state = "") {
+async function getLocations(type: LocationType, country = "", state = "", city = "") {
   const query = new URLSearchParams({ type });
   if (country) query.set("country", country);
   if (state) query.set("state", state);
+  if (city) query.set("city", city);
   const response = await fetch(`/api/locations?${query}`);
   if (!response.ok) throw new Error("Unable to load locations");
   return response.json() as Promise<LocationOption[]>;
@@ -105,9 +106,11 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
   const [countries, setCountries] = useState<LocationOption[]>([]);
   const [regions, setRegions] = useState<LocationOption[]>([]);
   const [cities, setCities] = useState<LocationOption[]>([]);
+  const [postalOptions, setPostalOptions] = useState<LocationOption[]>([]);
   const [loadingCountries, setLoadingCountries] = useState(true);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [loadingCities, setLoadingCities] = useState(false);
+  const [loadingPostal, setLoadingPostal] = useState(false);
   const termsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -159,13 +162,24 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
   }
 
   async function changeCountry(value: string) {
-    setCountry(value); setRegion(""); setCity(""); setRegions([]); setCities([]); setLoadingRegions(true);
+    setCountry(value); setRegion(""); setCity(""); setPostalCode(""); setPostalOptions([]); setRegions([]); setCities([]); setLoadingRegions(true);
     try { setRegions(await getLocations("states", value)); } catch { setMessage(copy.locationError); } finally { setLoadingRegions(false); }
   }
 
   async function changeRegion(value: string) {
-    setRegion(value); setCity(""); setCities([]); setLoadingCities(true);
+    setRegion(value); setCity(""); setPostalCode(""); setPostalOptions([]); setCities([]); setLoadingCities(true);
     try { setCities(await getLocations("cities", country, value)); } catch { setMessage(copy.locationError); } finally { setLoadingCities(false); }
+  }
+
+  async function changeCity(value: string) {
+    setCity(value); setPostalCode(""); setPostalOptions([]);
+    if (!country || !region || !value) return;
+    setLoadingPostal(true);
+    try {
+      const next = await getLocations("postal", country, region, value);
+      setPostalOptions(next);
+      if (next.length === 1) setPostalCode(next[0].value);
+    } catch { setPostalOptions([]); } finally { setLoadingPostal(false); }
   }
 
   function pickFile(event: ChangeEvent<HTMLInputElement>, side: "front" | "back") {
@@ -244,8 +258,8 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
         <label>{copy.nationality}<input value={nationality} onChange={event => setNationality(event.target.value)} /></label>
         <label>{copy.country}<LocationCombobox value={country} options={countries} placeholder={copy.chooseCountry} searchPlaceholder={copy.search} emptyText={copy.empty} loading={loadingCountries} onChange={value => void changeCountry(value)} /></label>
         <label>{copy.region}{!loadingRegions && regions.length === 0 ? <input required maxLength={120} autoComplete="address-level1" placeholder={copy.manualRegion} value={region} onChange={event => { setRegion(event.target.value); setCity(""); }} /> : <LocationCombobox value={region} options={regions} placeholder={copy.chooseRegion} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!country} loading={loadingRegions} onChange={value => void changeRegion(value)} />}</label>
-        <label>{copy.city}{region && !loadingCities && cities.length === 0 ? <input required maxLength={120} autoComplete="address-level2" placeholder={copy.manualCity} value={city} onChange={event => setCity(event.target.value)} /> : <LocationCombobox value={city} options={cities} placeholder={copy.chooseCity} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!region} loading={loadingCities} onChange={setCity} />}</label>
-        <label>{copy.postal}<input maxLength={24} autoComplete="postal-code" value={postalCode} onChange={event => setPostalCode(event.target.value)} /></label>
+        <label>{copy.city}{region && !loadingCities && cities.length === 0 ? <input required maxLength={120} autoComplete="address-level2" placeholder={copy.manualCity} value={city} onChange={event => void changeCity(event.target.value)} /> : <LocationCombobox value={city} options={cities} placeholder={copy.chooseCity} searchPlaceholder={copy.search} emptyText={copy.empty} disabled={!region} loading={loadingCities} onChange={value => void changeCity(value)} />}</label>
+        <label>{copy.postal}{postalOptions.length > 1 ? <LocationCombobox value={postalCode} options={postalOptions} placeholder={copy.postal} searchPlaceholder={copy.search} emptyText={copy.empty} loading={loadingPostal} onChange={setPostalCode} /> : <input maxLength={24} autoComplete="postal-code" value={postalCode} onChange={event => setPostalCode(event.target.value)} placeholder={loadingPostal ? "…" : ""} />}</label>
         <label>{copy.documentType}<select value={documentType} onChange={event => setDocumentType(event.target.value)}><option value="passport">{copy.passport}</option><option value="national_id">{copy.national_id}</option><option value="driving_licence">{copy.driving_licence}</option><option value="other">{copy.other}</option></select></label>
         <label>{copy.last4}<input value={documentLast4} onChange={event => setDocumentLast4(event.target.value.replace(/[^A-Za-z0-9]/g, "").slice(0, 8))} inputMode="text" /></label>
         <label>{copy.number}<input value={documentNumber} onChange={event => setDocumentNumber(event.target.value)} autoComplete="off" /></label>
