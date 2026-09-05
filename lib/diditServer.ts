@@ -38,9 +38,11 @@ export function verifyDiditSignature(rawBody: string, signatureHeader: string, s
 }
 
 export async function createDiditSession(payload: DiditSessionPayload) {
-  const endpoint = process.env.DIDIT_CREATE_SESSION_URL || `${diditBaseUrl()}/v2/session/`;
+  const workflowId = process.env.DIDIT_WORKFLOW_ID?.trim();
+  if (!workflowId) throw new Error("Didit workflow is not configured. Set DIDIT_WORKFLOW_ID in Vercel.");
+  const endpoint = process.env.DIDIT_CREATE_SESSION_URL || `${diditBaseUrl()}/v3/session/`;
   const callbackUrl = `${appConfig.domain}/api/webhooks/didit`;
-  const vendorData = JSON.stringify({ kycId: payload.kycId, userId: payload.userId });
+  const vendorData = `kyc-${payload.kycId}`;
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -48,24 +50,17 @@ export async function createDiditSession(payload: DiditSessionPayload) {
       "x-api-key": process.env.DIDIT_API_KEY || "",
     },
     body: JSON.stringify({
-      workflow_id: process.env.DIDIT_WORKFLOW_ID || undefined,
+      workflow_id: workflowId,
       callback: callbackUrl,
-      callback_url: callbackUrl,
+      callback_method: "both",
       vendor_data: vendorData,
-      reference_id: `kyc-${payload.kycId}`,
-      contact_details: payload.email ? { email: payload.email } : undefined,
-      user: {
-        id: payload.userId,
-        email: payload.email || undefined,
-        name: payload.legalName,
-      },
+      contact_details: payload.email ? { email: payload.email, send_notification_emails: false } : undefined,
       metadata: {
         kyc_id: payload.kycId,
         user_id: payload.userId,
         source: "burmesebridge",
       },
       language: payload.locale,
-      redirect_url: `${appConfig.domain}/${payload.locale}/kyc`,
     }),
   });
   const data = await response.json().catch(() => null) as Record<string, unknown> | null;
