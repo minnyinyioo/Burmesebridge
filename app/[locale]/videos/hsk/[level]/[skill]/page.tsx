@@ -16,6 +16,7 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { hskCourses, hskSkills, type HskSkill } from "@/lib/hskCourses";
+import UnifiedMediaPlayer from "@/components/media/UnifiedMediaPlayer";
 
 const icons = {
   listening: Headphones,
@@ -127,14 +128,7 @@ export default async function HskCoursePage({
       <div className="hsk-classroom">
         <section className="hsk-player">
           <div className="hsk-course-video">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${course.youtubeId}?rel=0`}
-              title={`HSK ${level} ${names[skill]}`}
-              loading="eager"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
+            <UnifiedMediaPlayer youtubeId={course.youtubeId} title={`HSK ${level} ${names[skill]}`} />
           </div>
           <p className="hsk-video-credit">
             {zh

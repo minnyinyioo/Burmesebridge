@@ -5,6 +5,7 @@ import { ArrowRight, BookOpen, ClipboardCheck, LibraryBig, PlayCircle, Video } f
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import ContentInteractions from "@/components/ContentInteractions";
+import UnifiedMediaPlayer from "@/components/media/UnifiedMediaPlayer";
 import { PageContainer, PageIntro } from "@/components/ui/page-container";
 import {
   ContentDirectory,
@@ -166,14 +167,7 @@ export default function VideosPage() {
                 key={item.id}
               >
                 <div className="video-player">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${item.youtube_id}?rel=0`}
-                    title={item.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
+                  <UnifiedMediaPlayer youtubeId={item.youtube_id} title={item.title} />
                 </div>
                 <div className="video-card-copy">
                   {item.featured && <span>{copy.featured}</span>}
