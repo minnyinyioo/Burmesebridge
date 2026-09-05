@@ -10,6 +10,9 @@ type AdminPost = {
   content: string;
   created_at: string;
   user_id: string;
+  status: "pending" | "published" | "hidden";
+  is_pinned: boolean;
+  is_featured: boolean;
 };
 
 export default function AdminPostsPage() {
@@ -30,7 +33,7 @@ function PostsContent() {
   async function loadPosts() {
     const { data, error } = await supabase
       .from("posts")
-      .select("id, content, created_at, user_id")
+      .select("id, content, created_at, user_id, status, is_pinned, is_featured")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -56,6 +59,12 @@ function PostsContent() {
     await loadPosts();
   }
 
+  async function moderate(postId: number, patch: Partial<AdminPost>) {
+    const { error } = await supabase.from("posts").update(patch).eq("id", postId);
+    if (error) { alert(error.message); return; }
+    await loadPosts();
+  }
+
   return (
     <div className="adminShell">
       <AdminSidebar />
@@ -66,6 +75,11 @@ function PostsContent() {
         <div style={{ display: "grid", gap: 14, marginTop: 24 }}>
           {posts.map((post) => (
             <div key={post.id} className="feedCard">
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                <span className="forum-post-badge pending">{post.status}</span>
+                {post.is_pinned && <span className="forum-post-badge pinned">pinned</span>}
+                {post.is_featured && <span className="forum-post-badge featured">featured</span>}
+              </div>
               <p style={{ lineHeight: 1.8 }}>{post.content}</p>
 
               <div
@@ -78,21 +92,13 @@ function PostsContent() {
                 }}
               >
                 <span>{new Date(post.created_at).toLocaleString()}</span>
-
-                <button
-                  onClick={() => deletePost(post.id)}
-                  style={{
-                    border: "none",
-                    background: "#ef4444",
-                    color: "white",
-                    borderRadius: 999,
-                    padding: "8px 14px",
-                    cursor: "pointer",
-                    fontWeight: 700,
-                  }}
-                >
-                  Delete
-                </button>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {post.status !== "published" && <button onClick={() => moderate(post.id, { status: "published" })}>Approve</button>}
+                  {post.status !== "hidden" && <button onClick={() => moderate(post.id, { status: "hidden" })}>Hide</button>}
+                  <button onClick={() => moderate(post.id, { is_pinned: !post.is_pinned })}>{post.is_pinned ? "Unpin" : "Pin"}</button>
+                  <button onClick={() => moderate(post.id, { is_featured: !post.is_featured })}>{post.is_featured ? "Unfeature" : "Feature"}</button>
+                  <button onClick={() => deletePost(post.id)} style={{ background: "#ef4444", color: "white" }}>Delete</button>
+                </div>
               </div>
             </div>
           ))}

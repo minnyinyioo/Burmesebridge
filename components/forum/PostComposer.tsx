@@ -8,6 +8,11 @@ type PostComposerProps = {
   buttonText: string;
   onContentChange: (value: string) => void;
   onSubmit: () => void;
+  categoryId: string;
+  categories: { id: number; label: string }[];
+  tags: string;
+  onCategoryChange: (value: string) => void;
+  onTagsChange: (value: string) => void;
 };
 
 /**
@@ -25,6 +30,11 @@ export default function PostComposer({
   buttonText,
   onContentChange,
   onSubmit,
+  categoryId,
+  categories,
+  tags,
+  onCategoryChange,
+  onTagsChange,
 }: PostComposerProps) {
   return (
     <div className="feedComposer">
@@ -34,6 +44,14 @@ export default function PostComposer({
         placeholder={placeholder}
         className="forum-post-textarea"
       />
+
+      <div className="forum-composer-options">
+        <select value={categoryId} onChange={(event) => onCategoryChange(event.target.value)} aria-label="Category">
+          <option value="">Category</option>
+          {categories.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
+        </select>
+        <input value={tags} onChange={(event) => onTagsChange(event.target.value)} placeholder="Tags (comma separated)" maxLength={120} />
+      </div>
 
       <div className="forum-composer-footer">
         <button onClick={onSubmit} className="forum-post-submit" disabled={!content.trim()}>

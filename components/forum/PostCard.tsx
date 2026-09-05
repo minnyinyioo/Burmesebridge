@@ -20,6 +20,10 @@ type Post = {
   created_at: string;
   user_id: string;
   profiles?: Profile | Profile[] | null;
+  tags?: string[];
+  status?: "pending" | "published" | "hidden";
+  is_pinned?: boolean;
+  is_featured?: boolean;
 };
 
 type PostCardProps = {
@@ -113,7 +117,13 @@ export default function PostCard({
           </div>
 
           <div className="forum-post-content">
+            {(post.is_pinned || post.is_featured || post.status === "pending") && <div className="forum-post-badges">
+              {post.is_pinned && <span className="forum-post-badge pinned">Pinned</span>}
+              {post.is_featured && <span className="forum-post-badge featured">Featured</span>}
+              {post.status === "pending" && <span className="forum-post-badge pending">Pending review</span>}
+            </div>}
             {post.content}
+            {!!post.tags?.length && <div className="forum-post-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>}
           </div>
 
           <div className="forum-post-stats">

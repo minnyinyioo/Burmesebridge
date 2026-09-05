@@ -23,10 +23,16 @@ type Post = {
   content: string;
   created_at: string;
   user_id: string;
+  category_id?: number | null;
+  tags?: string[];
+  status?: "pending" | "published" | "hidden";
+  is_pinned?: boolean;
+  is_featured?: boolean;
   profiles?: Profile | Profile[] | null;
 };
 
 type ForumComment = CommentItem & { post_id: number; user_id: string; created_at: string };
+type ForumCategory = { id: number; slug: string; name_my: string; name_zh: string; name_en: string };
 
 export default function ForumPage() {
   const params = useParams();
@@ -102,6 +108,10 @@ export default function ForumPage() {
 
   const [currentUserId, setCurrentUserId] = useState("");
   const [content, setContent] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [tags, setTags] = useState("");
+  const [categories, setCategories] = useState<ForumCategory[]>([]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [myLikes, setMyLikes] = useState<Record<number, boolean>>({});
@@ -116,6 +126,12 @@ export default function ForumPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (currentUserId) void loadPosts(currentUserId);
+    // Category changes are the only dependency needed for this refresh.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory]);
+
   /**
    * 页面初始化：
    * 1. 获取当前登录用户
@@ -129,6 +145,8 @@ export default function ForumPage() {
     const userId = user?.id || "";
 
     setCurrentUserId(userId);
+    const { data: categoryRows } = await supabase.from("forum_categories").select("id,slug,name_my,name_zh,name_en").order("sort_order");
+    setCategories((categoryRows || []) as ForumCategory[]);
     await loadPosts(userId);
   }
 
@@ -151,8 +169,15 @@ export default function ForumPage() {
         id,
         content,
         created_at,
-        user_id
+        user_id,
+        category_id,
+        tags,
+        status,
+        is_pinned,
+        is_featured
       `)
+      .order("is_pinned", { ascending: false })
+      .order("is_featured", { ascending: false })
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -161,7 +186,7 @@ export default function ForumPage() {
       return;
     }
 
-    const rawPosts = postRows || [];
+    const rawPosts = (postRows || []).filter((post) => !activeCategory || String(post.category_id || "") === activeCategory);
 
     const postUserIds = Array.from(
       new Set(rawPosts.map((post) => post.user_id))
@@ -299,6 +324,9 @@ export default function ForumPage() {
     const { error } = await supabase.from("posts").insert({
       user_id: user.id,
       content: content.trim(),
+      category_id: categoryId ? Number(categoryId) : null,
+      tags: tags.split(",").map((tag) => tag.trim().toLowerCase()).filter(Boolean).slice(0, 5),
+      status: "pending",
     });
 
     if (error) {
@@ -307,6 +335,8 @@ export default function ForumPage() {
     }
 
     setContent("");
+    setTags("");
+    setCategoryId("");
     await loadPosts(user.id);
   }
 
@@ -407,7 +437,17 @@ export default function ForumPage() {
         buttonText={t.post}
         onContentChange={setContent}
         onSubmit={createPost}
+        categoryId={categoryId}
+        categories={categories.map((category) => ({ id: category.id, label: locale === "zh" ? category.name_zh : locale === "my" ? category.name_my : category.name_en }))}
+        tags={tags}
+        onCategoryChange={setCategoryId}
+        onTagsChange={setTags}
       />
+    </div>
+
+    <div className="forum-category-tabs" role="tablist">
+      <button className={!activeCategory ? "active" : ""} onClick={() => setActiveCategory("")}>All</button>
+      {categories.map((category) => <button key={category.id} className={activeCategory === String(category.id) ? "active" : ""} onClick={() => setActiveCategory(String(category.id))}>{locale === "zh" ? category.name_zh : locale === "my" ? category.name_my : category.name_en}</button>)}
     </div>
 
     {loading ? <DirectoryState kind="loading" title={t.loading}/> : loadError ? <DirectoryState kind="error" title={t.loadError} description={loadError}/> : posts.length === 0 ? <DirectoryState title={t.empty}/> : <div className="forum-feed-list">
