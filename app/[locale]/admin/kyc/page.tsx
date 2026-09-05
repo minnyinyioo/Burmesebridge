@@ -73,7 +73,10 @@ function KycAdminContent() {
   async function clearDocuments(row: KycRow) {
     setBusy(row.id); setMessage("");
     const paths = [row.document_front_path, row.document_back_path].filter(Boolean) as string[];
-    if (paths.length) await supabase.storage.from("kyc-documents").remove(paths);
+    if (paths.length) {
+      const { error: removeError } = await supabase.storage.from("kyc-documents").remove(paths);
+      if (removeError) { setBusy(null); setMessage(removeError.message); return; }
+    }
     const { error } = await supabase.rpc("clear_kyc_documents", { p_id: row.id });
     setBusy(null);
     setMessage(error ? error.message : copy.cleared);
