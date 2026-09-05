@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { BadgeCheck, FileCheck2, IdCard, ImagePlus, LockKeyhole, ShieldCheck } from "lucide-react";
+import { BadgeCheck, ExternalLink, FileCheck2, IdCard, ImagePlus, LockKeyhole, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { safeFileExtension, validateUpload } from "@/lib/fileValidation";
 
@@ -16,6 +16,10 @@ type KycRow = {
   document_back_path: string | null;
   status: "pending" | "in_review" | "approved" | "rejected" | "expired";
   review_note: string | null;
+  didit_session_id: string | null;
+  didit_session_url: string | null;
+  didit_session_status: string | null;
+  didit_verified_at: string | null;
   created_at: string;
   reviewed_at: string | null;
 };
@@ -35,7 +39,8 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
     front: "证件正面（必需）", back: "证件背面（可选）", uploadHint: "JPG、PNG、WEBP 或 PDF，单个文件最大 10MB。",
     selected: "已选择", required: "请填写必需字段并上传证件正面。", invalid: "文件格式不支持或超过 10MB。",
     termsTitle: "KYC 规则与隐私说明", termsHint: "请阅读到最后后才能勾选同意。",
-    terms: ["KYC 只用于确认你在 BurmeseBridge 私立学习平台内的身份、教师或作者申请，不是政府认证、学历认证、签证、银行或金融 KYC。", "申请资料必须真实、完整并属于本人。不得冒用身份、提交伪造或篡改文件。管理员可以要求补充资料或拒绝申请。", "平台只保存审核所需的最少信息。完整证件号码不会保存，只保存不可逆哈希和后 4–8 位；证件文件保存在私有存储中，仅申请人和授权 Admin 可查看。", "审核完成后，管理员可以按保留期限清理证件文件。你可以通过账户删除或隐私请求要求删除资料，但法律允许保留的审核记录除外。", "KYC 通过只表示 BurmeseBridge 内部审核通过，不代表任何政府教育机构、政府部门、学校、大学或职业资格机构。"],
+    terms: ["KYC 只用于确认你在 BurmeseBridge 私立学习平台内的身份、教师或作者申请，不是政府认证、学历认证、签证、银行或金融 KYC。", "申请资料必须真实、完整并属于本人。不得冒用身份、提交伪造或篡改文件。管理员可以要求补充资料或拒绝申请。", "平台只保存审核所需的最少信息。完整证件号码不会保存，只保存不可逆哈希和后 4–8 位；证件文件保存在私有存储中，仅申请人和授权 Admin 可查看。", "如平台启用 Didit 等第三方身份验证服务，你同意按页面提示跳转完成证件、人脸或活体核验；第三方服务会按其隐私政策处理核验资料，并将结果回传给 BurmeseBridge 供 Admin 审核。", "审核完成后，管理员可以按保留期限清理证件文件。你可以通过账户删除或隐私请求要求删除资料，但法律允许保留的审核记录除外。", "KYC 通过只表示 BurmeseBridge 内部审核通过，不代表任何政府教育机构、政府部门、学校、大学或职业资格机构。"],
+    didit: "Didit 自动身份验证", diditReady: "本站资料已提交。请继续完成 Didit 证件/人脸验证，然后等待 Admin 最终审核。", diditStart: "开始 Didit 验证", diditOpen: "继续 Didit 验证", diditPassed: "Didit 已验证通过", diditStatus: "Didit 状态", diditUnavailable: "Didit 暂未配置，当前使用本站人工 KYC 审核。",
     read: "我已阅读并理解 KYC 规则与隐私说明", submit: "提交 KYC 审核", submitting: "提交中…", pending: "KYC 已提交，等待 Admin 审核。", in_review: "KYC 正在人工审核。", approved: "KYC 已通过内部审核。", rejected: "KYC 未通过", expired: "KYC 已过期，请重新提交", history: "KYC 申请记录", reviewed: "审核时间", note: "审核说明", retry: "重新申请", privacy: "证件仅限授权 Admin 查看，系统使用短期签名链接。", noUser: "请先登录后申请。"
   } : locale === "my" ? {
     title: "KYC ကိုယ်ရေးအထောက်အထား စစ်ဆေးခြင်း",
@@ -47,10 +52,11 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
     front: "အရှေ့ဘက် (မဖြစ်မနေ)", back: "အနောက်ဘက် (ရွေးချယ်နိုင်သည်)", uploadHint: "JPG၊ PNG၊ WEBP သို့မဟုတ် PDF၊ ဖိုင်တစ်ခုလျှင် 10MB အထိ။",
     selected: "ရွေးထားသည်", required: "လိုအပ်သောအချက်များ ဖြည့်ပြီး အရှေ့ဘက်ဖိုင် တင်ပါ။", invalid: "ဖိုင်အမျိုးအစား မထောက်ပံ့ပါ သို့မဟုတ် 10MB ကျော်နေသည်။",
     termsTitle: "KYC စည်းမျဉ်းနှင့် ကိုယ်ရေးအချက်အလက်ရှင်းလင်းချက်", termsHint: "အောက်ဆုံးအထိ ဖတ်ပြီးမှ သဘောတူနိုင်ပါမည်။",
-    terms: ["KYC ကို BurmeseBridge ပုဂ္ဂလိကသင်ယူရေးပလက်ဖောင်းအတွင်း အကောင့်၊ ဆရာ သို့မဟုတ် စာရေးသူအဖြစ် အတည်ပြုရန်သာ သုံးသည်။ အစိုးရအသိအမှတ်ပြုမှု၊ ဘွဲ့၊ ဗီဇာ၊ ဘဏ် သို့မဟုတ် ငွေကြေး KYC မဟုတ်ပါ။", "အချက်အလက်များသည် မှန်ကန်ပြီး ကိုယ်တိုင်ပိုင်ဆိုင်ရမည်။ အခြားသူအမည်သုံးခြင်း၊ စာရွက်စာတမ်းအတု သို့မဟုတ် ပြင်ဆင်ထားသော ဖိုင်တင်ခြင်း မပြုရ။ Admin သည် ထပ်ဆင့်အချက်အလက်တောင်းနိုင်သည် သို့မဟုတ် ငြင်းပယ်နိုင်သည်။", "လိုအပ်သလောက် အနည်းဆုံးအချက်အလက်ကိုသာ သိမ်းမည်။ အထောက်အထားနံပါတ်အပြည့်ကို မသိမ်းဘဲ ပြောင်းပြန်မရနိုင်သော hash နှင့် နောက်ဆုံး ၄–၈ လုံးသာ သိမ်းမည်။ ဖိုင်များကို private storage တွင်ထားပြီး လျှောက်ထားသူနှင့် ခွင့်ပြုထားသော Admin သာ ကြည့်နိုင်သည်။", "စစ်ဆေးပြီးနောက် ထိန်းသိမ်းကာလပြည့်လျှင် Admin သည် ဖိုင်များကို ဖျက်နိုင်သည်။ အကောင့်ဖျက်ခြင်း သို့မဟုတ် privacy request ဖြင့် ဖျက်ရန် တောင်းဆိုနိုင်သော်လည်း ဥပဒေအရ ထိန်းသိမ်းရမည့် မှတ်တမ်းများ မပါဝင်ပါ။", "KYC အတည်ပြုခြင်းသည် BurmeseBridge အတွင်း စစ်ဆေးပြီးကြောင်းသာ ဖြစ်ပြီး အစိုးရ၊ အစိုးရကျောင်း၊ တက္ကသိုလ် သို့မဟုတ် အစိုးရအသိအမှတ်ပြု အရည်အချင်း မဟုတ်ပါ။"],
+    terms: ["KYC ကို BurmeseBridge ပုဂ္ဂလိကသင်ယူရေးပလက်ဖောင်းအတွင်း အကောင့်၊ ဆရာ သို့မဟုတ် စာရေးသူအဖြစ် အတည်ပြုရန်သာ သုံးသည်။ အစိုးရအသိအမှတ်ပြုမှု၊ ဘွဲ့၊ ဗီဇာ၊ ဘဏ် သို့မဟုတ် ငွေကြေး KYC မဟုတ်ပါ။", "အချက်အလက်များသည် မှန်ကန်ပြီး ကိုယ်တိုင်ပိုင်ဆိုင်ရမည်။ အခြားသူအမည်သုံးခြင်း၊ စာရွက်စာတမ်းအတု သို့မဟုတ် ပြင်ဆင်ထားသော ဖိုင်တင်ခြင်း မပြုရ။ Admin သည် ထပ်ဆင့်အချက်အလက်တောင်းနိုင်သည် သို့မဟုတ် ငြင်းပယ်နိုင်သည်။", "လိုအပ်သလောက် အနည်းဆုံးအချက်အလက်ကိုသာ သိမ်းမည်။ အထောက်အထားနံပါတ်အပြည့်ကို မသိမ်းဘဲ ပြောင်းပြန်မရနိုင်သော hash နှင့် နောက်ဆုံး ၄–၈ လုံးသာ သိမ်းမည်။ ဖိုင်များကို private storage တွင်ထားပြီး လျှောက်ထားသူနှင့် ခွင့်ပြုထားသော Admin သာ ကြည့်နိုင်သည်။", "Didit ကဲ့သို့ third-party identity verification service ကို ဖွင့်ထားပါက စာရွက်စာတမ်း၊ မျက်နှာ သို့မဟုတ် liveness စစ်ဆေးမှု ပြီးစီးရန် သဘောတူသည်။ ထို service သည် ၎င်း၏ privacy policy အတိုင်း ဒေတာကို ကိုင်တွယ်ပြီး ရလဒ်ကို BurmeseBridge Admin review အတွက် ပြန်ပို့နိုင်သည်။", "စစ်ဆေးပြီးနောက် ထိန်းသိမ်းကာလပြည့်လျှင် Admin သည် ဖိုင်များကို ဖျက်နိုင်သည်။ အကောင့်ဖျက်ခြင်း သို့မဟုတ် privacy request ဖြင့် ဖျက်ရန် တောင်းဆိုနိုင်သော်လည်း ဥပဒေအရ ထိန်းသိမ်းရမည့် မှတ်တမ်းများ မပါဝင်ပါ။", "KYC အတည်ပြုခြင်းသည် BurmeseBridge အတွင်း စစ်ဆေးပြီးကြောင်းသာ ဖြစ်ပြီး အစိုးရ၊ အစိုးရကျောင်း၊ တက္ကသိုလ် သို့မဟုတ် အစိုးရအသိအမှတ်ပြု အရည်အချင်း မဟုတ်ပါ။"],
+    didit: "Didit identity verification", diditReady: "BurmeseBridge KYC တင်ပြီးပါပြီ။ Didit တွင် စာရွက်စာတမ်း/မျက်နှာစစ်ဆေးမှု ဆက်လက်လုပ်ပြီး Admin final review ကို စောင့်ပါ။", diditStart: "Didit စစ်ဆေးမှု စတင်ရန်", diditOpen: "Didit ဆက်လုပ်ရန်", diditPassed: "Didit အတည်ပြုပြီး", diditStatus: "Didit အခြေအနေ", diditUnavailable: "Didit မ配置ရသေးပါ။ လက်ရှိ BurmeseBridge manual KYC review ကို အသုံးပြုနေသည်။",
     read: "KYC စည်းမျဉ်းနှင့် ကိုယ်ရေးအချက်အလက်ရှင်းလင်းချက်ကို ဖတ်ပြီး နားလည်သဘောတူပါသည်", submit: "KYC တင်မည်", submitting: "တင်နေသည်…", pending: "KYC တင်ပြီးပါပြီ။ Admin စစ်ဆေးရန် စောင့်နေသည်။", in_review: "KYC ကို Admin က စစ်ဆေးနေသည်။", approved: "KYC ကို BurmeseBridge အတွင်း အတည်ပြုပြီးပါပြီ။", rejected: "KYC အတည်မပြုပါ", expired: "KYC သက်တမ်းကုန်ပါပြီ။ ပြန်လည်တင်ပါ", history: "KYC မှတ်တမ်း", reviewed: "စစ်ဆေးချိန်", note: "စစ်ဆေးချက်", retry: "ပြန်လည်လျှောက်ထားရန်", privacy: "ဖိုင်များကို ခွင့်ပြုထားသော Admin သာ ကာလတို signed link ဖြင့် ကြည့်နိုင်သည်။", noUser: "အရင် အကောင့်ဝင်ပါ။"
   } : {
-    title: "KYC identity verification", intro: "A self-hosted, human-reviewed identity workflow. It verifies status inside BurmeseBridge only and is not a government identity or qualification.", kind: "Application purpose", student: "Student status", teacher: "Teacher status", author: "Author status", company: "Company / organisation status", legalName: "Legal name on document", dob: "Date of birth", nationality: "Nationality", country: "Country of residence", address: "Residential address", documentType: "Document type", passport: "Passport", national_id: "National ID", driving_licence: "Driving licence", other: "Other government document", last4: "Last 4–8 characters of document number", number: "Full document number (optional; hashed and never stored in plain text)", front: "Front of document (required)", back: "Back of document (optional)", uploadHint: "JPG, PNG, WEBP or PDF; up to 10MB per file.", selected: "Selected", required: "Complete the required fields and upload the front of your document.", invalid: "Unsupported file type or file exceeds 10MB.", termsTitle: "KYC rules and privacy notice", termsHint: "Read to the end before ticking consent.", terms: ["KYC is used only to confirm your account, teacher, author, or company status inside the private BurmeseBridge learning platform. It is not government accreditation, an academic qualification, visa, banking, or financial KYC service.", "Your information must be truthful, complete, and yours. Impersonation, forged documents, and altered files are prohibited. Admin may request more evidence or reject an application.", "We collect the minimum information needed for review. The full document number is never stored; only a one-way hash and the last 4–8 characters are retained. Files stay in private storage and are visible only to you and authorised Admin reviewers.", "After review, an Admin may delete document files when the retention period ends. You may request deletion through account deletion or a privacy request, except for records the law allows us to retain.", "Approval only records an internal BurmeseBridge review. It is not approval by a government, school, university, or professional-qualification authority."], read: "I have read, understood, and agree to the KYC rules and privacy notice", submit: "Submit KYC review", submitting: "Submitting…", pending: "KYC submitted. Waiting for Admin review.", in_review: "KYC is being reviewed by Admin.", approved: "KYC passed BurmeseBridge's internal review.", rejected: "KYC was not approved", expired: "KYC expired. Please submit again", history: "KYC history", reviewed: "Reviewed", note: "Review note", retry: "Submit again", privacy: "Documents are visible only to authorised Admin reviewers through short-lived signed links.", noUser: "Please sign in before applying.",
+    title: "KYC identity verification", intro: "A self-hosted, human-reviewed identity workflow. It verifies status inside BurmeseBridge only and is not a government identity or qualification.", kind: "Application purpose", student: "Student status", teacher: "Teacher status", author: "Author status", company: "Company / organisation status", legalName: "Legal name on document", dob: "Date of birth", nationality: "Nationality", country: "Country of residence", address: "Residential address", documentType: "Document type", passport: "Passport", national_id: "National ID", driving_licence: "Driving licence", other: "Other government document", last4: "Last 4–8 characters of document number", number: "Full document number (optional; hashed and never stored in plain text)", front: "Front of document (required)", back: "Back of document (optional)", uploadHint: "JPG, PNG, WEBP or PDF; up to 10MB per file.", selected: "Selected", required: "Complete the required fields and upload the front of your document.", invalid: "Unsupported file type or file exceeds 10MB.", termsTitle: "KYC rules and privacy notice", termsHint: "Read to the end before ticking consent.", terms: ["KYC is used only to confirm your account, teacher, author, or company status inside the private BurmeseBridge learning platform. It is not government accreditation, an academic qualification, visa, banking, or financial KYC service.", "Your information must be truthful, complete, and yours. Impersonation, forged documents, and altered files are prohibited. Admin may request more evidence or reject an application.", "We collect the minimum information needed for review. The full document number is never stored; only a one-way hash and the last 4–8 characters are retained. Files stay in private storage and are visible only to you and authorised Admin reviewers.", "When third-party identity verification such as Didit is enabled, you agree to complete document, face, or liveness checks through that provider. The provider processes verification data under its privacy terms and sends the result back to BurmeseBridge for Admin review.", "After review, an Admin may delete document files when the retention period ends. You may request deletion through account deletion or a privacy request, except for records the law allows us to retain.", "Approval only records an internal BurmeseBridge review. It is not approval by a government, school, university, or professional-qualification authority."], read: "I have read, understood, and agree to the KYC rules and privacy notice", submit: "Submit KYC review", submitting: "Submitting…", pending: "KYC submitted. Waiting for Admin review.", in_review: "KYC is being reviewed by Admin.", approved: "KYC passed BurmeseBridge's internal review.", rejected: "KYC was not approved", expired: "KYC expired. Please submit again", history: "KYC history", reviewed: "Reviewed", note: "Review note", retry: "Submit again", privacy: "Documents are visible only to authorised Admin reviewers through short-lived signed links.", noUser: "Please sign in before applying.", didit: "Didit identity verification", diditReady: "Your BurmeseBridge KYC form is submitted. Continue with Didit document/face verification, then wait for Admin final review.", diditStart: "Start Didit verification", diditOpen: "Continue Didit verification", diditPassed: "Didit verified", diditStatus: "Didit status", diditUnavailable: "Didit is not configured yet. BurmeseBridge manual KYC review is still available.",
   };
 
   const [application, setApplication] = useState<KycRow | null>(null);
@@ -74,7 +80,7 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
 
   useEffect(() => {
     let active = true;
-    void supabase.from("kyc_verifications").select("id,application_kind,legal_name,country,document_type,document_front_path,document_back_path,status,review_note,created_at,reviewed_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle().then(({ data }) => { if (active) setApplication((data || null) as KycRow | null); });
+    void supabase.from("kyc_verifications").select("id,application_kind,legal_name,country,document_type,document_front_path,document_back_path,status,review_note,didit_session_id,didit_session_url,didit_session_status,didit_verified_at,created_at,reviewed_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle().then(({ data }) => { if (active) setApplication((data || null) as KycRow | null); });
     return () => { active = false; };
   }, [userId]);
 
@@ -122,6 +128,27 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
     setApplication(data as KycRow); setDocumentNumber(""); setFrontFile(null); setBackFile(null); setConsent(false); setTermsRead(false); setBusy(false); setMessage(copy.pending);
   }
 
+  async function startDidit() {
+    if (!application) return;
+    setBusy(true); setMessage("");
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) { setBusy(false); setMessage(copy.noUser); return; }
+    const response = await fetch("/api/kyc/didit-session", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify({ kycId: application.id, locale }),
+    });
+    const result = await response.json().catch(() => null) as { message?: string; sessionUrl?: string; sessionId?: string } | null;
+    setBusy(false);
+    if (!response.ok || !result?.sessionUrl) {
+      setMessage(response.status === 503 ? copy.diditUnavailable : result?.message || copy.diditUnavailable);
+      return;
+    }
+    setApplication({ ...application, status: "in_review", didit_session_id: result.sessionId || application.didit_session_id, didit_session_url: result.sessionUrl, didit_session_status: "created" });
+    window.location.href = result.sessionUrl;
+  }
+
   const open = application?.status === "pending" || application?.status === "in_review";
   const statusText = application ? copy[application.status] : "";
   if (!userId) return <section className="kyc-panel"><p>{copy.noUser}</p></section>;
@@ -129,6 +156,7 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
   return <section className="kyc-panel" id="kyc-verification">
     <header className="kyc-panel-header"><div><span className="account-panel-eyebrow"><ShieldCheck size={16}/>{copy.title}</span><h2>{copy.title}</h2><p>{copy.intro}</p></div><LockKeyhole size={24}/></header>
     {application ? <div className={`kyc-status kyc-status-${application.status}`}><BadgeCheck size={18}/><div><strong>{statusText}</strong><small>{new Date(application.created_at).toLocaleString(locale)} · {application.legal_name} · {application.country}</small>{application.review_note ? <p>{copy.note}: {application.review_note}</p> : null}</div></div> : null}
+    {application && open ? <div className="kyc-didit-card"><div><strong>{copy.didit}</strong><p>{application.didit_verified_at ? copy.diditPassed : copy.diditReady}</p>{application.didit_session_status ? <small>{copy.diditStatus}: {application.didit_session_status}</small> : null}</div>{application.didit_session_url ? <a href={application.didit_session_url} target="_blank" rel="noreferrer">{copy.diditOpen}<ExternalLink size={14}/></a> : <button type="button" onClick={() => void startDidit()} disabled={busy}>{copy.diditStart}</button>}</div> : null}
     {!open && application?.status === "approved" ? <p className="kyc-privacy-note">{copy.privacy}</p> : null}
     {!open && application?.status === "rejected" ? <button type="button" className="kyc-retry" onClick={() => setApplication(null)}>{copy.retry}</button> : null}
     {!application || (!open && application.status === "rejected") || application.status === "expired" ? <>
