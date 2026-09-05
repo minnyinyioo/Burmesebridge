@@ -11,6 +11,8 @@ export type HskQuestion = {
   acceptedAnswers?: string[];
 };
 
+export type HskPresentedQuestion = HskQuestion & { originalAnswer?: number; originalOptions?: [string, string, string, string] };
+
 export const hskQuestions: HskQuestion[] = [
   { id:"h1-1",level:1,skill:"vocabulary",prompt:"“谢谢”的意思是：",options:["问候","感谢","道歉","告别"],answer:1,explanation:"“谢谢”用于表达感谢。" },
   { id:"h1-2",level:1,skill:"grammar",prompt:"我___学生。",options:["是","有","在","会"],answer:0,explanation:"判断身份使用判断动词“是”。" },
@@ -155,6 +157,31 @@ export function localizeHskQuestion(question:HskQuestion,locale:string):HskQuest
   return translated ? {...question,prompt:translated.prompt,explanation:translated.explanation,options:translated.options||question.options} : question;
 }
 
+function shuffleArray<T>(items:T[]){
+  const next=[...items];
+  for(let i=next.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [next[i],next[j]]=[next[j],next[i]];
+  }
+  return next;
+}
+
+export function createHskAssessmentPaper(previousQuestionIds:string[]=[]):HskPresentedQuestion[]{
+  const previous=new Set(previousQuestionIds);
+  const orderedLevels=[1,2,3,4,5,6] as const;
+  const paper=orderedLevels.flatMap(level=>{
+    const levelQuestions=hskQuestions.filter(question=>question.level===level);
+    const fresh=shuffleArray(levelQuestions.filter(question=>!previous.has(question.id)));
+    const repeated=shuffleArray(levelQuestions.filter(question=>previous.has(question.id)));
+    return [...fresh,...repeated];
+  });
+  return paper.map(question=>{
+    if(question.responseType==="text"||!question.options||typeof question.answer!=="number") return question;
+    const optionPairs=shuffleArray(question.options.map((option,index)=>({option,index})));
+    return {...question,originalAnswer:question.answer,originalOptions:question.options,options:optionPairs.map(item=>item.option) as [string,string,string,string],answer:optionPairs.findIndex(item=>item.index===question.answer)};
+  });
+}
+
 export const cefrByHsk = { 0:"Pre-A1",1:"A1",2:"A2",3:"B1",4:"B2",5:"C1",6:"C2" } as const;
 
 export type HskAnswer = number | string;
@@ -166,11 +193,11 @@ export function isHskAnswerCorrect(question:HskQuestion,value:HskAnswer|undefine
   return (question.acceptedAnswers||[String(question.answer)]).some(item=>item.replace(/[，。！？、,.!?\s]/g,"")===normalized);
 }
 
-export function scoreHsk(answers: Record<string, HskAnswer>) {
+export function scoreHsk(answers: Record<string, HskAnswer>, questions:HskQuestion[]=hskQuestions) {
   const byLevel = [1,2,3,4,5,6].map((level) => {
-    const questions = hskQuestions.filter((question) => question.level === level);
-    const correct = questions.filter((question) => isHskAnswerCorrect(question,answers[question.id])).length;
-    return { level, correct, total: questions.length, rate: correct / questions.length };
+    const levelQuestions = questions.filter((question) => question.level === level);
+    const correct = levelQuestions.filter((question) => isHskAnswerCorrect(question,answers[question.id])).length;
+    return { level, correct, total: levelQuestions.length, rate: levelQuestions.length ? correct / levelQuestions.length : 0 };
   });
   const totalCorrect = byLevel.reduce((sum, item) => sum + item.correct, 0);
   let estimatedLevel = 0;
@@ -183,9 +210,9 @@ export function scoreHsk(answers: Record<string, HskAnswer>) {
     else break;
   }
   const bySkill=(["listening","reading","writing","vocabulary","grammar"] as const).map(skill=>{
-    const questions=hskQuestions.filter(question=>question.skill===skill);
-    const correct=questions.filter(question=>isHskAnswerCorrect(question,answers[question.id])).length;
-    return {skill,correct,total:questions.length,rate:questions.length?correct/questions.length:0};
+    const skillQuestions=questions.filter(question=>question.skill===skill);
+    const correct=skillQuestions.filter(question=>isHskAnswerCorrect(question,answers[question.id])).length;
+    return {skill,correct,total:skillQuestions.length,rate:skillQuestions.length?correct/skillQuestions.length:0};
   });
-  return { estimatedLevel, cefr: cefrByHsk[estimatedLevel as keyof typeof cefrByHsk], score: Math.round(totalCorrect / hskQuestions.length * 100), correct: totalCorrect, total: hskQuestions.length, byLevel, bySkill };
+  return { estimatedLevel, cefr: cefrByHsk[estimatedLevel as keyof typeof cefrByHsk], score: Math.round(totalCorrect / questions.length * 100), correct: totalCorrect, total: questions.length, byLevel, bySkill };
 }

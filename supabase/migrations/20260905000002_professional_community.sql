@@ -36,6 +36,7 @@ create policy "Anyone can view active forum categories" on public.forum_categori
 create policy "Moderators manage forum categories" on public.forum_categories for all using (public.is_admin_or_moderator()) with check (public.is_admin_or_moderator());
 
 drop policy if exists "Anyone can view posts" on public.posts;
+drop policy if exists "Anyone can view published posts" on public.posts;
 create policy "Anyone can view published posts" on public.posts for select using (status = 'published' or user_id = auth.uid() or public.is_admin_or_moderator());
 drop policy if exists "Users can create own posts" on public.posts;
 create policy "Users can create own posts" on public.posts for insert with check (auth.uid() = user_id and (status = 'pending' or (status = 'published' and public.is_admin_or_moderator())));
