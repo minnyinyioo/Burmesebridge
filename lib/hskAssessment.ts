@@ -151,10 +151,17 @@ const hskQuestionTranslations: Record<"my"|"en",Record<string,QuestionTranslatio
   }
 };
 
-export function localizeHskQuestion(question:HskQuestion,locale:string):HskQuestion {
+export function localizeHskQuestion(question:HskQuestion|HskPresentedQuestion,locale:string):HskQuestion {
   if(locale!=="my"&&locale!=="en") return question;
   const translated=hskQuestionTranslations[locale][question.id];
-  return translated ? {...question,prompt:translated.prompt,explanation:translated.explanation,options:translated.options||question.options} : question;
+  if(!translated) return question;
+  const options=translated.options&&question.options
+    ? question.options.map((option)=>{
+      const originalIndex=(question as HskPresentedQuestion).originalOptions?.indexOf(option);
+      return originalIndex!==undefined&&originalIndex>=0 ? translated.options?.[originalIndex]||option : option;
+    }) as [string,string,string,string]
+    : question.options;
+  return {...question,prompt:translated.prompt,explanation:translated.explanation,options};
 }
 
 function shuffleArray<T>(items:T[]){
