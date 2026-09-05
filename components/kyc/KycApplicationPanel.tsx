@@ -72,7 +72,6 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
   const [frontFile, setFrontFile] = useState<File | null>(null);
   const [backFile, setBackFile] = useState<File | null>(null);
   const [termsRead, setTermsRead] = useState(false);
-  const [termsMeasured, setTermsMeasured] = useState(false);
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -87,13 +86,11 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
 
   useEffect(() => {
     if (!expanded) return;
-    setTermsMeasured(false);
     setTermsRead(false);
     setConsent(false);
     const frame = window.requestAnimationFrame(() => {
       const element = termsRef.current;
       if (!element) return;
-      setTermsMeasured(true);
       if (element.scrollHeight <= element.clientHeight + 1) setTermsRead(true);
     });
     return () => window.cancelAnimationFrame(frame);
@@ -109,7 +106,7 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
 
   async function submit() {
     if (!userId) { setMessage(copy.noUser); return; }
-    if (!legalName.trim() || !dateOfBirth || !nationality.trim() || !country.trim() || !address.trim() || !documentLast4.trim() || !frontFile || !termsMeasured || !termsRead || !consent) { setMessage(copy.required); return; }
+    if (!legalName.trim() || !dateOfBirth || !nationality.trim() || !country.trim() || !address.trim() || !documentLast4.trim() || !frontFile || !termsRead || !consent) { setMessage(copy.required); return; }
     setBusy(true); setMessage("");
     const folder = `${userId}/${crypto.randomUUID()}`;
     const frontPath = `${folder}/front.${safeFileExtension(frontFile)}`;
@@ -179,8 +176,8 @@ export default function KycApplicationPanel({ locale, userId, defaultExpanded = 
         <label className="kyc-upload-box"><span>{frontFile ? <FileCheck2 size={17}/> : <ImagePlus size={17}/>} {copy.front}</span><small>{frontFile ? `${copy.selected}: ${frontFile.name}` : copy.uploadHint}</small><input type="file" accept={ACCEPTED_TYPES.join(",")} onChange={event => pickFile(event, "front")} /></label>
         <label className="kyc-upload-box"><span>{backFile ? <FileCheck2 size={17}/> : <ImagePlus size={17}/>} {copy.back}</span><small>{backFile ? `${copy.selected}: ${backFile.name}` : copy.uploadHint}</small><input type="file" accept={ACCEPTED_TYPES.join(",")} onChange={event => pickFile(event, "back")} /></label>
       </div>
-      <div className="kyc-terms"><h3>{copy.termsTitle}</h3><p>{copy.termsHint}</p><div ref={termsRef} className="kyc-terms-scroll" tabIndex={0} onScroll={event => { const element = event.currentTarget; if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setTermsRead(true); }}>{copy.terms.map((term, index) => <p key={index}>{term}</p>)}{termsRead ? <strong>✓ {copy.read}</strong> : null}</div><label className="kyc-consent"><input type="checkbox" checked={consent} disabled={!termsMeasured || !termsRead} onChange={event => setConsent(event.target.checked)} /><span>{copy.read}</span></label></div>
-      <button type="button" className="kyc-submit" onClick={() => void submit()} disabled={busy || !termsMeasured || !termsRead || !consent}>{busy ? copy.submitting : copy.submit}</button>
+      <div className="kyc-terms"><h3>{copy.termsTitle}</h3><p>{copy.termsHint}</p><div ref={termsRef} className="kyc-terms-scroll" tabIndex={0} onScroll={event => { const element = event.currentTarget; if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setTermsRead(true); }}>{copy.terms.map((term, index) => <p key={index}>{term}</p>)}{termsRead ? <strong>✓ {copy.read}</strong> : null}</div><label className="kyc-consent"><input type="checkbox" checked={consent} disabled={!termsRead} onChange={event => setConsent(event.target.checked)} /><span>{copy.read}</span></label></div>
+      <button type="button" className="kyc-submit" onClick={() => void submit()} disabled={busy || !termsRead || !consent}>{busy ? copy.submitting : copy.submit}</button>
     </> : null}
     <p className="kyc-privacy-note"><LockKeyhole size={15}/>{copy.privacy}</p>
   </section>;
