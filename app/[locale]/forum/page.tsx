@@ -59,6 +59,7 @@ export default function ForumPage() {
       loading: "ဆွေးနွေးချက်များ ရယူနေသည်",
       empty: "ပထမဆုံး ဆွေးနွေးချက်ကို မျှဝေပါ",
       loadError: "ဆွေးနွေးချက်များကို ရယူ၍ မရပါ",
+      search: "ရှာဖွေမည်", searchPlaceholder: "ဆွေးနွေးမှုများကို ရှာပါ", latest: "အသစ်ဆုံး", popular: "လူကြိုက်များဆုံး", all: "အားလုံး",
     },
     zh: {
       title: "社区论坛",
@@ -80,6 +81,7 @@ export default function ForumPage() {
       loading: "正在加载讨论",
       empty: "还没有帖子，来发布第一条讨论吧",
       loadError: "讨论内容加载失败，请稍后重试",
+      search: "搜索", searchPlaceholder: "搜索社区讨论", latest: "最新", popular: "热门", all: "全部",
     },
     en: {
       title: "Forum",
@@ -101,6 +103,7 @@ export default function ForumPage() {
       loading: "Loading discussions",
       empty: "No posts yet. Start the first discussion.",
       loadError: "Discussions could not be loaded. Please try again.",
+      search: "Search", searchPlaceholder: "Search community discussions", latest: "Latest", popular: "Popular", all: "All",
     },
   };
 
@@ -112,6 +115,8 @@ export default function ForumPage() {
   const [tags, setTags] = useState("");
   const [categories, setCategories] = useState<ForumCategory[]>([]);
   const [activeCategory, setActiveCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortMode, setSortMode] = useState<"latest" | "popular">("latest");
   const [posts, setPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [myLikes, setMyLikes] = useState<Record<number, boolean>>({});
@@ -426,6 +431,13 @@ export default function ForumPage() {
     alert(t.copied);
   }
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const visiblePosts = posts
+    .filter((post) => !normalizedSearch || `${post.content} ${(post.tags || []).join(" ")}`.toLowerCase().includes(normalizedSearch))
+    .sort((a, b) => sortMode === "popular"
+      ? ((likes[b.id] || 0) + (comments[b.id]?.length || 0)) - ((likes[a.id] || 0) + (comments[a.id]?.length || 0))
+      : new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
   return (
   <PageContainer className="forum-page">
     <PageIntro eyebrow={<><MessageCircleMore size={18}/>{t.eyebrow}</>} title={t.title} description={t.subtitle}/>
@@ -446,12 +458,20 @@ export default function ForumPage() {
     </div>
 
     <div className="forum-category-tabs" role="tablist">
-      <button className={!activeCategory ? "active" : ""} onClick={() => setActiveCategory("")}>All</button>
+      <button className={!activeCategory ? "active" : ""} onClick={() => setActiveCategory("")}>{t.all}</button>
       {categories.map((category) => <button key={category.id} className={activeCategory === String(category.id) ? "active" : ""} onClick={() => setActiveCategory(String(category.id))}>{locale === "zh" ? category.name_zh : locale === "my" ? category.name_my : category.name_en}</button>)}
     </div>
 
-    {loading ? <DirectoryState kind="loading" title={t.loading}/> : loadError ? <DirectoryState kind="error" title={t.loadError} description={loadError}/> : posts.length === 0 ? <DirectoryState title={t.empty}/> : <div className="forum-feed-list">
-      {posts.map((post) => (
+    <div className="forum-discovery-bar">
+      <div className="forum-search-field"><span aria-hidden="true">⌕</span><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder={t.searchPlaceholder} aria-label={t.search} /></div>
+      <div className="forum-sort-tabs" role="tablist">
+        <button className={sortMode === "latest" ? "active" : ""} onClick={() => setSortMode("latest")}>{t.latest}</button>
+        <button className={sortMode === "popular" ? "active" : ""} onClick={() => setSortMode("popular")}>{t.popular}</button>
+      </div>
+    </div>
+
+    {loading ? <DirectoryState kind="loading" title={t.loading}/> : loadError ? <DirectoryState kind="error" title={t.loadError} description={loadError}/> : visiblePosts.length === 0 ? <DirectoryState title={t.empty}/> : <div className="forum-feed-list">
+      {visiblePosts.map((post) => (
         <PostCard
           key={post.id}
           post={post}
