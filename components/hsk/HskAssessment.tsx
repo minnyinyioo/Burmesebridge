@@ -41,9 +41,15 @@ export default function HskAssessment({ locale }: { locale: string }) {
 
   useEffect(()=>{let active=true;if(!reportMeta.verificationUrl)return;void import("qrcode").then(({default:QRCode})=>QRCode.toDataURL(reportMeta.verificationUrl,{width:220,margin:1,errorCorrectionLevel:"M",color:{dark:"#0e5a49",light:"#fffdf8"}})).then(value=>{if(active)setQrCode(value)});return()=>{active=false}},[reportMeta.verificationUrl]);
 
-  function start(){
-    const last=typeof window==="undefined"?[]:JSON.parse(window.localStorage.getItem("bb:lastHskQuestionIds")||"[]") as string[];
-    const nextPaper=createHskAssessmentPaper(last);
+  async function start(){
+    let previous=typeof window==="undefined"?[]:JSON.parse(window.localStorage.getItem("bb:lastHskQuestionIds")||"[]") as string[];
+    const {data:{user}}=await supabase.auth.getUser();
+    if(user){
+      const {data}=await supabase.from("hsk_assessment_attempts").select("question_ids").eq("user_id",user.id).order("created_at",{ascending:false}).limit(8);
+      const historic=(data||[]).flatMap(row=>Array.isArray(row.question_ids)?row.question_ids.filter((id):id is string=>typeof id==="string"):[]);
+      previous=Array.from(new Set([...previous,...historic]));
+    }
+    const nextPaper=createHskAssessmentPaper(previous);
     setPaper(nextPaper);setAnswers({});setIndex(0);setSaved("idle");setQrCode("");setPhase("test");
   }
   function playAudio(){
