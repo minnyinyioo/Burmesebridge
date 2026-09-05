@@ -77,6 +77,7 @@ const pageEntries: Array<{ path: string; title: Record<Locale, string>; text: st
   { path: "/knowledge", title: { my: "သင်တန်းများ", zh: "课程中心", en: "Course center" }, text: "courses knowledge learning 课程 知识付费 သင်တန်း" },
   { path: "/privacy", title: { my: "ကိုယ်ရေးအချက်အလက် မူဝါဒ", zh: "隐私政策", en: "Privacy policy" }, text: "privacy policy 隐私政策 ကိုယ်ရေးအချက်အလက်" },
   { path: "/terms", title: { my: "အသုံးပြုမှုစည်းမျဉ်း", zh: "服务条款", en: "Terms of service" }, text: "terms service 服务条款 使用条款 စည်းမျဉ်း" },
+  { path: "/refund-policy", title: { my: "ငွေပြန်အမ်းရေး မူဝါဒ", zh: "退款政策", en: "Refund policy" }, text: "refund policy refunds cancellation paid courses membership 退款政策 退款 退费 购买 课程 会员 ငွေပြန်အမ်း refund ဝယ်ယူမှု" },
 ];
 
 export async function searchSite(rawQuery: string, rawLocale: string): Promise<SiteSearchResult[]> {

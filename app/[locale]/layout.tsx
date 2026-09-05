@@ -273,6 +273,13 @@ export default async function LocaleLayout({
                     ? "ဝန်ဆောင်မှု စည်းမျဉ်းများ"
                     : "Terms of service"}
               </Link>
+              <Link href={`/${locale}/refund-policy`}>
+                {locale === "zh"
+                  ? "退款政策"
+                  : locale === "my"
+                    ? "ငွေပြန်အမ်းရေး မူဝါဒ"
+                    : "Refund policy"}
+              </Link>
               <Link href={`/${locale}/community-guidelines`}>
                 {locale === "zh"
                   ? "社区规则"
@@ -358,6 +365,13 @@ export default async function LocaleLayout({
                   : locale === "my"
                     ? "ဝန်ဆောင်မှုစည်းမျဉ်း"
                     : "Terms"}
+              </Link>
+              <Link href={`/${locale}/refund-policy`}>
+                {locale === "zh"
+                  ? "退款"
+                  : locale === "my"
+                    ? "ငွေပြန်အမ်း"
+                    : "Refunds"}
               </Link>
               <Link href={`/${locale}/data-deletion`}>
                 {locale === "zh"
