@@ -46,6 +46,7 @@ export async function createDiditSession(payload: DiditSessionPayload) {
   const endpoint = process.env.DIDIT_CREATE_SESSION_URL || "https://verification.didit.me/v3/session/";
   const callbackUrl = `${appConfig.domain}/api/webhooks/didit`;
   const vendorData = `kyc-${payload.kycId}`;
+  const diditLanguage = payload.locale === "my" ? "en" : payload.locale === "zh" ? "zh-CN" : "en";
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -63,7 +64,7 @@ export async function createDiditSession(payload: DiditSessionPayload) {
         user_id: payload.userId,
         source: "burmesebridge",
       },
-      language: payload.locale,
+      language: diditLanguage,
     }),
   });
   const data = await response.json().catch(() => null) as Record<string, unknown> | null;
