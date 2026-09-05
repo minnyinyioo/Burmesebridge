@@ -18,6 +18,9 @@ create table if not exists public.knowledge_lesson_progress (
 );
 
 alter table public.knowledge_lesson_progress enable row level security;
+drop policy if exists "Users can view own lesson progress" on public.knowledge_lesson_progress;
+drop policy if exists "Users can write own lesson progress" on public.knowledge_lesson_progress;
+drop policy if exists "Users can update own lesson progress" on public.knowledge_lesson_progress;
 create policy "Users can view own lesson progress" on public.knowledge_lesson_progress
   for select using (user_id = auth.uid() or public.is_admin_or_moderator());
 create policy "Users can write own lesson progress" on public.knowledge_lesson_progress
