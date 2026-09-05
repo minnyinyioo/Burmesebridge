@@ -21,5 +21,5 @@ export default function KycPage() {
     return () => { active = false; };
   }, [locale, router]);
 
-  return <main className="account-page"><section className="account-shell kyc-page-shell"><KycApplicationPanel locale={locale} userId={userId} /></section></main>;
+  return <main className="account-page"><section className="account-shell kyc-page-shell"><KycApplicationPanel locale={locale} userId={userId} defaultExpanded /></section></main>;
 }

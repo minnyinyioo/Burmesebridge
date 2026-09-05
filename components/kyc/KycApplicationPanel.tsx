@@ -27,7 +27,7 @@ type KycRow = {
 const TERMS_VERSION = "kyc-2026-09-05";
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
-export default function KycApplicationPanel({ locale, userId }: { locale: string; userId: string }) {
+export default function KycApplicationPanel({ locale, userId, defaultExpanded = false }: { locale: string; userId: string; defaultExpanded?: boolean }) {
   const copy = locale === "zh" ? {
     title: "KYC 身份核验",
     intro: "使用自托管、人工审核的身份核验流程。证件只供 BurmeseBridge 内部审核，不代表政府身份或政府资格。",
@@ -76,7 +76,7 @@ export default function KycApplicationPanel({ locale, userId }: { locale: string
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const termsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
