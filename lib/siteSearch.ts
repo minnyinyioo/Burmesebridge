@@ -77,12 +77,12 @@ const pageEntries: Array<{ path: string; title: Record<Locale, string>; text: st
   { path: "/knowledge", title: { my: "သင်တန်းများ", zh: "课程中心", en: "Course center" }, text: "courses knowledge learning 课程 知识付费 သင်တန်း" },
   { path: "/privacy", title: { my: "ကိုယ်ရေးအချက်အလက် မူဝါဒ", zh: "隐私政策", en: "Privacy policy" }, text: "privacy policy 隐私政策 ကိုယ်ရေးအချက်အလက်" },
   { path: "/terms", title: { my: "အသုံးပြုမှုစည်းမျဉ်း", zh: "服务条款", en: "Terms of service" }, text: "terms service 服务条款 使用条款 စည်းမျဉ်း" },
-  { path: "/refund-policy", title: { my: "ငွေပြန်အမ်းရေး မူဝါဒ", zh: "退款政策", en: "Refund policy" }, text: "refund policy refunds cancellation paid courses membership 退款政策 退款 退费 购买 课程 会员 ငွေပြန်အမ်း refund ဝယ်ယူမှု" },
+  { path: "/refund-policy", title: { my: "ငွေပြန်အမ်းရေး မူဝါဒ", zh: "退款政策", en: "Refund policy" }, text: "refund policy refunds cancellation paid courses membership resale piracy chargeback compensation 退款政策 退款 退费 购买 课程 会员 转卖 盗版 赔偿 法律追究 ငွေပြန်အမ်း refund ဝယ်ယူမှု resale piracy" },
   { path: "/cookie-policy", title: { my: "Cookie မူဝါဒ", zh: "Cookie 使用政策", en: "Cookie policy" }, text: "cookie policy cookies consent tracking Cookie 使用政策 cookie 同意 跟踪 ကွတ်ကီး consent tracking" },
-  { path: "/payment-policy", title: { my: "ငွေပေးချေမှု မူဝါဒ", zh: "支付政策", en: "Payment policy" }, text: "payment policy payment proof review chargeback 支付政策 付款 凭证 审核 拒付 ငွေပေးချေမှု payment proof" },
+  { path: "/payment-policy", title: { my: "ငွေပေးချေမှု မူဝါဒ", zh: "支付政策", en: "Payment policy" }, text: "payment policy payment proof review chargeback paid course restrictions resale piracy compensation 支付政策 付款 凭证 审核 拒付 付费课程 禁止转卖 盗版 法律追究 赔偿 ငွေပေးချေမှု payment proof resale piracy" },
   { path: "/verification-policy", title: { my: "Identity verification မူဝါဒ", zh: "身份认证与证件政策", en: "Identity verification policy" }, text: "KYC verification Didit identity student teacher ID 身份认证 教师证 学生证 证件 didit ကိုယ်ရေးအထောက်အထား" },
   { path: "/teacher-author-agreement", title: { my: "ဆရာနှင့် စာရေးသူ သဘောတူညီချက်", zh: "教师与作者协议", en: "Teacher and author agreement" }, text: "teacher author agreement course copyright original content 教师 作者 协议 原创 版权 课程 ဆရာ စာရေးသူ မူပိုင်" },
-  { path: "/acceptable-use-policy", title: { my: "အသုံးပြုခွင့် မူဝါဒ", zh: "可接受使用政策", en: "Acceptable use policy" }, text: "acceptable use policy abuse security paid content access control 可接受使用 安全 滥用 付费内容 账号 အသုံးပြုခွင့် security" },
+  { path: "/acceptable-use-policy", title: { my: "အသုံးပြုခွင့် မူဝါဒ", zh: "可接受使用政策", en: "Acceptable use policy" }, text: "acceptable use policy abuse security paid content access control resale piracy account sharing compensation 可接受使用 安全 滥用 付费内容 账号 转卖 盗版 共享 赔偿 法律追究 အသုံးပြုခွင့် security resale piracy" },
 ];
 
 export async function searchSite(rawQuery: string, rawLocale: string): Promise<SiteSearchResult[]> {
