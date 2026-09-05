@@ -3847,6 +3847,21 @@ svg {
 .forum-post-badge.featured { color: #075f4b; background: #d9f2e9; }
 .forum-post-badge.pending { color: #8a4a12; background: #ffead8; }
 .forum-post-tags span { color: var(--brand-accent); background: color-mix(in srgb, var(--brand-accent) 10%, var(--surface)); }
+.mux-uploader {
+  display: grid;
+  gap: 4px;
+  min-width: min(320px, 100%);
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--brand-accent) 4%, var(--surface));
+}
+.mux-uploader label { font-size: 12px; font-weight: 750; }
+.mux-uploader-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mux-uploader input { max-width: 210px; font-size: 11px; }
+.mux-uploader button { border: 0; border-radius: 7px; padding: 6px 9px; color: #fff; background: var(--green-800); cursor: pointer; font-weight: 700; }
+.mux-uploader button:disabled { opacity: .55; cursor: wait; }
+.mux-uploader small { color: var(--muted-foreground); font-size: 11px; }
 @media (max-width: 560px) {
   .forum-composer-options { flex-direction: column; }
 }

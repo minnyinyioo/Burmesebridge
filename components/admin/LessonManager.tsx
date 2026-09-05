@@ -16,6 +16,7 @@ import CourseSectionManager, { type CourseSection } from "@/components/admin/Cou
 import AssignmentManager from "@/components/admin/AssignmentManager";
 import QuizManager from "@/components/admin/QuizManager";
 import LessonContentEditor from "@/components/admin/LessonContentEditor";
+import MuxVideoUploader from "@/components/admin/MuxVideoUploader";
 type Product = { id: number; title: string };
 type Lesson = {
   id: number;
@@ -288,6 +289,7 @@ export default function LessonManager({
                   {lesson.section_id ? ` · ${sections.find((section)=>section.id===lesson.section_id)?.title_zh||sections.find((section)=>section.id===lesson.section_id)?.title_my||sections.find((section)=>section.id===lesson.section_id)?.title_en||copy.section}` : ""}
                 </span>
                 <div className="lesson-admin-actions">
+                  <MuxVideoUploader lessonId={lesson.id} onUploaded={load} />
                   <LessonAttachmentUploader locale={locale} lessonId={lesson.id} onUploaded={load}/>
                   <button
                     type="button"
