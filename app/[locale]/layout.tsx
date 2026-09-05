@@ -214,17 +214,10 @@ export default async function LocaleLayout({
               </Link>
               <Link href={`/${locale}/certificate`}>
                 {locale === "zh"
-                  ? "证书查询"
+                  ? "证书 / 证件查询"
                   : locale === "my"
-                    ? "လက်မှတ် စစ်ဆေးရန်"
-                    : "Certificate lookup"}
-              </Link>
-              <Link href={`/${locale}/education-id`}>
-                {locale === "zh"
-                  ? "学生证 / 教师证查询"
-                  : locale === "my"
-                    ? "ကျောင်းသား / ဆရာကတ် စစ်ဆေးရန်"
-                    : "Student / teacher ID lookup"}
+                    ? "လက်မှတ် / ကတ် စစ်ဆေးရန်"
+                    : "Certificate / ID lookup"}
               </Link>
               <Link href={`/${locale}/news`}>
                 {locale === "zh" ? "新闻" : locale === "my" ? "သတင်း" : "News"}

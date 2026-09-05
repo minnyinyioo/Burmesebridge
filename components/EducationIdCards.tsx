@@ -37,7 +37,7 @@ export default function EducationIdCards({ locale, userId }: { locale: string; u
     let active = true;
     if (!cards.length) return () => { active = false; };
     void import("qrcode").then(async ({ default: QRCode }) => {
-      const entries = await Promise.all(cards.map(async card => [card.id, await QRCode.toDataURL(`https://burmesebridge.com/${locale}/education-id/${encodeURIComponent(card.verification_code)}`, { width: 180, margin: 1, errorCorrectionLevel: "M", color: { dark: "#0e5a49", light: "#fffdf8" } })] as const));
+      const entries = await Promise.all(cards.map(async card => [card.id, await QRCode.toDataURL(`https://burmesebridge.com/${locale}/certificate/${encodeURIComponent(card.verification_code)}`, { width: 180, margin: 1, errorCorrectionLevel: "M", color: { dark: "#0e5a49", light: "#fffdf8" } })] as const));
       if (active) setQrs(Object.fromEntries(entries));
     });
     return () => { active = false; };
@@ -47,7 +47,7 @@ export default function EducationIdCards({ locale, userId }: { locale: string; u
     <section className="education-id-section"><h2><CreditCard size={20} />{copy.title}</h2>{cards.length ? <div className="education-id-list">{cards.map(card => <article className={`education-id-card is-${card.card_type}`} key={card.id}>
       <header><BrandLogo size={38} /><strong>{copy[card.card_type]}</strong><ShieldCheck size={23} /></header><h3>{card.holder_name}</h3>
       <dl><div><dt>{copy.number}</dt><dd>{card.card_no}</dd></div><div><dt>{copy.anti}</dt><dd>{card.verification_code}</dd></div><div><dt>{copy.issued}</dt><dd>{new Date(card.issued_at).toLocaleDateString(locale)}</dd></div><div><dt>{copy.expires}</dt><dd>{new Date(card.expires_at).toLocaleDateString(locale)}</dd></div></dl>
-      <div className="education-id-auth">{qrs[card.id] ? <img src={qrs[card.id]} alt="QR" /> : null}<Link href={`/${locale}/education-id/${encodeURIComponent(card.verification_code)}`} target="_blank">{copy.verify}<ExternalLink size={13} /></Link></div><Code39Barcode value={card.card_no} />
+      <div className="education-id-auth">{qrs[card.id] ? <img src={qrs[card.id]} alt="QR" /> : null}<Link href={`/${locale}/certificate/${encodeURIComponent(card.verification_code)}`} target="_blank">{copy.verify}<ExternalLink size={13} /></Link></div><Code39Barcode value={card.card_no} />
       <p>{card.card_type === "teacher" ? teacherNotice : copy.notice}</p>
     </article>)}</div> : <p className="education-id-empty">{copy.empty}</p>}</section>
     <PhysicalCardApplication locale={locale} cards={cards} />
