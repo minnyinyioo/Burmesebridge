@@ -40,7 +40,10 @@ export function verifyDiditSignature(rawBody: string, signatureHeader: string, s
 export async function createDiditSession(payload: DiditSessionPayload) {
   const workflowId = process.env.DIDIT_WORKFLOW_ID?.trim();
   if (!workflowId) throw new Error("Didit workflow is not configured. Set DIDIT_WORKFLOW_ID in Vercel.");
-  const endpoint = process.env.DIDIT_CREATE_SESSION_URL || `${diditBaseUrl()}/v3/session/`;
+  // Didit's current Sessions API is hosted at verification.didit.me/v3.
+  // Do not derive this from the legacy API base URL, which may still be set
+  // to apx.didit.me/auth from the old v2 integration.
+  const endpoint = process.env.DIDIT_CREATE_SESSION_URL || "https://verification.didit.me/v3/session/";
   const callbackUrl = `${appConfig.domain}/api/webhooks/didit`;
   const vendorData = `kyc-${payload.kycId}`;
   const response = await fetch(endpoint, {
@@ -65,7 +68,7 @@ export async function createDiditSession(payload: DiditSessionPayload) {
   });
   const data = await response.json().catch(() => null) as Record<string, unknown> | null;
   if (!response.ok) {
-    const detail = data?.message || data?.error || data?.detail || response.statusText;
+    const detail = data?.message || data?.error || data?.detail || (data && Object.keys(data).length ? JSON.stringify(data) : response.statusText);
     throw new Error(`Didit session creation failed: ${String(detail)}`);
   }
   return data || {};
