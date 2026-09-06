@@ -25,6 +25,7 @@ type Profile = {
   avatar_url: string | null;
   verified: boolean | null;
   badge: string | null;
+  role: string | null;
   points: number | null;
   display_name_updated_at: string | null;
 };
@@ -38,6 +39,7 @@ export default function MePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [checkinCount, setCheckinCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
+  const [approvedKinds, setApprovedKinds] = useState<string[]>([]);
 
   const copy =
     locale === "zh"
@@ -110,10 +112,10 @@ export default function MePage() {
       }
 
       const user = authData.user;
-      const [profileResult, checkinResult, postResult] = await Promise.all([
+      const [profileResult, checkinResult, postResult, kycResult] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, display_name, avatar_url, verified, badge, points, display_name_updated_at")
+          .select("id, display_name, avatar_url, verified, badge, role, points, display_name_updated_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase
@@ -124,6 +126,11 @@ export default function MePage() {
           .from("posts")
           .select("*", { count: "exact", head: true })
           .eq("user_id", user.id),
+        supabase
+          .from("kyc_verifications")
+          .select("application_kind")
+          .eq("user_id", user.id)
+          .eq("status", "approved"),
       ]);
 
       if (!mounted) return;
@@ -131,6 +138,7 @@ export default function MePage() {
       setProfile(profileResult.data);
       setCheckinCount(checkinResult.count || 0);
       setPostCount(postResult.count || 0);
+      setApprovedKinds(Array.from(new Set((kycResult.data || []).map((row) => row.application_kind))));
       setLoading(false);
     }
     loadAccount();
@@ -152,9 +160,17 @@ export default function MePage() {
     );
 
   const name = profile?.display_name || email.split("@")[0] || copy.fallback;
-  const badge = profile?.verified
-    ? profile.badge || copy.verified
-    : copy.member;
+  const rank = Math.max(1, Math.floor(Math.sqrt(checkinCount)) + 1);
+  const roles = new Set<string>(["student"]);
+  if (profile?.verified) roles.add("verified");
+  if (profile?.role === "admin") roles.add("admin");
+  if (profile?.role === "moderator") roles.add("moderator");
+  if (profile?.badge && ["teacher", "author", "company", "vip"].includes(profile.badge)) roles.add(profile.badge);
+  approvedKinds.forEach((kind) => roles.add(kind));
+  const roleLabels: Record<string, { zh: string; my: string; en: string }> = {
+    admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP", my: "VIP", en: "VIP" },
+  };
+  const badgeItems = Array.from(roles).map((type) => ({ type, label: roleLabels[type]?.[locale as "zh" | "my" | "en"] || roleLabels[type]?.en || type }));
   const links = [
     {
       href: `/${locale}/my-courses`,
@@ -202,14 +218,10 @@ export default function MePage() {
           <div className="account-identity">
             <div className="account-name-row">
               <h1>{name}</h1>
-              <span
-                className={
-                  profile?.verified ? "account-badge verified" : "account-badge"
-                }
-              >
-                {profile?.verified && <ShieldCheck size={14} />}
-                {badge}
-              </span>
+              <div className="account-badges" aria-label="Account badges">
+                {badgeItems.map((item) => <span key={item.type} className={`account-badge account-badge-${item.type}`}><ShieldCheck size={14} />{item.label}</span>)}
+                <span className={`account-badge account-level-badge level-${Math.min(rank, 10)}`}><span className="level-gem">✦</span>LV.{rank}</span>
+              </div>
             </div>
             <p>{email}</p>
           </div>
