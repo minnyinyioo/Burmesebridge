@@ -9863,3 +9863,11 @@ svg {
 .kyc-didit-card button:disabled{opacity:.55;cursor:wait}
 .kyc-didit-pass{color:var(--brand)!important;font-weight:850}
 @media(max-width:640px){.kyc-didit-card{display:grid}.kyc-didit-card a,.kyc-didit-card button{width:100%}}
+.checkin-page{min-height:70vh;display:grid;place-items:center;padding:48px 20px;background:var(--background)}
+.checkin-card{width:min(680px,100%);padding:32px;border:1px solid var(--border);border-radius:24px;background:var(--surface);box-shadow:0 20px 50px rgba(10,55,45,.08)}
+.checkin-card header>span{display:flex;align-items:center;gap:8px;color:var(--brand);font-size:13px;font-weight:800}.checkin-card h1{margin:10px 0 8px}.checkin-card header p{margin:0;color:var(--muted)}
+.checkin-level{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-top:24px;padding:20px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 14%,var(--surface)),var(--surface))}.checkin-level-badge{display:grid;place-items:center;width:86px;height:86px;border-radius:22px;background:var(--brand);color:#fff}.checkin-level-badge strong{font-size:20px}.checkin-level small{color:var(--muted)}
+.checkin-progress{height:10px;margin:10px 0;border-radius:999px;background:var(--border);overflow:hidden}.checkin-progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--brand),#39b98a)}
+.checkin-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.checkin-stats article{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;align-items:center;padding:17px;border:1px solid var(--border);border-radius:15px}.checkin-stats svg{grid-row:1/3;color:var(--brand)}.checkin-stats strong{font-size:25px}.checkin-stats span{color:var(--muted);font-size:13px}
+.checkin-button{width:100%;min-height:50px;border:0;border-radius:13px;background:var(--brand);color:#fff;font-weight:850;cursor:pointer}.checkin-button:disabled{opacity:.62;cursor:default}.checkin-note{display:block;margin-top:14px;color:var(--muted);line-height:1.55;text-align:center}
+@media(max-width:560px){.checkin-card{padding:20px}.checkin-level{grid-template-columns:1fr}.checkin-level-badge{width:72px;height:72px}.checkin-stats{grid-template-columns:1fr}}
