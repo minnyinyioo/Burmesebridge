@@ -14,7 +14,6 @@ import {
   Crown,
   GraduationCap,
   PenLine,
-  UserRound,
   Gavel,
   UserRound,
 } from "lucide-react";
