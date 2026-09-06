@@ -10,6 +10,11 @@ import {
   LogOut,
   MessageSquareText,
   ShieldCheck,
+  BadgeCheck,
+  Crown,
+  GraduationCap,
+  PenLine,
+  UserRound,
   Gavel,
   UserRound,
 } from "lucide-react";
@@ -173,6 +178,7 @@ export default function MePage() {
     admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP", my: "VIP", en: "VIP" },
   };
   const badgeItems = Array.from(roles).map((type) => ({ type, label: roleLabels[type]?.[locale as "zh" | "my" | "en"] || roleLabels[type]?.en || type }));
+  const badgeIcon = (type: string) => type === "admin" ? <Crown size={14} /> : type === "teacher" ? <GraduationCap size={14} /> : type === "author" ? <PenLine size={14} /> : type === "student" ? <UserRound size={14} /> : type === "verified" ? <BadgeCheck size={14} /> : <ShieldCheck size={14} />;
   const links = [
     {
       href: `/${locale}/my-courses`,
@@ -221,7 +227,7 @@ export default function MePage() {
             <div className="account-name-row">
               <h1>{name}</h1>
               <div className="account-badges" aria-label="Account badges">
-                {badgeItems.map((item) => <span key={item.type} className={`account-badge account-badge-${item.type}`}><ShieldCheck size={14} />{item.label}</span>)}
+                {badgeItems.map((item) => <span key={item.type} className={`account-badge account-badge-${item.type}`}><span className="account-badge-icon">{badgeIcon(item.type)}</span>{item.label}</span>)}
                 <span className={`account-badge account-level-badge level-${Math.min(rank, 10)}`}><span className="level-gem">✦</span>LV.{rank}</span>
               </div>
             </div>
