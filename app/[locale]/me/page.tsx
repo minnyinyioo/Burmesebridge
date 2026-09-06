@@ -26,6 +26,7 @@ type Profile = {
   verified: boolean | null;
   badge: string | null;
   role: string | null;
+  badges: string[] | null;
   points: number | null;
   display_name_updated_at: string | null;
 };
@@ -115,7 +116,7 @@ export default function MePage() {
       const [profileResult, checkinResult, postResult, kycResult] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, display_name, avatar_url, verified, badge, role, points, display_name_updated_at")
+          .select("id, display_name, avatar_url, verified, badge, badges, role, points, display_name_updated_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase
@@ -166,6 +167,7 @@ export default function MePage() {
   if (profile?.role === "admin") roles.add("admin");
   if (profile?.role === "moderator") roles.add("moderator");
   if (profile?.badge && ["teacher", "author", "company", "vip"].includes(profile.badge)) roles.add(profile.badge);
+  (profile?.badges || []).forEach((item) => roles.add(item));
   approvedKinds.forEach((kind) => roles.add(kind));
   const roleLabels: Record<string, { zh: string; my: string; en: string }> = {
     admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP", my: "VIP", en: "VIP" },

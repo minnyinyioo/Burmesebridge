@@ -14,6 +14,7 @@ type AdminUser = {
   badge: string | null;
   verified: boolean | null;
   banned_until: string | null;
+  badges?: string[] | null;
 };
 
 const SYSTEM_ROLES = ["member", "moderator", "admin", "banned"] as const;
@@ -51,7 +52,7 @@ function UsersContent() {
   const loadUsers = useCallback(async () => {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, display_name, role, badge, verified, banned_until")
+      .select("id, display_name, role, badge, badges, verified, banned_until")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -62,22 +63,27 @@ function UsersContent() {
     setUsers(data || []);
   }, []);
 
-  async function updateRole(user: AdminUser, selectedRole: string) {
-    const role = normaliseRole(selectedRole);
-    if (!role) return;
+  async function updateRole(user: AdminUser, selectedRoles: string[]) {
+    const selected = selectedRoles.map(normaliseRole).filter(Boolean);
+    if (!selected.length) return;
+    const role = normaliseRole(user.role) === "admin" ? "admin" : selected.find(isSystemRole) || "member";
+    if (!confirm(`将为 ${user.display_name || user.id} 设置身份：${selected.join(", ")}。Admin 权限将保留。继续吗？`)) return;
+    if (!confirm("二次确认：确认立即保存这些身份和徽章吗？此操作会影响账户显示与权限。")) return;
 
     // System roles control moderation access. Position roles are identity
     // badges; assigning one here never grants verification or teacher access.
     const updates = isSystemRole(role)
       ? {
           role,
-          badge: role === "banned" ? "member" : role,
+          badge: selected.find((item) => ["teacher", "student", "company", "author", "vip"].includes(item)) || (role === "banned" ? "member" : role),
+          badges: selected,
           verified: role === "admin" || role === "moderator",
         }
       : {
-          role: "member",
-          badge: role,
-          verified: Boolean(user.verified && normaliseRole(user.badge) === role),
+          role,
+          badge: selected.find((item) => ["teacher", "student", "company", "author", "vip"].includes(item)) || normaliseRole(user.badge) || "member",
+          badges: selected,
+          verified: Boolean(user.verified),
         };
 
     const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
@@ -152,12 +158,9 @@ function UsersContent() {
                   <KeyRound size={16} /> {resetting === user.id ? "Resetting…" : "Reset password"}
                 </button>
                 <select
-                  value={(() => {
-                    const role = normaliseRole(user.role);
-                    const badge = normaliseRole(user.badge);
-                    return role === "member" && badge && badge !== "member" ? badge : role || "member";
-                  })()}
-                  onChange={(event) => void updateRole(user, event.target.value)}
+                  multiple
+                  defaultValue={(() => { const current = (user.badges || []).map(normaliseRole).filter(Boolean); if (current.length) return current; const role = normaliseRole(user.role); const badge = normaliseRole(user.badge); return Array.from(new Set([role, badge].filter(Boolean))); })()}
+                  onChange={(event) => void updateRole(user, Array.from(event.target.selectedOptions, (option) => option.value))}
                   style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #e2e8f0", fontWeight: 700 }}
                 >
                   {roleOptions.map((role) => <option key={role} value={role}>{role}</option>)}
