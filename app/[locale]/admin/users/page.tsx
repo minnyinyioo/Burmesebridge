@@ -18,7 +18,7 @@ type AdminUser = {
 };
 
 const SYSTEM_ROLES = ["member", "moderator", "admin", "banned"] as const;
-const KNOWN_POSITION_ROLES = ["teacher", "student", "company", "author"] as const;
+const KNOWN_POSITION_ROLES = ["teacher", "student", "company", "author", "vip", "premium"] as const;
 
 function normaliseRole(value: string | null | undefined) {
   return value?.trim().toLowerCase() || "";

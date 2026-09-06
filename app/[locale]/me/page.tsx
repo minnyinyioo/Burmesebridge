@@ -166,7 +166,7 @@ export default function MePage() {
 
   const name = profile?.display_name || email.split("@")[0] || copy.fallback;
   const rank = Math.max(1, Math.floor(Math.sqrt(checkinCount)) + 1);
-  const roles = new Set<string>(["student"]);
+  const roles = new Set<string>(["member", "student"]);
   if (profile?.verified) roles.add("verified");
   if (profile?.role === "admin") roles.add("admin");
   if (profile?.role === "moderator") roles.add("moderator");
@@ -174,7 +174,7 @@ export default function MePage() {
   (profile?.badges || []).forEach((item) => roles.add(item));
   approvedKinds.forEach((kind) => roles.add(kind));
   const roleLabels: Record<string, { zh: string; my: string; en: string }> = {
-    admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP", my: "VIP", en: "VIP" },
+    admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP 会员", my: "VIP အဖွဲ့ဝင်", en: "VIP" }, premium: { zh: "高级会员", my: "အဆင့်မြင့်အဖွဲ့ဝင်", en: "Premium" }, member: { zh: "会员", my: "အဖွဲ့ဝင်", en: "Member" },
   };
   const badgeItems = Array.from(roles).map((type) => ({ type, label: roleLabels[type]?.[locale as "zh" | "my" | "en"] || roleLabels[type]?.en || type }));
   const badgeIcon = (type: string) => type === "admin" ? <Crown size={14} /> : type === "teacher" ? <GraduationCap size={14} /> : type === "author" ? <PenLine size={14} /> : type === "student" ? <UserRound size={14} /> : type === "verified" ? <BadgeCheck size={14} /> : <ShieldCheck size={14} />;
