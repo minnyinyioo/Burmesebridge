@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useState, useEffect } from "react";
+import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import BrandLogo from "@/components/BrandLogo";
@@ -41,30 +43,42 @@ export default function LoginPage() {
       loading: "အကောင့်ဝင်နေပါသည်…",
       register: "အကောင့်မရှိသေးပါသလား။ အကောင့်အသစ် ဖွင့်ရန်",
       success: "အကောင့်ဝင်ရောက်မှု အောင်မြင်ပါသည်။",
-      intro: "BurmeseBridge မှ ပြန်လည်ကြိုဆိုပါသည်။",
+      intro: "သင်တန်း၊ community နှင့် account tools များကို ဆက်လက်အသုံးပြုရန် ဝင်ပါ။",
       forgot: "စကားဝှက် မေ့သွားပါသလား။",
+      back: "ပင်မစာမျက်နှာ",
+      show: "စကားဝှက်ပြရန်",
+      hide: "စကားဝှက်ဖျောက်ရန်",
+      error: "အီးမေးလ် သို့မဟုတ် စကားဝှက်ကို စစ်ဆေးပြီး ထပ်စမ်းပါ။",
     },
     zh: {
-      title: "登录",
+      title: "欢迎回来",
       email: "邮箱",
       password: "密码",
-      button: "登录",
-      loading: "加载中...",
+      button: "登录账号",
+      loading: "正在登录…",
       register: "没有账号？创建账号",
       success: "登录成功",
-      intro: "欢迎回到 BurmeseBridge",
+      intro: "登录后继续使用课程、论坛、会员与个人中心。",
       forgot: "忘记密码？",
+      back: "返回首页",
+      show: "显示密码",
+      hide: "隐藏密码",
+      error: "邮箱或密码不正确，请检查后重试。",
     },
     en: {
-      title: "Login",
+      title: "Welcome back",
       email: "Email",
       password: "Password",
-      button: "Login",
-      loading: "Loading...",
+      button: "Sign in",
+      loading: "Signing in…",
       register: "No account? Create one",
       success: "Login success",
-      intro: "Welcome back to BurmeseBridge",
+      intro: "Sign in to continue with courses, community, membership, and your profile.",
       forgot: "Forgot password?",
+      back: "Home",
+      show: "Show password",
+      hide: "Hide password",
+      error: "Check your email and password, then try again.",
     },
   };
 
@@ -72,6 +86,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -87,7 +102,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message);
+      setError(t.error);
     } else {
       const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       router.push(aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2" ? `/${locale}/mfa-verify` : safeNext);
@@ -100,30 +115,57 @@ export default function LoginPage() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <BrandLogo size={30} className="auth-brand" />
-        <h1>{t.title}</h1>
-        <p className="auth-copy">{t.intro}</p>
+        <Link href={`/${locale}`} className="auth-back-link">
+          <ArrowLeft size={15} />
+          {t.back}
+        </Link>
+        <div className="auth-card-head">
+          <BrandLogo size={34} className="auth-brand" />
+          <h1>{t.title}</h1>
+          <p className="auth-copy">{t.intro}</p>
+        </div>
 
         <form onSubmit={handleLogin}>
-          <input
-          type="email"
-          autoComplete="email"
-          aria-label={t.email}
-          placeholder={t.email}
-          className="auth-input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          />
+          <label className="auth-field">
+            <span>{t.email}</span>
+            <span className="auth-input-wrap">
+              <Mail size={18} />
+              <input
+                type="email"
+                autoComplete="email"
+                aria-label={t.email}
+                placeholder="name@example.com"
+                className="auth-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </span>
+          </label>
 
-          <input
-          type="password"
-          autoComplete="current-password"
-          aria-label={t.password}
-          placeholder={t.password}
-          className="auth-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          />
+          <label className="auth-field">
+            <span>{t.password}</span>
+            <span className="auth-input-wrap">
+              <LockKeyhole size={18} />
+              <input
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                aria-label={t.password}
+                placeholder={t.password}
+                className="auth-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="auth-password-toggle"
+                aria-label={showPassword ? t.hide : t.show}
+                title={showPassword ? t.hide : t.show}
+                onClick={() => setShowPassword((value) => !value)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </span>
+          </label>
 
           <a href={`/${locale}/forgot-password`} className="auth-forgot-link">
             {t.forgot}
