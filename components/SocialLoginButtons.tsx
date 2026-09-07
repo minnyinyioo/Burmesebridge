@@ -55,6 +55,7 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
     : locale === "my"
       ? { divider: "သို့မဟုတ် အောက်ပါအကောင့်ဖြင့် ဆက်လုပ်ပါ", loading: "ချိတ်ဆက်နေသည်", error: "ဤအကောင့်ဖြင့် လောလောဆယ် ဝင်၍မရပါ။ နောက်မှ ထပ်စမ်းပါ။" }
       : { divider: "or continue with", loading: "Connecting", error: "This sign-in option is temporarily unavailable. Please try again later." };
+  const googleLocale = locale === "zh" ? "zh_CN" : locale === "my" ? "my" : "en";
 
   const initializeGoogle = useCallback(async () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -104,10 +105,11 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
       shape: "rectangular",
       text: "continue_with",
       logo_alignment: "left",
+      locale: googleLocale,
       width: Math.max(120, Math.floor(button.getBoundingClientRect().width)),
     });
     setGoogleReady(true);
-  }, [copy.error, locale, router]);
+  }, [copy.error, googleLocale, locale, router]);
 
   async function signIn(provider: RedirectProvider) {
     setActiveProvider(provider);
