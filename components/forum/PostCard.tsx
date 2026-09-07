@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart, MessageCircle } from "lucide-react";
-import Badge, { type BadgeType } from "@/components/Badges";
+import { ProfileBadges } from "@/components/Badges";
 import PostActions from "@/components/ui/PostActions";
 import CommentList, { type CommentItem } from "./CommentList";
 import ReportButton from "./ReportButton";
@@ -12,6 +12,8 @@ type Profile = {
   verified?: boolean | null;
   badge?: string | null;
   role?: string | null;
+  badges?: string[] | null;
+  level?: number | null;
 };
 
 type Post = {
@@ -90,7 +92,6 @@ export default function PostCard({
     profile?.email ||
     labels.anonymous;
 
-  const badge = profile?.badge || profile?.role || "member";
   const authorInitial = author.slice(0, 1).toUpperCase();
 
   return (
@@ -105,11 +106,7 @@ export default function PostCard({
           <div className="forum-author-row">
             <strong>{author}</strong>
 
-            {profile?.verified && (
-              <Badge type="verified" />
-            )}
-
-            <Badge type={toBadgeType(badge)} />
+            <ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/>
           </div>
 
           <div className="forum-post-time">
@@ -173,11 +170,6 @@ function getProfile(post: Post): Profile | null {
   }
 
   return post.profiles || null;
-}
-
-const badgeTypes = new Set<BadgeType>(["verified", "moderator", "admin", "teacher", "company", "author", "vip", "member", "pinned", "hot", "featured"]);
-function toBadgeType(value: string): BadgeType {
-  return badgeTypes.has(value as BadgeType) ? value as BadgeType : "member";
 }
 
 const avatar = {

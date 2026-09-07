@@ -18,7 +18,7 @@ import DeleteAccountPanel from "@/components/DeleteAccountPanel";
 import AccountSecurityPanel from "@/components/AccountSecurityPanel";
 import AccountProfilePanel from "@/components/AccountProfilePanel";
 import EducationIdCards from "@/components/EducationIdCards";
-import BrandBadgeIcon from "@/components/BrandBadgeIcon";
+import { ProfileBadges } from "@/components/Badges";
 
 type Profile = {
   id: string;
@@ -174,7 +174,6 @@ export default function MePage() {
     admin: { zh: "管理员", my: "အက်မင်", en: "Admin" }, moderator: { zh: "版主", my: "စီမံခန့်ခွဲသူ", en: "Moderator" }, verified: { zh: "已认证", my: "အတည်ပြုပြီး", en: "Verified" }, teacher: { zh: "老师", my: "ဆရာ", en: "Teacher" }, author: { zh: "作者", my: "စာရေးသူ", en: "Author" }, student: { zh: "学生", my: "ကျောင်းသား", en: "Student" }, company: { zh: "企业", my: "ကုမ္ပဏီ", en: "Company" }, vip: { zh: "VIP 会员", my: "VIP အဖွဲ့ဝင်", en: "VIP" }, premium: { zh: "高级会员", my: "အဆင့်မြင့်အဖွဲ့ဝင်", en: "Premium" }, member: { zh: "会员", my: "အဖွဲ့ဝင်", en: "Member" },
   };
   const badgeItems = Array.from(roles).map((type) => ({ type, label: roleLabels[type]?.[locale as "zh" | "my" | "en"] || roleLabels[type]?.en || type }));
-  const badgeIcon = (type: string) => <BrandBadgeIcon type={type} />;
   const links = [
     {
       href: `/${locale}/my-courses`,
@@ -222,10 +221,7 @@ export default function MePage() {
           <div className="account-identity">
             <div className="account-name-row">
               <h1>{name}</h1>
-              <div className="account-badges" aria-label="Account badges">
-                {badgeItems.map((item) => <span key={item.type} className={`account-badge account-badge-${item.type}`}><span className="account-badge-icon">{badgeIcon(item.type)}</span>{item.label}</span>)}
-                <span className={`account-badge account-level-badge level-${Math.min(rank, 10)}`}><span className="level-gem">✦</span>LV.{rank}</span>
-              </div>
+              <ProfileBadges badges={badgeItems.map(item=>item.type)} level={rank}/>
             </div>
             <p>{email}</p>
           </div>

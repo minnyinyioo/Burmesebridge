@@ -16,6 +16,8 @@ type Profile = {
   verified?: boolean | null;
   badge?: string | null;
   role?: string | null;
+  badges?: string[] | null;
+  level?: number | null;
 };
 
 type Post = {
@@ -204,7 +206,9 @@ export default function ForumPage() {
         display_name,
         verified,
         badge,
-        role
+        role,
+        badges,
+        level
       `)
       .in("id", postUserIds);
 
@@ -280,7 +284,9 @@ export default function ForumPage() {
         display_name,
         verified,
         badge,
-        role
+        role,
+        badges,
+        level
       `)
       .in("id", commentUserIds);
 

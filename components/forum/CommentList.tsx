@@ -1,8 +1,14 @@
 import { Send } from "lucide-react";
+import { ProfileBadges } from "@/components/Badges";
 
 type CommentProfile = {
   display_name?: string | null;
   email?: string | null;
+  verified?: boolean | null;
+  badge?: string | null;
+  role?: string | null;
+  badges?: string[] | null;
+  level?: number | null;
 };
 
 export type CommentItem = {
@@ -74,7 +80,7 @@ export default function CommentList({
 
           return (
             <div key={comment.id} className="forum-comment-item">
-              <strong>{commentAuthor}</strong>
+              <div className="forum-author-row"><strong>{commentAuthor}</strong><ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/></div>
 
               <p style={{ marginTop: 4 }}>{comment.content}</p>
             </div>
