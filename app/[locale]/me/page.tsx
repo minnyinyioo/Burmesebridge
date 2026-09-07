@@ -213,7 +213,7 @@ export default function MePage() {
     <main className="account-page">
       <section className="account-shell">
         <div className="account-hero">
-          <div className="account-avatar"><VerifiedAvatar name={name} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={112}/></div>
+          <div className="account-avatar"><VerifiedAvatar name={name} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={82}/></div>
           <div className="account-identity">
             <div className="account-name-row">
               <h1>{name}</h1>
