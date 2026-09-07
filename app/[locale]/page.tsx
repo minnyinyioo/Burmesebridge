@@ -63,6 +63,7 @@ export default function HomePage() {
         "BurmeseBridge သည် မြန်မာများအတွက် သင်ယူရေး၊ သတင်းအချက်အလက်နှင့် လူမှုအသိုင်းအဝိုင်း ပလက်ဖောင်းဖြစ်သည်။",
       explore: "သင်တန်းများ ကြည့်ရန်",
       test: "HSK အဆင့် စစ်ဆေးရန်",
+      memberAction: "အသင်းဝင်ရန်",
       news: "သတင်း",
       jobs: "အလုပ်အကိုင်",
       learn: "လေ့လာရန်",
@@ -110,6 +111,7 @@ export default function HomePage() {
       heroSub: "BurmeseBridge 是面向缅甸用户的中文学习、资讯与社区平台。",
       explore: "浏览课程",
       test: "测试 HSK 水平",
+      memberAction: "加入会员",
       news: "新闻",
       jobs: "工作",
       learn: "学习",
@@ -157,6 +159,7 @@ export default function HomePage() {
         "BurmeseBridge is a Chinese learning, news and community platform for Myanmar users.",
       explore: "Explore courses",
       test: "Check HSK level",
+      memberAction: "Join membership",
       news: "News",
       jobs: "Jobs",
       learn: "Learn",
@@ -327,6 +330,10 @@ export default function HomePage() {
             >
               <ClipboardCheck size={17} />
               {t.test}
+            </Link>
+            <Link href={`/${locale}/membership`} className="home-secondary-button">
+              <Sparkles size={17} />
+              {t.memberAction}
             </Link>
           </div>
         </div>
