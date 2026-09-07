@@ -11,6 +11,8 @@ type CommentProfile = {
   badges?: string[] | null;
   level?: number | null;
   avatar_url?: string | null;
+  membership_badge?: string | null;
+  membership_expires_at?: string | null;
 };
 
 export type CommentItem = {
@@ -82,7 +84,7 @@ export default function CommentList({
 
           return (
             <div key={comment.id} className="forum-comment-item">
-              <div className="forum-comment-author"><VerifiedAvatar name={commentAuthor} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={30}/><div><div className="forum-author-row"><strong>{commentAuthor}</strong><ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/></div><p style={{ marginTop: 4 }}>{comment.content}</p></div></div>
+              <div className="forum-comment-author"><VerifiedAvatar name={commentAuthor} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={30}/><div><div className="forum-author-row"><strong>{commentAuthor}</strong><ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level} membershipBadge={profile?.membership_badge} membershipExpiresAt={profile?.membership_expires_at}/></div><p style={{ marginTop: 4 }}>{comment.content}</p></div></div>
             </div>
           );
         })}

@@ -38,7 +38,7 @@ export default function Badge({type,labelOverride}:{type:BadgeType|string;labelO
   const known=(Object.hasOwn(labels.en,type)?type:"member") as BadgeType;
   const label=labelOverride||labels[locale]?.[known]||labels.en[known];
   const Icon=contentIcons[known as keyof typeof contentIcons];
-  return <BadgeTrigger label={label} premium={known==="admin"||known==="vip"||known==="premium"}>
+  return <BadgeTrigger label={label} premium={["admin","member","vip","premium"].includes(known)}>
     {Icon?<Icon size={23}/>:<BrandBadgeIcon type={known}/>}
   </BadgeTrigger>;
 }
@@ -53,8 +53,9 @@ export function LevelBadge({level}:{level:number}) {
   </BadgeTrigger>;
 }
 
-export function ProfileBadges({badges,badge,role,verified,level}:{badges?:string[]|null;badge?:string|null;role?:string|null;verified?:boolean|null;level?:number|null}) {
+export function ProfileBadges({badges,badge,role,verified,level,membershipBadge,membershipExpiresAt}:{badges?:string[]|null;badge?:string|null;role?:string|null;verified?:boolean|null;level?:number|null;membershipBadge?:string|null;membershipExpiresAt?:string|null}) {
   const ids=new Set<string>();
+  if(membershipBadge && (!membershipExpiresAt || Date.parse(membershipExpiresAt)>Date.now()))ids.add(membershipBadge);
   (badges||[]).forEach(value=>{const key=value.trim().toLowerCase();if(key)ids.add(key)});
   if(role && role!=="member")ids.add(role.toLowerCase());
   if(badge)ids.add(badge.toLowerCase());

@@ -19,6 +19,8 @@ type Profile = {
   badges?: string[] | null;
   level?: number | null;
   avatar_url?: string | null;
+  membership_badge?: string | null;
+  membership_expires_at?: string | null;
 };
 
 type Post = {
@@ -210,7 +212,9 @@ export default function ForumPage() {
         role,
         badges,
         level,
-        avatar_url
+        avatar_url,
+        membership_badge,
+        membership_expires_at
       `)
       .in("id", postUserIds);
 
@@ -289,7 +293,9 @@ export default function ForumPage() {
         role,
         badges,
         level,
-        avatar_url
+        avatar_url,
+        membership_badge,
+        membership_expires_at
       `)
       .in("id", commentUserIds);
 

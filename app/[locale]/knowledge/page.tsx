@@ -55,6 +55,7 @@ export default function KnowledgePage() {
     <header className="knowledge-library-head">
       <span><BookOpen size={17}/>{copy.eyebrow}</span><h1>{copy.title}</h1><p>{copy.intro}</p>
     </header>
+    <nav className="membership-links"><Link href={"/"+locale+"/membership"}>{locale==="zh"?"会员中心 · 订购 / 续费":locale==="my"?"အဖွဲ့ဝင်စင်တာ":"Membership · Purchase / Renew"}</Link></nav>
     <div className="knowledge-grid">
       {products.length === 0 ? <div className="feedCard">{copy.empty}</div> : null}
       {products.map((product) => {

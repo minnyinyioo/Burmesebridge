@@ -43,6 +43,7 @@ export default function MePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [checkinCount, setCheckinCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
+  const [membershipDisplay,setMembershipDisplay]=useState<{membership_badge:string|null;membership_expires_at:string|null}|null>(null);
   const [approvedKinds, setApprovedKinds] = useState<string[]>([]);
 
   const copy =
@@ -138,6 +139,8 @@ export default function MePage() {
       ]);
 
       if (!mounted) return;
+      const {data:membershipData}=await supabase.from("public_profiles").select("membership_badge,membership_expires_at").eq("id",user.id).maybeSingle();
+      setMembershipDisplay(membershipData);
       setEmail(user.email || "");
       setProfile(profileResult.data);
       setCheckinCount(checkinResult.count || 0);
@@ -177,6 +180,7 @@ export default function MePage() {
   };
   const badgeItems = Array.from(roles).map((type) => ({ type, label: roleLabels[type]?.[locale as "zh" | "my" | "en"] || roleLabels[type]?.en || type }));
   const links = [
+    {href: "/"+locale+"/membership", label: locale==="zh"?"会员中心 · 订购 / 续费":locale==="my"?"အဖွဲ့ဝင်စင်တာ":"Membership · Purchase / Renew", icon: ShieldCheck},
     {
       href: `/${locale}/my-courses`,
       label:
@@ -213,7 +217,7 @@ export default function MePage() {
           <div className="account-identity">
             <div className="account-name-row">
               <h1>{name}</h1>
-              <ProfileBadges badges={badgeItems.map(item=>item.type)} level={rank}/>
+              <ProfileBadges badges={badgeItems.map(item=>item.type)} level={rank} membershipBadge={membershipDisplay?.membership_badge} membershipExpiresAt={membershipDisplay?.membership_expires_at}/>
             </div>
             <p>{email}</p>
           </div>

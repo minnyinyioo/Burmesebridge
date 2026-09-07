@@ -16,6 +16,8 @@ type Profile = {
   badges?: string[] | null;
   level?: number | null;
   avatar_url?: string | null;
+  membership_badge?: string | null;
+  membership_expires_at?: string | null;
 };
 
 type Post = {
@@ -108,7 +110,7 @@ export default function PostCard({
           <div className="forum-author-row">
             <strong>{author}</strong>
 
-            <ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/>
+            <ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level} membershipBadge={profile?.membership_badge} membershipExpiresAt={profile?.membership_expires_at}/>
           </div>
 
           <div className="forum-post-time">
