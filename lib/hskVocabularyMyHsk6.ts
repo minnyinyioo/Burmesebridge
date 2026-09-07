@@ -420,7 +420,7 @@ export const hsk6VocabularyMy: Record<string, VocabularyEnrichment> = {
   "蹬": { meaningMy: "ခြေဖြင့် နင်းသည်၊ ကန်သည်၊ စက်ဘီးခြေနင်း နင်းသည်" },
   "灯笼": { meaningMy: "မီးပုံး၊ ရိုးရာမီးအိမ်" },
   "登陆": { meaningMy: "ကမ်းတက်သည်၊ စစ်အင်အားဖြင့် ကမ်းခြေသို့ တက်ရောက်သည်" },
-  "登录": { meaningMy: "မှတ်ပုံတင်သည်၊ စနစ်ထဲသို့ လော့ဂ်အင်ဝင်သည်" },
+  "登录": { meaningMy: "မှတ်ပုံတင်သည်၊ စနစ်ထဲသို့ လော့ဂ်အင်ဝင်သည်", image: "/images/hsk/vocabulary/hsk6-denglu-login.png", imageAltMy: "လေ့လာရေးစားပွဲတွင် laptop မှတစ်ဆင့် account ထဲသို့ လုံခြုံစွာ ဝင်ရောက်နေသော BurmeseBridge လမ်းညွှန်", imageStatus: "generated" },
   "等级": { meaningMy: "အဆင့်၊ အတန်းအစား၊ အဆင့်သတ်မှတ်ချက်" },
   "瞪": { meaningMy: "မျက်လုံးပြူး၍ စိုက်ကြည့်သည်" },
   "堤坝": { meaningMy: "တာတမံ၊ ရေကာတာ" },
