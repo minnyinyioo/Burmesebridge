@@ -4,6 +4,16 @@
 .trigger:hover { background:rgba(104,130,122,.1); }
 .trigger:focus-visible { outline:2px solid #008060; outline-offset:2px; }
 .art { display:inline-flex; position:relative; align-items:center; justify-content:center; width:29px; height:29px; filter:drop-shadow(0 1px 1px rgba(30,50,45,.15)); }
+.art > svg { width:23px; height:23px; }
+.art > .brand-badge-svg-admin { width:24px; height:24px; }
+.art > .brand-badge-svg-moderator { width:23px; height:23px; }
+.art > .brand-badge-svg-verified { width:21px; height:21px; }
+.art > .brand-badge-svg-teacher { width:24px; height:24px; }
+.art > .brand-badge-svg-student { width:24px; height:24px; }
+.art > .brand-badge-svg-author { width:23px; height:23px; }
+.art > .brand-badge-svg-company { width:23px; height:23px; }
+.art > .brand-badge-svg-member { width:22px; height:22px; }
+.art > .brand-badge-svg-vip,.art > .brand-badge-svg-premium { width:24px; height:24px; }
 .level { position:absolute; inset:0; display:grid; place-items:center; padding-top:1px; color:#422d09; font:800 12px/1 system-ui,sans-serif; letter-spacing:-.4px; text-shadow:0 1px rgba(255,255,255,.4); }
 .level[data-long="true"] { font-size:9px; }
 .sparkle { position:absolute; right:-1px; top:-2px; color:#fff0af; font:normal 12px/1 serif; text-shadow:0 0 2px #80520a; pointer-events:none; opacity:0; animation:glow 12s ease-in-out infinite; }
