@@ -20,6 +20,7 @@ import AccountProfilePanel from "@/components/AccountProfilePanel";
 import EducationIdCards from "@/components/EducationIdCards";
 import { ProfileBadges } from "@/components/Badges";
 import VerifiedAvatar from "@/components/VerifiedAvatar";
+import AvatarPicker from "@/components/AvatarPicker";
 
 type Profile = {
   id: string;
@@ -220,6 +221,8 @@ export default function MePage() {
             {copy.profile}
           </a>
         </div>
+
+        {profile?.id ? <AvatarPicker locale={locale} userId={profile.id} name={name} avatarUrl={profile.avatar_url} verified={Boolean(profile.verified)} onSaved={(url)=>setProfile(current=>current?{...current,avatar_url:url}:current)} /> : null}
 
         <div className="account-stats">
           <article>
