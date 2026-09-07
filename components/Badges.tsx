@@ -27,7 +27,7 @@ function BadgeTrigger({label, children, premium=false}:{label:string;children:Re
       onBlur={()=>{setFocused(false);setPinned(false)}}
       onClick={()=>{setPinned(!pinned);setDismissed(pinned)}}
       onKeyDown={event=>{if(event.key==="Escape"){setDismissed(true);setPinned(false)}}}>
-      <span className={styles.art}>{children}{premium?<i className={styles.sparkle} aria-hidden="true">✦</i>:null}</span>
+      <span className={`${styles.art} ${premium ? styles.premium : ""}`}>{children}{premium?<i className={styles.sparkle} aria-hidden="true">✦</i>:null}</span>
     </button>
     {visible?<span id={id} className={styles.tooltip} role="tooltip">{label}</span>:null}
   </span>;
