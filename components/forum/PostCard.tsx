@@ -5,6 +5,7 @@ import { ProfileBadges } from "@/components/Badges";
 import PostActions from "@/components/ui/PostActions";
 import CommentList, { type CommentItem } from "./CommentList";
 import ReportButton from "./ReportButton";
+import VerifiedAvatar from "@/components/VerifiedAvatar";
 
 type Profile = {
   display_name?: string | null;
@@ -14,6 +15,7 @@ type Profile = {
   role?: string | null;
   badges?: string[] | null;
   level?: number | null;
+  avatar_url?: string | null;
 };
 
 type Post = {
@@ -100,7 +102,7 @@ export default function PostCard({
       className="feedCard forum-post-card"
     >
       <div className="forum-post-layout">
-        <div style={avatar}>{authorInitial}</div>
+        <VerifiedAvatar name={author} avatarUrl={profile?.avatar_url} verified={profile?.verified} />
 
         <div className="forum-post-main">
           <div className="forum-author-row">
@@ -171,17 +173,3 @@ function getProfile(post: Post): Profile | null {
 
   return post.profiles || null;
 }
-
-const avatar = {
-  minWidth: "52px",
-  width: "52px",
-  height: "52px",
-  borderRadius: "999px",
-  background: "linear-gradient(135deg,var(--brand-primary),var(--brand-accent))",
-  color: "white",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  fontWeight: 800,
-  fontSize: "18px",
-};

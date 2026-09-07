@@ -19,6 +19,7 @@ import AccountSecurityPanel from "@/components/AccountSecurityPanel";
 import AccountProfilePanel from "@/components/AccountProfilePanel";
 import EducationIdCards from "@/components/EducationIdCards";
 import { ProfileBadges } from "@/components/Badges";
+import VerifiedAvatar from "@/components/VerifiedAvatar";
 
 type Profile = {
   id: string;
@@ -207,17 +208,7 @@ export default function MePage() {
     <main className="account-page">
       <section className="account-shell">
         <div className="account-hero">
-          <div className="account-avatar">
-            {profile?.avatar_url ? (
-              <span
-                style={{ backgroundImage: `url(${profile.avatar_url})` }}
-                role="img"
-                aria-label={name}
-              />
-            ) : (
-              <UserRound size={36} />
-            )}
-          </div>
+          <div className="account-avatar"><VerifiedAvatar name={name} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={112}/></div>
           <div className="account-identity">
             <div className="account-name-row">
               <h1>{name}</h1>

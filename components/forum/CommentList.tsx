@@ -1,5 +1,6 @@
 import { Send } from "lucide-react";
 import { ProfileBadges } from "@/components/Badges";
+import VerifiedAvatar from "@/components/VerifiedAvatar";
 
 type CommentProfile = {
   display_name?: string | null;
@@ -9,6 +10,7 @@ type CommentProfile = {
   role?: string | null;
   badges?: string[] | null;
   level?: number | null;
+  avatar_url?: string | null;
 };
 
 export type CommentItem = {
@@ -80,9 +82,7 @@ export default function CommentList({
 
           return (
             <div key={comment.id} className="forum-comment-item">
-              <div className="forum-author-row"><strong>{commentAuthor}</strong><ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/></div>
-
-              <p style={{ marginTop: 4 }}>{comment.content}</p>
+              <div className="forum-comment-author"><VerifiedAvatar name={commentAuthor} avatarUrl={profile?.avatar_url} verified={profile?.verified} size={30}/><div><div className="forum-author-row"><strong>{commentAuthor}</strong><ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level}/></div><p style={{ marginTop: 4 }}>{comment.content}</p></div></div>
             </div>
           );
         })}
