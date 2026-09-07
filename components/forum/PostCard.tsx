@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart, MessageCircle } from "lucide-react";
-import { ProfileBadges } from "@/components/Badges";
+import Badge, { ProfileBadges } from "@/components/Badges";
 import PostActions from "@/components/ui/PostActions";
 import CommentList, { type CommentItem } from "./CommentList";
 import ReportButton from "./ReportButton";
@@ -111,6 +111,11 @@ export default function PostCard({
             <strong>{author}</strong>
 
             <ProfileBadges badges={profile?.badges} badge={profile?.badge} role={profile?.role} verified={profile?.verified} level={profile?.level} membershipBadge={profile?.membership_badge} membershipExpiresAt={profile?.membership_expires_at}/>
+            {(post.is_pinned || post.is_featured || post.status === "pending") && <span className="forum-post-state-icons">
+              {post.is_pinned && <Badge type="pinned" />}
+              {post.is_featured && <Badge type="featured" />}
+              {post.status === "pending" && <Badge type="pending" />}
+            </span>}
           </div>
 
           <div className="forum-post-time">
@@ -118,11 +123,6 @@ export default function PostCard({
           </div>
 
           <div className="forum-post-content">
-            {(post.is_pinned || post.is_featured || post.status === "pending") && <div className="forum-post-badges">
-              {post.is_pinned && <span className="forum-post-badge pinned">Pinned</span>}
-              {post.is_featured && <span className="forum-post-badge featured">Featured</span>}
-              {post.status === "pending" && <span className="forum-post-badge pending">Pending review</span>}
-            </div>}
             {post.content}
             {!!post.tags?.length && <div className="forum-post-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>}
           </div>

@@ -2,13 +2,13 @@
 
 import { useParams } from "next/navigation";
 import { useId, useState, type ReactNode } from "react";
-import { Flame, Pin, Sparkles } from "lucide-react";
+import { Clock3, Flame, Pin, Sparkles } from "lucide-react";
 import BrandBadgeIcon from "@/components/BrandBadgeIcon";
 import styles from "./Badges.module.css";
 
-export type BadgeType = "verified"|"moderator"|"admin"|"teacher"|"student"|"company"|"author"|"vip"|"premium"|"member"|"pinned"|"hot"|"featured";
-const labels={my:{verified:"အတည်ပြုပြီး",moderator:"စီမံခန့်ခွဲသူ",admin:"အက်မင်",teacher:"ဆရာ",student:"ကျောင်းသား",company:"ကုမ္ပဏီ",author:"စာရေးသူ",vip:"VIP",premium:"Premium",member:"အသင်းဝင်",pinned:"ထိပ်ဆုံးပို့စ်",hot:"လူကြိုက်များ",featured:"အကြံပြု"},zh:{verified:"已认证",moderator:"版主",admin:"管理员",teacher:"老师",student:"学生",company:"企业",author:"作者",vip:"VIP会员",premium:"高级会员",member:"会员",pinned:"置顶",hot:"热门",featured:"推荐"},en:{verified:"Verified",moderator:"Moderator",admin:"Admin",teacher:"Teacher",student:"Student",company:"Company",author:"Author",vip:"VIP",premium:"Premium",member:"Member",pinned:"Pinned",hot:"Hot",featured:"Featured"}};
-const contentIcons = {pinned:Pin, hot:Flame, featured:Sparkles};
+export type BadgeType = "verified"|"moderator"|"admin"|"teacher"|"student"|"company"|"author"|"vip"|"premium"|"member"|"pinned"|"hot"|"featured"|"pending";
+const labels={my:{verified:"အတည်ပြုပြီး",moderator:"စီမံခန့်ခွဲသူ",admin:"အက်မင်",teacher:"ဆရာ",student:"ကျောင်းသား",company:"ကုမ္ပဏီ",author:"စာရေးသူ",vip:"VIP",premium:"Premium",member:"အသင်းဝင်",pinned:"ထိပ်ဆုံးပို့စ်",hot:"လူကြိုက်များ",featured:"အထူးရွေးချယ်ထားသည်",pending:"စိစစ်ရန် စောင့်ဆိုင်းနေသည်"},zh:{verified:"已认证",moderator:"版主",admin:"管理员",teacher:"老师",student:"学生",company:"企业",author:"作者",vip:"VIP会员",premium:"高级会员",member:"会员",pinned:"置顶",hot:"热门",featured:"精选",pending:"待审核"},en:{verified:"Verified",moderator:"Moderator",admin:"Admin",teacher:"Teacher",student:"Student",company:"Company",author:"Author",vip:"VIP",premium:"Premium",member:"Member",pinned:"Pinned",hot:"Hot",featured:"Featured",pending:"Pending review"}};
+const contentIcons = {pinned:Pin, hot:Flame, featured:Sparkles, pending:Clock3};
 const order = ["admin","moderator","verified","teacher","student","author","company","member","vip","premium"];
 
 function BadgeTrigger({label, children, premium=false}:{label:string;children:ReactNode;premium?:boolean}) {

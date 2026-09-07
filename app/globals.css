@@ -3850,14 +3850,18 @@ svg {
   line-height: 1.75;
   white-space: pre-wrap;
 }
-.forum-post-badges,
+.forum-post-state-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
 .forum-post-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 7px;
 }
-.forum-post-badge,
 .forum-post-tags span {
   display: inline-flex;
   align-items: center;
@@ -3867,9 +3871,6 @@ svg {
   font-size: 11px;
   font-weight: 700;
 }
-.forum-post-badge.pinned { color: #75541d; background: #fff0c7; }
-.forum-post-badge.featured { color: #075f4b; background: #d9f2e9; }
-.forum-post-badge.pending { color: #8a4a12; background: #ffead8; }
 .forum-post-tags span { color: var(--brand-accent); background: color-mix(in srgb, var(--brand-accent) 10%, var(--surface)); }
 .mux-uploader {
   display: grid;
