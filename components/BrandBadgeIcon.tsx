@@ -1,25 +1,20 @@
-type Props={type:string;size?:number};
+import type { ReactNode } from "react";
 
-const frames:Record<string,React.ReactNode>={
-  admin:<path className="brand-badge-frame" d="M12 2.7 19 6.8v8.4L12 21l-7-5.8V6.8L12 2.7Z"/>,
-  moderator:<path className="brand-badge-frame" d="M12 3.2 19 6v5.7c0 4.3-2.7 7.5-7 9.3-4.3-1.8-7-5-7-9.3V6l7-2.8Z"/>,
-  verified:<path className="brand-badge-frame" d="m12 2.8 2.3 1.5 2.8-.1.8 2.7 2.3 1.6-1 2.6 1 2.6-2.3 1.6-.8 2.7-2.8-.1L12 21.2l-2.3-1.5-2.8.1-.8-2.7-2.3-1.6 1-2.6-1-2.6 2.3-1.6.8-2.7 2.8.1L12 2.8Z"/>,
-  vip:<path className="brand-badge-frame" d="m12 2.8 7.2 6.1L12 21.2 4.8 8.9 12 2.8Z"/>,
-  premium:<path className="brand-badge-frame" d="m12 2.8 7.2 6.1L12 21.2 4.8 8.9 12 2.8Z"/>,
-  member:<circle className="brand-badge-frame" cx="12" cy="12" r="8.7"/>,
-};
-const roleFrame=<path className="brand-badge-frame" d="M6.2 4.2h11.6a2 2 0 0 1 2 2v11.6a2 2 0 0 1-2 2H6.2a2 2 0 0 1-2-2V6.2a2 2 0 0 1 2-2Z"/>;
-const symbols:Record<string,React.ReactNode>={
- admin:<><path d="M7.5 15.8h9l1.1-6-3.5 2.1L12 7.1l-2.1 4.8-3.5-2.1 1.1 6Z"/><path d="M8.2 17.5h7.6"/></>,
- moderator:<><path d="m8.4 12 2.2 2.2 5-5"/><path d="M12 6.4v1"/></>,
- verified:<path d="m7.8 12.1 2.7 2.7 5.8-6"/>,
- teacher:<><path d="m5.7 9.2 6.3-3 6.3 3-6.3 3-6.3-3Z"/><path d="M8 11.1v3.5c2.5 1.6 5.5 1.6 8 0v-3.5"/><path d="M18.3 9.2v4"/></>,
- student:<><path d="M7.2 7.2h4.1c1.6 0 2.7.8 2.7 2.2v7.4c0-1.3-1.1-2.1-2.7-2.1H7.2V7.2Z"/><path d="M16.8 7.2H14c-1.6 0-2.7.8-2.7 2.2v5.3"/></>,
- author:<><path d="m7 17 3-.8 7-7-2.2-2.2-7 7L7 17Z"/><path d="m13.7 8.1 2.2 2.2"/></>,
- company:<><path d="M6.5 18V7.2h7.2V18m0-7h3.8v7M9 10h2m-2 3h2m-2 3h2m5-2h-1"/></>,
- vip:<><path d="M7 9.1h10l-5 8.3-5-8.3Z"/><path d="m7 9.1 2.5-2.5L12 9l2.5-2.4L17 9.1M9.5 6.6h5"/></>,
- premium:<><path d="m12 5 5 4-5 9-5-9 5-4Z"/><path d="M7 9h10m-7.5 0L12 18 14.5 9"/></>,
- member:<path d="M8.2 6.8h4.6c2 0 3.2 1 3.2 2.6 0 1.1-.6 1.9-1.7 2.3 1.3.3 2.1 1.2 2.1 2.6 0 1.9-1.5 3-3.7 3H8.2V6.8Zm2.6 2.2v1.8h1.7c.7 0 1.1-.3 1.1-.9s-.4-.9-1.1-.9h-1.7Zm0 4v2h1.8c.9 0 1.4-.4 1.4-1s-.5-1-1.4-1h-1.8Z"/>,
+// Full-size silhouettes: no nested frames or tiny decorative strokes.
+const symbols: Record<string, ReactNode> = {
+  admin: <><path fill="#b3264b" d="M3 6.5 7.7 10 12 3l4.3 7L21 6.5l-2 12H5Z"/><path fill="#f7b3c6" d="m12 3 4.3 7L21 6.5l-2 12h-7Z"/><path fill="#831738" d="M5 19h14v2H5z"/><path fill="white" d="m12 10 2 3-2 3-2-3Z"/></>,
+  moderator: <><path fill="#294f85" d="m12 2 9 4v6c0 5-5 9-9 11-4-2-9-6-9-11V6Z"/><path fill="#5585b9" d="m12 2 9 4v6c0 5-5 9-9 11Z"/><path stroke="white" strokeWidth="2.5" fill="none" d="M8 12h8m-4-4v8"/></>,
+  verified: <><path fill="#008060" d="m12 1 3 2 4 .5.5 4 2 3-2 3-.5 4-4 .5-3 2-3-2-4-.5-.5-4-2-3 2-3 .5-4L9 3Z"/><path stroke="white" strokeWidth="2.6" fill="none" d="m7 11.5 3.2 3.2 6.5-6.5"/></>,
+  student: <><path fill="#087b91" d="M2 4h5c2 0 4 1 5 2 1-1 3-2 5-2h5v16h-5c-2 0-4 1-5 2-1-1-3-2-5-2H2Z"/><path fill="#b8eef0" d="M13 7c1-.8 2.5-1 4-1h3v12h-3c-1.5 0-3 .2-4 1Z"/><path stroke="white" strokeWidth="1.8" fill="none" d="M5 8h3m-3 4h3m4-5v12"/></>,
+  teacher: <><path fill="#6840b8" d="M5 12v6c4 4 10 4 14 0v-6Z"/><path fill="#8d63d1" d="m1 8 11-6 11 6-11 6Z"/><path fill="#553096" d="m1 8 11 6v-4Z"/><path stroke="#513084" strokeWidth="2" fill="none" d="M22 9v8"/><circle fill="#513084" cx="22" cy="19" r="1.5"/></>,
+  author: <><path fill="#b45309" d="M4 10 17 2l5 5-8 13-12 2Z"/><path fill="#efb867" d="m17 2 5 5-8 13-5-5Z"/><path stroke="white" strokeWidth="2" fill="none" d="m4 20 8-8"/><circle fill="white" cx="13" cy="11" r="2.2"/></>,
+  company: <><path fill="#246697" d="M3 3h12v19H3Z"/><path fill="#74a3c1" d="M15 9h6v13h-6Z"/><path fill="white" d="M6 6h2v3H6zm4 0h2v3h-2zm-4 6h2v3H6zm4 0h2v3h-2zm-2 6h3v4H8zm9-6h2v3h-2z"/></>,
+  member: <><rect fill="#536577" x="2" y="2" width="20" height="20" rx="7"/><path fill="white" fillRule="evenodd" d="M7 5h6c5 0 6 5 2.5 6.5C19.5 13 18 19 13 19H7Zm3 3v3h3c2 0 2-3 0-3Zm0 5v3h3c2.5 0 2.5-3 0-3Z"/></>,
+  vip: <><path fill="#8c5a04" d="m6 2 12 0 5 7-11 14L1 9Z"/><path fill="#e7b747" d="m6 2 6 7H1Zm12 0 5 7H12Z"/><path fill="#f8dda0" d="M6 2h12l-6 7Z"/><path fill="#bb841b" d="M1 9h11v14Z"/><path fill="#edc56d" d="M12 9h11L12 23Z"/><path stroke="white" strokeWidth="1.8" fill="none" d="m8 10 4 6 4-6"/></>,
+  premium: <><path fill="#583287" d="m12 1 10 7-4 13H6L2 8Z"/><path fill="#9865c6" d="m12 1 10 7-10 14Z"/><path fill="#edcb77" d="m12 4 2.2 5.3L20 10l-4.4 3.8 1.3 5.7-4.9-3-4.9 3 1.3-5.7L4 10l5.8-.7Z"/></>,
+  level: <><path fill="#b97c17" d="m12 1 9 5v12l-9 5-9-5V6Z"/><path fill="#f2d18a" d="m12 1 9 5-9 5-9-5Z"/><path fill="#dba441" d="m12 11 9-5v12l-9 5Z"/></>,
 };
 
-export default function BrandBadgeIcon({type,size=22}:Props){const key=type in symbols?type:"member";return <svg className={`brand-badge-svg brand-badge-svg-${key}`} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">{frames[key]||roleFrame}{symbols[key]}</svg>}
+export default function BrandBadgeIcon({type,size=25}:{type:string;size?:number}) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" style={{display:"block",flexShrink:0,overflow:"visible"}} strokeLinecap="round" strokeLinejoin="round">{symbols[type] || symbols.member}</svg>;
+}
