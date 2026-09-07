@@ -22,4 +22,4 @@ const symbols:Record<string,React.ReactNode>={
  member:<path d="M8.2 6.8h4.6c2 0 3.2 1 3.2 2.6 0 1.1-.6 1.9-1.7 2.3 1.3.3 2.1 1.2 2.1 2.6 0 1.9-1.5 3-3.7 3H8.2V6.8Zm2.6 2.2v1.8h1.7c.7 0 1.1-.3 1.1-.9s-.4-.9-1.1-.9h-1.7Zm0 4v2h1.8c.9 0 1.4-.4 1.4-1s-.5-1-1.4-1h-1.8Z"/>,
 };
 
-export default function BrandBadgeIcon({type,size=18}:Props){const key=type in symbols?type:"member";return <svg className={`brand-badge-svg brand-badge-svg-${key}`} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">{frames[key]||roleFrame}{symbols[key]}</svg>}
+export default function BrandBadgeIcon({type,size=22}:Props){const key=type in symbols?type:"member";return <svg className={`brand-badge-svg brand-badge-svg-${key}`} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">{frames[key]||roleFrame}{symbols[key]}</svg>}
