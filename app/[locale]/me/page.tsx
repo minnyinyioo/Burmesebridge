@@ -221,12 +221,13 @@ export default function MePage() {
             </div>
             <p>{email}</p>
           </div>
-          <a href="#profile-settings" className="account-edit">
-            {copy.profile}
-          </a>
+          <div className="account-hero-actions">
+            {profile?.id ? <AvatarPicker locale={locale} userId={profile.id} name={name} avatarUrl={profile.avatar_url} verified={Boolean(profile.verified)} onSaved={(url)=>setProfile(current=>current?{...current,avatar_url:url}:current)} /> : null}
+            <a href="#profile-settings" className="account-edit">
+              {copy.profile}
+            </a>
+          </div>
         </div>
-
-        {profile?.id ? <AvatarPicker locale={locale} userId={profile.id} name={name} avatarUrl={profile.avatar_url} verified={Boolean(profile.verified)} onSaved={(url)=>setProfile(current=>current?{...current,avatar_url:url}:current)} /> : null}
 
         <div className="account-stats">
           <article>
