@@ -9877,7 +9877,7 @@ svg {
 .brand-icon-badge{position:relative;display:inline-grid;place-items:center;width:27px;height:27px;border:1px solid color-mix(in srgb,currentColor 32%,transparent);border-radius:8px;color:#64748b;background:linear-gradient(145deg,#fff,color-mix(in srgb,currentColor 7%,#fff));box-shadow:0 2px 6px color-mix(in srgb,currentColor 12%,transparent);cursor:help;outline:none;overflow:visible;isolation:isolate;transition:transform .16s ease,box-shadow .16s ease}
 .brand-icon-badge:before{content:"";position:absolute;inset:2px;border-radius:6px;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.82) 45%,transparent 68%);opacity:0;transform:translateX(-115%);pointer-events:none;z-index:1;animation:brand-badge-glint 8s ease-in-out infinite}
 .brand-icon-badge:nth-child(2n):before{animation-delay:1.4s}.brand-icon-badge:nth-child(3n):before{animation-delay:2.8s}
-.brand-icon-badge-vip:before,.brand-icon-badge-premium:before,.brand-level-icon:before{background:linear-gradient(112deg,transparent 18%,rgba(255,245,184,.95) 43%,#fff 50%,transparent 72%);animation-duration:6.8s}
+.brand-icon-badge-admin:before,.brand-icon-badge-vip:before,.brand-icon-badge-premium:before,.brand-level-icon:before{background:linear-gradient(112deg,transparent 18%,rgba(255,245,184,.95) 43%,#fff 50%,transparent 72%);animation-duration:12s}
 .brand-icon-badge-vip,.brand-icon-badge-premium,.brand-level-icon{box-shadow:0 2px 7px rgba(188,122,5,.18),inset 0 0 8px rgba(255,220,104,.08)}
 .brand-icon-badge>svg,.brand-icon-badge>b{position:relative;z-index:2}
 @keyframes brand-badge-glint{0%,72%,100%{opacity:0;transform:translateX(-115%)}78%{opacity:.38}86%{opacity:0;transform:translateX(115%)}}

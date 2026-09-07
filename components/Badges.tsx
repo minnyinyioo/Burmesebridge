@@ -38,7 +38,7 @@ export default function Badge({type,labelOverride}:{type:BadgeType|string;labelO
   const known=(Object.hasOwn(labels.en,type)?type:"member") as BadgeType;
   const label=labelOverride||labels[locale]?.[known]||labels.en[known];
   const Icon=contentIcons[known as keyof typeof contentIcons];
-  return <BadgeTrigger label={label} premium={known==="vip"||known==="premium"}>
+  return <BadgeTrigger label={label} premium={known==="admin"||known==="vip"||known==="premium"}>
     {Icon?<Icon size={23}/>:<BrandBadgeIcon type={known}/>}
   </BadgeTrigger>;
 }
