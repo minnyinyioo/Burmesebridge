@@ -8,6 +8,22 @@ import { supabase } from "@/lib/supabase";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import BrandLogo from "@/components/BrandLogo";
 
+function sessionAal(accessToken?: string) {
+  if (!accessToken) return "aal1";
+  try {
+    const payload = accessToken.split(".")[1];
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
+    return (JSON.parse(atob(normalized)) as { aal?: string }).aal || "aal1";
+  } catch {
+    return "aal1";
+  }
+}
+
+function destinationForSession(locale: string, safeNext: string, session: Awaited<ReturnType<typeof supabase.auth.getSession>>["data"]["session"]) {
+  const hasVerifiedFactor = session?.user.factors?.some((factor) => factor.status === "verified");
+  return hasVerifiedFactor && sessionAal(session?.access_token) !== "aal2" ? `/${locale}/mfa-verify` : safeNext;
+}
+
 export default function LoginPage() {
   const params = useParams();
   const locale = String(params.locale || "en");
@@ -21,13 +37,9 @@ export default function LoginPage() {
   // 新增：检查用户是否已登录，如果已登录则重定向
   useEffect(() => {
     async function checkUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-        router.replace(aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2" ? `/${locale}/mfa-verify` : safeNext);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.replace(destinationForSession(locale, safeNext, session));
       }
     }
 
@@ -96,7 +108,7 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -104,9 +116,7 @@ export default function LoginPage() {
     if (error) {
       setError(t.error);
     } else {
-      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      router.push(aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2" ? `/${locale}/mfa-verify` : safeNext);
-      router.refresh();
+      router.replace(destinationForSession(locale, safeNext, data.session));
     }
 
     setLoading(false);

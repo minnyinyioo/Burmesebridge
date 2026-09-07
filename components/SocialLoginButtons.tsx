@@ -93,7 +93,6 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
           return;
         }
         router.replace(`/${locale}/me`);
-        router.refresh();
       },
     });
 

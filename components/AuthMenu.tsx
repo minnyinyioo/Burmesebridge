@@ -58,20 +58,27 @@ export default function AuthMenu({
     text.en;
 
   useEffect(() => {
-    async function getUser() {
-      const { data } =
-        await supabase.auth.getUser();
-
-      setEmail(data.user?.email ?? null);
-      if (data.user) {
+    let authVersion = 0;
+    let teacherTimer: number | undefined;
+    async function applyUser(user: { email?: string | null } | null, version: number) {
+      if (version !== authVersion) return;
+      setEmail(user?.email ?? null);
+      if (user) {
         const { data: allowed } = await supabase.rpc("can_access_teacher_portal");
+        if (version !== authVersion) return;
         setCanTeach(Boolean(allowed));
       } else {
         setCanTeach(false);
       }
     }
 
-    getUser();
+    void supabase.auth.getSession().then(({ data }) => applyUser(data.session?.user ?? null, authVersion));
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      const version = ++authVersion;
+      setEmail(session?.user.email ?? null);
+      if (!session?.user) setCanTeach(false);
+      else teacherTimer = window.setTimeout(() => void applyUser(session.user, version), 0);
+    });
 
     function handleClickOutside(
       event: MouseEvent
@@ -92,6 +99,9 @@ export default function AuthMenu({
     );
 
     return () => {
+      authVersion += 1;
+      if (teacherTimer !== undefined) window.clearTimeout(teacherTimer);
+      authListener.subscription.unsubscribe();
       document.removeEventListener(
         "mousedown",
         handleClickOutside
