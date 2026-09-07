@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 const symbols: Record<string, ReactNode> = {
   admin: <><path fill="#b3264b" d="M3 6.5 7.7 10 12 3l4.3 7L21 6.5l-2 12H5Z"/><path fill="#f7b3c6" d="m12 3 4.3 7L21 6.5l-2 12h-7Z"/><path fill="#831738" d="M5 19h14v2H5z"/><path fill="white" d="m12 10 2 3-2 3-2-3Z"/></>,
   moderator: <><path fill="#294f85" d="m12 2 9 4v6c0 5-5 9-9 11-4-2-9-6-9-11V6Z"/><path fill="#5585b9" d="m12 2 9 4v6c0 5-5 9-9 11Z"/><path stroke="white" strokeWidth="2.5" fill="none" d="M8 12h8m-4-4v8"/></>,
-  verified: <><path fill="#008060" d="m12 1 3 2 4 .5.5 4 2 3-2 3-.5 4-4 .5-3 2-3-2-4-.5-.5-4-2-3 2-3 .5-4L9 3Z"/><path stroke="white" strokeWidth="2.6" fill="none" d="m7 11.5 3.2 3.2 6.5-6.5"/></>,
+  verified: <><circle fill="#008060" cx="12" cy="12" r="10"/><circle fill="#0a9875" cx="12" cy="12" r="8.5"/><path stroke="white" strokeWidth="2.6" fill="none" d="m7.2 12 3.1 3.1 6.5-6.5"/></>,
   student: <><path fill="#087b91" d="M2 4h5c2 0 4 1 5 2 1-1 3-2 5-2h5v16h-5c-2 0-4 1-5 2-1-1-3-2-5-2H2Z"/><path fill="#b8eef0" d="M13 7c1-.8 2.5-1 4-1h3v12h-3c-1.5 0-3 .2-4 1Z"/><path stroke="white" strokeWidth="1.8" fill="none" d="M5 8h3m-3 4h3m4-5v12"/></>,
   teacher: <><path fill="#6840b8" d="M5 12v6c4 4 10 4 14 0v-6Z"/><path fill="#8d63d1" d="m1 8 11-6 11 6-11 6Z"/><path fill="#553096" d="m1 8 11 6v-4Z"/><path stroke="#513084" strokeWidth="2" fill="none" d="M22 9v8"/><circle fill="#513084" cx="22" cy="19" r="1.5"/></>,
   author: <><path fill="#b45309" d="M4 10 17 2l5 5-8 13-12 2Z"/><path fill="#efb867" d="m17 2 5 5-8 13-5-5Z"/><path stroke="white" strokeWidth="2" fill="none" d="m4 20 8-8"/><circle fill="white" cx="13" cy="11" r="2.2"/></>,
