@@ -20,8 +20,12 @@
 .level { position:absolute; inset:0; display:grid; place-items:center; padding-top:1px; color:#422d09; font:800 12px/1 system-ui,sans-serif; letter-spacing:-.4px; text-shadow:0 1px rgba(255,255,255,.4); }
 .level[data-long="true"] { font-size:9px; }
 .sparkle { position:absolute; right:-1px; top:-2px; color:#fff0af; font:normal 12px/1 serif; text-shadow:0 0 2px #80520a; pointer-events:none; opacity:0; animation:glow 12s ease-in-out infinite; }
+.premium .sparkle::before,.premium .sparkle::after { content:"✦"; position:absolute; color:#fff8c7; font-size:7px; text-shadow:0 0 3px #f5c85b; opacity:0; animation:miniTwinkle 12s ease-in-out infinite; }
+.premium .sparkle::before { right:9px; top:8px; animation-delay:2.2s; }
+.premium .sparkle::after { right:-7px; top:13px; font-size:5px; animation-delay:4.4s; }
 .item:nth-child(even) .sparkle { animation-delay:3s; }
 @keyframes glow { 0%,80%,95%,100% {opacity:0;transform:translateX(-8px) scale(.6)} 86% {opacity:.55;transform:translateX(0) scale(.9)} 94% {opacity:0;transform:translateX(5px) scale(.65)} }
 @keyframes badgeSweep { 0%,72%,100% {opacity:0;background-position:140% 0} 80% {opacity:.65;background-position:55% 0} 87% {opacity:0;background-position:-30% 0} }
+@keyframes miniTwinkle { 0%,72%,100% {opacity:0;transform:scale(.45) rotate(-18deg)} 78% {opacity:.8;transform:scale(1) rotate(0)} 84% {opacity:0;transform:scale(.55) rotate(18deg)} }
 .tooltip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); z-index:1000; padding:8px 10px; border-radius:7px; background:#183c33; color:white; font:600 12px/1.5 system-ui,sans-serif; white-space:nowrap; box-shadow:0 4px 15px #102e2426; }
 @media(prefers-reduced-motion:reduce) { .sparkle,.premium::after { animation:none;opacity:0; } .trigger {transition:none;} }
