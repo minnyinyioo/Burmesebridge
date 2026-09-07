@@ -28,12 +28,12 @@ export default function AvatarPicker({locale,userId,name,avatarUrl,verified,onSa
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
   const [error,setError]=useState("");
-  const [selected,setSelected]=useState(avatarUrl || systemAvatars[0].src);
+  const [selected,setSelected]=useState(avatarUrl || "");
   const [file,setFile]=useState<File|null>(null);
   const [preview,setPreview]=useState("");
   const displayUrl=preview || selected || avatarUrl || null;
 
-  useEffect(()=>setSelected(avatarUrl || systemAvatars[0].src),[avatarUrl]);
+  useEffect(()=>setSelected(avatarUrl || ""),[avatarUrl]);
   useEffect(()=>{
     if(!file){setPreview("");return}
     const next=URL.createObjectURL(file);
@@ -74,10 +74,10 @@ export default function AvatarPicker({locale,userId,name,avatarUrl,verified,onSa
     if(await save(selected))setOpen(false);
   }
 
-  const selectedLabel=useMemo(()=>systemAvatars.find(item=>item.src===selected)?.label || copy.custom,[selected,copy.custom]);
+  const selectedLabel=useMemo(()=>systemAvatars.find(item=>item.src===selected)?.label || (file ? copy.custom : copy.choose),[selected,file,copy.custom,copy.choose]);
 
   return <>
-    <button type="button" className="account-avatar-action" onClick={()=>{setOpen(true);setError("");setMessage("");setFile(null);setSelected(avatarUrl || systemAvatars[0].src)}}><Settings size={16}/>{copy.open}</button>
+    <button type="button" className="account-avatar-action" onClick={()=>{setOpen(true);setError("");setMessage("");setFile(null);setSelected(avatarUrl || "")}}><Settings size={16}/>{copy.open}</button>
     {message?<p className="avatar-picker-message" role="status">{message}</p>:null}
     <Dialog open={open} onOpenChange={(value)=>{if(!busy)setOpen(value)}}>
       <DialogContent className="avatar-dialog">
