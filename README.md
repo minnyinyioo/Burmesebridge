@@ -215,7 +215,9 @@ middleware.ts              管理员路由和认证访问保护
 ## 联系方式
 
 - 网站：[https://burmesebridge.com](https://burmesebridge.com)
-- 邮箱：[admin@burmesebridge.com](mailto:admin@burmesebridge.com)
+- 支持邮箱：[support@burmesebridge.com](mailto:support@burmesebridge.com)
+- 版权邮箱：[copyright@burmesebridge.com](mailto:copyright@burmesebridge.com)
+- 隐私邮箱：[privacy@burmesebridge.com](mailto:privacy@burmesebridge.com)
 - GitHub：[minnyinyioo/Burmesebridge](https://github.com/minnyinyioo/Burmesebridge)
 
 ## 许可证

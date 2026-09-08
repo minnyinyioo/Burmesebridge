@@ -3,6 +3,15 @@ import BrandLogo from "@/components/BrandLogo";
 
 export type LegalSection = { title: string; paragraphs: string[]; items?: string[] };
 
+const EMAIL_PART = /([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi;
+const EXACT_EMAIL = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+function contactLinks(text: string) {
+  return text.split(EMAIL_PART).map((part, index) => EXACT_EMAIL.test(part)
+    ? <a key={`${part}-${index}`} href={`mailto:${part}`}>{part}</a>
+    : part);
+}
+
 export default function LegalPage({ locale, title, summary, updated, sections }: {
   locale: string;
   title: string;
@@ -24,8 +33,8 @@ export default function LegalPage({ locale, title, summary, updated, sections }:
     <div className="legal-content">
       {sections.map((section) => <section key={section.title}>
         <h2>{section.title}</h2>
-        {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        {section.items?.length ? <ul>{section.items.map((item) => <li key={item}>{item}</li>)}</ul> : null}
+        {section.paragraphs.map((paragraph) => <p key={paragraph}>{contactLinks(paragraph)}</p>)}
+        {section.items?.length ? <ul>{section.items.map((item) => <li key={item}>{contactLinks(item)}</li>)}</ul> : null}
       </section>)}
     </div>
   </article>;

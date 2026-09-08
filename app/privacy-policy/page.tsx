@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
+import { CONTACT_EMAILS } from "@/lib/contactEmails";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | BurmeseBridge",
@@ -79,7 +80,7 @@ const sections: LegalSection[] = [
     "For any questions or concerns regarding your privacy, or to exercise any of your rights, you may contact us using the following details:",
   ], items: [
     "Address: 12 Soi. 2 Sai Ma, Mueang Nonthaburi District, Nonthaburi 11000 dcon prime",
-    "Email address: admin@burmesebridge.com",
+    `Email address: ${CONTACT_EMAILS.privacy}`,
   ] },
 ];
 
