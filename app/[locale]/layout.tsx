@@ -9,6 +9,7 @@ import BrandLogo from "@/components/BrandLogo";
 import Link from "next/link";
 import PasswordChangeGuard from "@/components/PasswordChangeGuard";
 import MfaGuard from "@/components/MfaGuard";
+import { CONTACT_EMAILS } from "@/lib/contactEmails";
 import {
   Home,
   MessageCircle,
@@ -252,6 +253,9 @@ export default async function LocaleLayout({
                     ? "အကြံပြုချက်နှင့် ချို့ယွင်းချက်တိုင်ကြားရန်"
                     : "Feedback & bugs"}
               </Link>
+              <a href={`mailto:${CONTACT_EMAILS.support}`}>{CONTACT_EMAILS.support}</a>
+              <a href={`mailto:${CONTACT_EMAILS.privacy}`}>{CONTACT_EMAILS.privacy}</a>
+              <a href={`mailto:${CONTACT_EMAILS.copyright}`}>{CONTACT_EMAILS.copyright}</a>
               <Link href={`/${locale}/privacy`}>
                 {locale === "zh"
                   ? "隐私政策"
