@@ -133,6 +133,11 @@ export default function SocialLoginButtons({ locale }: { locale: string }) {
       <div className="social-auth-grid">
         <div className="google-identity-slot">
           <div ref={googleButtonRef} className="google-identity-button" aria-label={`${copy.divider} Google`} />
+          {googleReady && (
+            <span className="social-auth-button social-auth-google google-identity-visual" aria-hidden="true">
+              <span className="social-auth-mark"><GoogleIcon /></span><span>Google</span>
+            </span>
+          )}
           {!googleReady && (
             <button type="button" className="social-auth-button social-auth-google" disabled>
               <span className="social-auth-mark" aria-hidden="true"><GoogleIcon /></span><span>{activeProvider === "google" ? copy.loading : "Google"}</span>

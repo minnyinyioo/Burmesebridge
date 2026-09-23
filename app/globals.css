@@ -4694,11 +4694,12 @@ svg {
 .google-identity-button {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   width: 100%;
   min-height: 46px;
+  opacity: 0.001;
 }
 .google-identity-button > div,
 .google-identity-button iframe {
@@ -4707,6 +4708,12 @@ svg {
 }
 .google-identity-slot .social-auth-button {
   width: 100%;
+}
+.google-identity-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 .social-auth-button {
   min-width: 0;
