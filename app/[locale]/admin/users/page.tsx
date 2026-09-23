@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Badge, { type BadgeType } from "@/components/Badges";
-import { KeyRound } from "lucide-react";
+import { ChevronDown, KeyRound, Save } from "lucide-react";
 
 type AdminUser = {
   id: string;
@@ -26,6 +26,53 @@ function normaliseRole(value: string | null | undefined) {
 
 function isSystemRole(value: string) {
   return (SYSTEM_ROLES as readonly string[]).includes(value);
+}
+
+function currentRoles(user: AdminUser) {
+  const saved = (user.badges || []).map(normaliseRole).filter(Boolean);
+  if (saved.length) return saved;
+  return Array.from(new Set([normaliseRole(user.role), normaliseRole(user.badge)].filter(Boolean)));
+}
+
+function UserRoleEditor({ user, options, onSave }: {
+  user: AdminUser;
+  options: string[];
+  onSave: (roles: string[]) => Promise<void>;
+}) {
+  const initial = currentRoles(user);
+  const [selected, setSelected] = useState<string[]>(initial);
+  const [busy, setBusy] = useState(false);
+  const changed = [...selected].sort().join("|") !== [...initial].sort().join("|");
+
+  function toggle(role: string) {
+    setSelected((value) => value.includes(role) ? value.filter((item) => item !== role) : [...value, role]);
+  }
+
+  async function save() {
+    if (!selected.length || !changed) return;
+    setBusy(true);
+    await onSave(selected);
+    setBusy(false);
+  }
+
+  return <details className="admin-role-editor">
+    <summary>
+      <span>{selected.length ? `${selected.length} roles` : "Select roles"}</span>
+      <ChevronDown size={16} aria-hidden="true" />
+    </summary>
+    <div className="admin-role-menu">
+      <fieldset>
+        <legend>Roles and badges</legend>
+        {options.map((role) => <label key={role}>
+          <input type="checkbox" checked={selected.includes(role)} onChange={() => toggle(role)} />
+          <span>{role}</span>
+        </label>)}
+      </fieldset>
+      <button type="button" onClick={() => void save()} disabled={!selected.length || !changed || busy}>
+        <Save size={15} />{busy ? "Saving…" : "Save roles"}
+      </button>
+    </div>
+  </details>;
 }
 
 export default function AdminUsersPage() {
@@ -157,14 +204,7 @@ function UsersContent() {
                 <button className="admin-action-button" onClick={() => resetPassword(user)} disabled={resetting === user.id}>
                   <KeyRound size={16} /> {resetting === user.id ? "Resetting…" : "Reset password"}
                 </button>
-                <select
-                  multiple
-                  defaultValue={(() => { const current = (user.badges || []).map(normaliseRole).filter(Boolean); if (current.length) return current; const role = normaliseRole(user.role); const badge = normaliseRole(user.badge); return Array.from(new Set([role, badge].filter(Boolean))); })()}
-                  onChange={(event) => void updateRole(user, Array.from(event.target.selectedOptions, (option) => option.value))}
-                  style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #e2e8f0", fontWeight: 700 }}
-                >
-                  {roleOptions.map((role) => <option key={role} value={role}>{role}</option>)}
-                </select>
+                <UserRoleEditor key={`${user.id}:${currentRoles(user).join("|")}`} user={user} options={roleOptions} onSave={(roles) => updateRole(user, roles)} />
               </div>
             </div>
           ))}
